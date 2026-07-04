@@ -1,0 +1,49 @@
+// ---------------------------------------------------------------------------
+// Design tokens — SINGLE SOURCE OF TRUTH for the visual design.
+// Brand: two base values run everything —
+//   #7c4dff (purple accent)  ·  #08070e (near-black background)
+// Glows/haze are the same purple at reduced opacity.
+// Keep in sync with theme.json (editor palette).
+// ---------------------------------------------------------------------------
+
+:root {
+	// Brand
+	--jwt-bg: #08070e;
+	--jwt-accent: #7c4dff;
+	--jwt-accent-hover: #8f66ff;
+	--jwt-accent-soft: rgba(124, 77, 255, 0.38); // CTA shadow + glow strength
+	--jwt-haze: rgba(124, 77, 255, 0.3);         // hero radial haze
+
+	// Derived surfaces (bg lifted toward the purple)
+	--jwt-surface: #100d1c;
+	--jwt-surface-2: #171232;
+	--jwt-line: #241d3d;
+
+	// Text
+	--jwt-text: #f0eef8;
+	--jwt-muted: #a49bc0;
+	--jwt-success: #16b364;
+
+	// Type
+	--jwt-font-body: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+	--jwt-font-heading: var(--jwt-font-body);
+	--jwt-size-sm: 0.9375rem;
+	--jwt-size-md: 1.0625rem;
+	--jwt-size-lg: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+	--jwt-size-xl: clamp(1.75rem, 1.5rem + 1.25vw, 2.25rem);
+	--jwt-size-2xl: clamp(2.25rem, 1.75rem + 2.5vw, 3.5rem);
+
+	// Layout
+	--jwt-container: 1200px;
+	--jwt-narrow: 760px;
+	--jwt-gutter: clamp(1.25rem, 4vw, 2rem);
+	--jwt-section-y: clamp(4rem, 10vw, 7rem);
+
+	// Shape & depth
+	--jwt-radius: 16px;
+	--jwt-radius-sm: 10px;
+	--jwt-shadow: 0 10px 30px rgb(0 0 0 / 0.35);
+
+	// Motion
+	--jwt-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}

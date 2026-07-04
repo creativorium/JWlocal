@@ -1,0 +1,14 @@
+# Dependencies & build output (never committed, never deployed from repo)
+node_modules/
+dist/
+*.local
+
+# Vite dev marker — must NEVER reach EasyWP
+dist/hot
+
+# Archives / scratch
+*.zip
+
+# OS noise
+Thumbs.db
+.DS_Store
