@@ -19,6 +19,10 @@ require_once JWT_CORE_PATH . 'includes/class-kit-sync.php';
 require_once JWT_CORE_PATH . 'includes/class-sheets-sync.php';
 require_once JWT_CORE_PATH . 'includes/class-woo.php';
 require_once JWT_CORE_PATH . 'includes/class-admin.php';
+require_once JWT_CORE_PATH . 'includes/class-plugin-guard.php';
+
+// Owner-only plugin visibility — independent of WooCommerce, boot immediately.
+JWT_Plugin_Guard::init();
 
 /**
  * Activation: create log table + schedule retry cron.

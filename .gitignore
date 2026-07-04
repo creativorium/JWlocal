@@ -6,8 +6,10 @@ dist/
 # Vite dev marker — must NEVER reach EasyWP
 dist/hot
 
-# Archives / scratch
+# Archives / scratch / site backups (never source)
 *.zip
+*.tar.gz
+JWtradingLocal/
 
 # OS noise
 Thumbs.db
