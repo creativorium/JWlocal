@@ -1,0 +1,1150 @@
+<?php
+/**
+ * Theme functions and definitions.
+ *
+ * For additional information on potential customization options,
+ * read the developers' documentation:
+ *
+ * https://developers.elementor.com/docs/hello-elementor-theme/
+ *
+ * @package HelloElementorChild
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
+define( 'HELLO_ELEMENTOR_CHILD_VERSION', '2.0.0' );
+
+/**
+ * Load child theme scripts & styles.
+ *
+ * @return void
+ */
+function hello_elementor_child_scripts_styles() {
+
+	wp_enqueue_style(
+		'hello-elementor-child-style',
+		get_stylesheet_directory_uri() . '/style.css',
+		[
+			'hello-elementor-theme-style',
+		],
+		HELLO_ELEMENTOR_CHILD_VERSION
+	);
+
+}
+add_action( 'wp_enqueue_scripts', 'hello_elementor_child_scripts_styles', 20 );
+
+/**
+ * JW Slim Checkout – Virtual Only Bootcamp (SAFE MERGED)
+ * Paste into hello-elementor-child/functions.php
+ */
+
+if ( ! defined('ABSPATH') ) exit;
+
+/* ----------------------------------------
+   Helpers (guarded)
+---------------------------------------- */
+if ( ! function_exists('jw_virtual_checkout_mode') ) {
+	function jw_virtual_checkout_mode() {
+		return ( function_exists('WC') && WC()->cart && ! WC()->cart->needs_shipping() );
+	}
+}
+
+/* ----------------------------------------
+   1) Checkout fields: keep only needed + rename labels
+---------------------------------------- */
+add_filter( 'woocommerce_checkout_fields', function( $fields ) {
+
+	if ( is_admin() || ! jw_virtual_checkout_mode() ) return $fields;
+
+	$keep = [
+		'billing_first_name',
+		'billing_last_name',
+		'billing_email',
+		'billing_phone',
+	];
+
+	if ( isset($fields['billing']) ) {
+		foreach ( $fields['billing'] as $key => $field ) {
+			if ( ! in_array( $key, $keep, true ) ) {
+				unset( $fields['billing'][ $key ] );
+			}
+		}
+	}
+
+	// Nama Depan
+	if ( isset($fields['billing']['billing_first_name']) ) {
+		$fields['billing']['billing_first_name']['label']    = 'Nama Depan';
+		$fields['billing']['billing_first_name']['required'] = true;
+		$fields['billing']['billing_first_name']['priority'] = 10;
+		$fields['billing']['billing_first_name']['class']    = ['form-row-wide'];
+	}
+
+	// Nama Belakang
+	if ( isset($fields['billing']['billing_last_name']) ) {
+		$fields['billing']['billing_last_name']['label']    = 'Nama Belakang';
+		$fields['billing']['billing_last_name']['required'] = true;
+		$fields['billing']['billing_last_name']['priority'] = 20;
+		$fields['billing']['billing_last_name']['class']    = ['form-row-wide'];
+	}
+
+	// WA Phone
+	$fields['billing']['billing_phone'] = array_merge(
+		$fields['billing']['billing_phone'] ?? [],
+		[
+			'type'        => 'tel',
+			'label'       => 'WA Phone',
+			'required'    => true,
+			'class'       => ['form-row-wide'],
+			'priority'    => 30,
+			'placeholder' => 'e.g. +62 812 3456 7890',
+		]
+	);
+
+	// Email
+	if ( isset($fields['billing']['billing_email']) ) {
+		$fields['billing']['billing_email']['label']    = 'Email Address';
+		$fields['billing']['billing_email']['required'] = true;
+		$fields['billing']['billing_email']['priority'] = 40;
+		$fields['billing']['billing_email']['class']    = ['form-row-wide'];
+	}
+
+	// Remove shipping section
+	unset( $fields['shipping'] );
+
+	return $fields;
+
+}, 99999 );
+
+/* ----------------------------------------
+   2) Remove default address fields (so address UI won't appear)
+---------------------------------------- */
+add_filter( 'woocommerce_default_address_fields', function( $address_fields ) {
+
+	if ( is_admin() || ! jw_virtual_checkout_mode() ) return $address_fields;
+
+	unset( $address_fields['country'] );
+	unset( $address_fields['address_1'] );
+	unset( $address_fields['address_2'] );
+	unset( $address_fields['city'] );
+	unset( $address_fields['state'] );
+	unset( $address_fields['postcode'] );
+
+	return $address_fields;
+
+}, 99999 );
+
+/* ----------------------------------------
+   3) Add Discord field
+---------------------------------------- */
+add_action( 'woocommerce_after_checkout_billing_form', function( $checkout ) {
+
+	if ( ! jw_virtual_checkout_mode() ) return;
+
+	woocommerce_form_field( 'discord_username', [
+		'type'        => 'text',
+		'class'       => ['form-row-wide'],
+		'label'       => 'Discord Username',
+		'placeholder' => 'e.g. johnsmith or johnsmith#1234',
+		'required'    => true,
+		'priority'    => 50,
+	], $checkout->get_value( 'discord_username' ) );
+
+}, 20 );
+
+/* Save Discord */
+add_action( 'woocommerce_checkout_create_order', function( $order ) {
+	if ( isset($_POST['discord_username']) ) {
+		$order->update_meta_data( '_discord_username', sanitize_text_field($_POST['discord_username']) );
+	}
+});
+
+/* Validate Discord + WA phone */
+add_action( 'woocommerce_checkout_process', function() {
+
+	if ( ! jw_virtual_checkout_mode() ) return;
+
+	if ( empty( $_POST['discord_username'] ) ) {
+		wc_add_notice( 'Please enter your Discord username.', 'error' );
+	}
+
+	if ( ! empty($_POST['billing_phone']) ) {
+		$digits = preg_replace('/\D+/', '', (string) $_POST['billing_phone'] );
+		if ( strlen($digits) > 0 && strlen($digits) < 7 ) {
+			wc_add_notice( 'Phone number must be at least 7 digits.', 'error' );
+		}
+	}
+
+}, 99999 );
+
+/* ----------------------------------------
+   4) Mandatory Accept Terms checkbox (+ link)
+---------------------------------------- */
+add_action( 'woocommerce_review_order_before_submit', function() {
+
+    if ( ! jw_virtual_checkout_mode() ) return;
+
+    $tc_url = 'https://dev.cularcreative.com/jwtradingacademy/terms-condition/';
+
+    woocommerce_form_field( 'jw_accept_terms', [
+        'type'     => 'checkbox',
+        'class'    => ['form-row-wide'],
+        'label'    => 'Setuju dengan syarat dan ketentuan, lihat <a href="' . esc_url($tc_url) . '" target="_blank" rel="noopener">Syarat & Ketentuan</a>',
+        'required' => true,
+    ], WC()->checkout()->get_value( 'jw_accept_terms' ) );
+
+}, 9 );
+
+add_action( 'woocommerce_checkout_process', function() {
+
+    if ( ! jw_virtual_checkout_mode() ) return;
+
+    if ( empty($_POST['jw_accept_terms']) ) {
+        wc_add_notice( 'Please accept the terms and conditions.', 'error' );
+    }
+
+}, 99999 );
+
+/* ----------------------------------------
+   5) Force single quantity (no multiples)
+---------------------------------------- */
+add_filter( 'woocommerce_is_sold_individually', function( $return, $product ) {
+    // Replace 123 with your bootcamp product ID
+    $bootcamp_id = 684;
+    if ( $product && (int) $product->get_id() === $bootcamp_id ) return true;
+    return $return;
+}, 9999, 2 );
+
+add_filter( 'woocommerce_add_to_cart_quantity', function( $qty, $product_id ) {
+	return 1;
+}, 9999, 2 );
+
+add_filter( 'woocommerce_cart_item_quantity', function( $product_quantity, $cart_item_key, $cart_item ) {
+	return '1';
+}, 9999, 3 );
+
+/* ----------------------------------------
+   6) Redirect add-to-cart straight to checkout
+---------------------------------------- */
+add_filter( 'woocommerce_add_to_cart_redirect', function() {
+	return function_exists('wc_get_checkout_url') ? wc_get_checkout_url() : '';
+});
+
+/* ----------------------------------------
+   7) Block cart page access (cart -> checkout)
+---------------------------------------- */
+add_action('template_redirect', function() {
+	if ( is_admin() || ( defined('DOING_AJAX') && DOING_AJAX ) ) return;
+
+	if ( function_exists('is_cart') && is_cart() ) {
+		wp_safe_redirect( wc_get_checkout_url() );
+		exit;
+	}
+});
+
+/* ----------------------------------------
+   8) Stop “cannot add another…” error when clicking add twice
+   If product already in cart => just redirect to checkout, no errors.
+---------------------------------------- */
+add_filter('woocommerce_add_to_cart_validation', function($passed, $product_id, $quantity) {
+
+	if ( ! function_exists('WC') || ! WC()->cart ) return $passed;
+
+	foreach ( WC()->cart->get_cart() as $item ) {
+		if ( (int) $item['product_id'] === (int) $product_id ) {
+			// prevent duplicate notice
+			wc_clear_notices();
+			// redirect to checkout (no fatal exits here)
+			add_filter('woocommerce_add_to_cart_redirect', function() {
+				return wc_get_checkout_url();
+			}, 9999);
+			return false; // stop adding again
+		}
+	}
+
+	return $passed;
+
+}, 20, 3 );
+
+/* Remove that specific error message if any plugin/theme outputs it */
+add_filter( 'woocommerce_get_notices', function( $notices, $notice_type ) {
+
+	if ( $notice_type !== 'error' ) return $notices;
+
+	foreach ( $notices as $k => $notice ) {
+		$msg = is_array($notice) ? ($notice['notice'] ?? '') : (string) $notice;
+		if ( stripos($msg, 'cannot add another') !== false ) {
+			unset($notices[$k]);
+		}
+	}
+
+	return $notices;
+
+}, 9999, 2 );
+
+//WRAPPER
+function jw_is_checkout_ajax() {
+	return ( defined('DOING_AJAX') && DOING_AJAX ) || ( isset($_GET['wc-ajax']) && $_GET['wc-ajax'] );
+}
+
+add_action('woocommerce_checkout_before_customer_details', function () {
+	if ( jw_is_checkout_ajax() ) return;
+	echo '<div class="jw-checkout-grid"><div class="jw-checkout-left">';
+}, 1);
+
+add_action('woocommerce_checkout_after_customer_details', function () {
+	if ( jw_is_checkout_ajax() ) return;
+	echo '</div>';
+}, 999);
+
+add_action('woocommerce_checkout_before_order_review_heading', function () {
+	if ( jw_is_checkout_ajax() ) return;
+	echo '<div class="jw-checkout-right">';
+}, 1);
+
+add_action('woocommerce_checkout_after_order_review', function () {
+	if ( jw_is_checkout_ajax() ) return;
+	echo '</div></div>';
+}, 999);
+
+
+//REMOVE TOTAL on checkout
+/* Change "Subtotal" column header to "Total" on checkout */
+add_filter( 'gettext', function( $translated, $text, $domain ) {
+
+    if ( ! is_checkout() || is_wc_endpoint_url() ) {
+        return $translated;
+    }
+
+    if ( $domain === 'woocommerce' && $text === 'Subtotal' ) {
+        return 'Total';
+    }
+
+    return $translated;
+
+}, 9999, 3 );
+
+
+/* =========================================================
+   THANK YOU / ORDER RECEIVED – JW Custom (Sleek + Tidy)
+   ========================================================= */
+
+/** Change Thank You heading text (subtext) */
+add_filter( 'woocommerce_thankyou_order_received_text', function( $text, $order ) {
+    return 'Terima kasih. Pesanan Anda telah berhasil kami terima.';
+}, 10, 2 );
+
+/** Change page title on order received page */
+add_filter( 'the_title', function( $title ) {
+    if ( function_exists('is_order_received_page') && is_order_received_page() && in_the_loop() ) {
+        return 'Pesanan Berhasil Diproses';
+    }
+    return $title;
+});
+
+/** ✅ Add Langkah Selanjutnya block (reliable hook for Thank You page) */
+add_action( 'woocommerce_thankyou', function( $order_id ) {
+
+	if ( ! is_order_received_page() ) return;
+	if ( ! $order_id ) return;
+
+	$discord_url   = 'https://jwtradingacademy.com/discord/';
+	$whatsapp_url  = 'https://wa.me/628113931505';
+	$wa_display    = '+628113931505';
+
+	echo '
+	<section class="jw-thankyou-card jw-next-steps">
+		<h3>Langkah Selanjutnya</h3>
+
+		<div class="jw-steps-grid">
+
+			<div class="jw-step">
+				<div class="jw-step-title">1️⃣ Cek Email Anda</div>
+				<p>Silakan periksa email Anda untuk mendapatkan link akses ke video course Bootcamp.</p>
+			</div>
+
+			<div class="jw-step">
+				<div class="jw-step-title">2️⃣ Bergabung ke Discord</div>
+				<p>Pastikan Anda sudah bergabung ke komunitas Discord kami. Admin kami akan menambahkan Anda ke channel khusus member dalam beberapa jam setelah pembelian dikonfirmasi.</p>
+				<a class="jw-btn" href="' . esc_url($discord_url) . '" target="_blank" rel="noopener">Join Discord</a>
+			</div>
+
+		</div>
+
+		<div class="jw-help">
+				<div class="jw-help-left">
+					<div class="jw-help-text">Butuh bantuan?</div>
+
+					<div class="jw-help-wa">
+						Hubungi WA: <a href="' . esc_url($whatsapp_url) . '" target="_blank" rel="noopener">' . esc_html($wa_display) . '</a>
+					</div>
+
+					<div class="jw-help-meta">
+						<strong>JW Trading Academy</strong><br>
+						Email: <a href="mailto:info@jwtradingacademy.com">info@jwtradingacademy.com</a>
+					</div>
+				</div>
+			</div>
+
+	</section>
+	';
+
+}, 5 );
+/** ✅ Remove Billing Address / Customer details on Thank You + View Order pages */
+add_filter( 'woocommerce_order_details_show_customer_details', function( $show ) {
+    if ( function_exists('is_order_received_page') && is_order_received_page() ) return false;
+    if ( function_exists('is_view_order_page') && is_view_order_page() ) return false;
+    return $show;
+}, 9999 );
+
+/** Make order totals table tidier (optional) */
+add_filter( 'woocommerce_get_order_item_totals', function( $totals, $order ) {
+
+    // Only on thank you / view order (avoid affecting emails/admin)
+    if ( ! ( (function_exists('is_order_received_page') && is_order_received_page()) || (function_exists('is_view_order_page') && is_view_order_page()) ) ) {
+        return $totals;
+    }
+
+    // If you want it super minimal, hide subtotal + discount and keep final total only:
+    unset( $totals['cart_subtotal'] );
+    unset( $totals['discount'] );
+
+    return $totals;
+
+}, 9999, 2 );
+
+/* Hide customer/billing address block on Thank You + View Order */
+add_filter( 'woocommerce_order_details_show_customer_details', function( $show ) {
+	if ( is_order_received_page() || is_view_order_page() ) {
+		return false;
+	}
+	return $show;
+}, 9999 );
+
+
+/**
+ * Show custom checkout fields in ADMIN "New order" email
+ * - Adds Discord Username + core billing fields in a tidy block
+ */
+add_action( 'woocommerce_email_after_order_table', function( $order, $sent_to_admin, $plain_text, $email ) {
+
+	// Only admin emails.
+	if ( ! $sent_to_admin ) return;
+
+	// Only target the "New order" email (admin notification).
+	if ( empty( $email ) || empty( $email->id ) || $email->id !== 'new_order' ) return;
+
+	$discord = $order->get_meta( '_discord_username' ); // saved by your code
+	$first   = $order->get_billing_first_name();
+	$last    = $order->get_billing_last_name();
+	$phone   = $order->get_billing_phone();
+	$mail    = $order->get_billing_email();
+
+	// If you want: show only when discord exists
+	// if ( empty( $discord ) ) return;
+
+	if ( $plain_text ) {
+		echo "\n\n=== Customer Details ===\n";
+		echo "Name: " . trim( $first . ' ' . $last ) . "\n";
+		echo "WA Phone: " . $phone . "\n";
+		echo "Email: " . $mail . "\n";
+		echo "Discord Username: " . $discord . "\n";
+		return;
+	}
+
+	// HTML email output
+	echo '<h3 style="margin:24px 0 8px; font-size:16px;">Customer Details</h3>';
+
+	echo '<table cellspacing="0" cellpadding="6" style="width:100%; border:1px solid #e5e5e5; border-collapse:collapse;" border="1">';
+	echo '<tbody>';
+
+	$rows = [
+		'Nama'             => trim( $first . ' ' . $last ),
+		'WA Phone'         => $phone,
+		'Email'            => $mail,
+		'Discord Username' => $discord,
+	];
+
+	foreach ( $rows as $label => $value ) {
+		if ( $value === '' || $value === null ) continue;
+
+		echo '<tr>';
+		echo '<th scope="row" style="text-align:left; width:35%; padding:10px; background:#f7f7f7;">' . esc_html( $label ) . '</th>';
+		echo '<td style="text-align:left; padding:10px;">' . esc_html( $value ) . '</td>';
+		echo '</tr>';
+	}
+
+	echo '</tbody></table>';
+
+}, 20, 4 );
+
+
+/**
+ * Also show Discord Username on WP Admin order edit screen (under Billing)
+ */
+add_action( 'woocommerce_admin_order_data_after_billing_address', function( $order ) {
+
+	$discord = $order->get_meta( '_discord_username' );
+	if ( empty( $discord ) ) return;
+
+	echo '<p><strong>Discord Username:</strong> ' . esc_html( $discord ) . '</p>';
+
+}, 10, 1 );
+
+/**
+ * Remove the default Billing Address / Customer Details block
+ * ONLY for admin "New Order" email.
+ *
+ * This prevents the "Billing address" section from printing.
+ */
+add_action( 'woocommerce_email_before_order_table', function( $order, $sent_to_admin, $plain_text, $email ) {
+
+	// Only admin emails.
+	if ( ! $sent_to_admin ) {
+		return;
+	}
+
+	// Only for the admin new order email.
+	if ( empty( $email ) || empty( $email->id ) || $email->id !== 'new_order' ) {
+		return;
+	}
+
+	// Remove everything hooked to this action (billing address, shipping, email/phone, etc).
+	remove_all_actions( 'woocommerce_email_customer_details' );
+
+}, 1, 4 );
+
+
+
+/* =========================================================
+   JW GATEKEEPER: Free Content Preview (Secure + Popup)
+   - Blocks content server-side unless unlocked cookie exists
+   - Shows popup overlay with form (Name + Email only)
+   - Sends form to admin email
+   - Triggers Kit tagging hook (Preview_Optin + Stage_Warm via plugin mapping)
+   - Bypass for Admin + Editor
+   ========================================================= */
+
+if ( ! defined('ABSPATH') ) exit;
+
+define( 'JW_GATE_PAGE_SLUG', 'free-content-preview' );
+define( 'JW_GATE_COOKIE', 'jw_free_preview_unlocked' );
+define( 'JW_GATE_COOKIE_DAYS', 30 );
+
+/**
+ * Bypass gate for logged-in Admin + Editor
+ */
+function jw_gate_should_bypass() {
+	if ( ! is_user_logged_in() ) return false;
+	return current_user_can('manage_options') || current_user_can('edit_pages');
+}
+
+/**
+ * 1) SERVER-SIDE SECURITY:
+ * If not unlocked, do NOT output the real page content.
+ */
+add_filter( 'the_content', function( $content ) {
+
+	if ( is_admin() ) return $content;
+	if ( ! function_exists('is_page') || ! is_page( JW_GATE_PAGE_SLUG ) ) return $content;
+
+	// ✅ Admin/Editor bypass
+	if ( jw_gate_should_bypass() ) return $content;
+
+	// Unlocked?
+	if ( isset($_COOKIE[JW_GATE_COOKIE]) && $_COOKIE[JW_GATE_COOKIE] === '1' ) {
+		return $content;
+	}
+
+	return '<div style="padding:40px 0; text-align:center;">This content is locked.</div>';
+
+}, 9999 );
+
+/**
+ * 2) POPUP OVERLAY (UX)
+ */
+add_action( 'wp_footer', function() {
+
+	if ( is_admin() ) return;
+	if ( ! function_exists('is_page') || ! is_page( JW_GATE_PAGE_SLUG ) ) return;
+
+	// ✅ Admin/Editor bypass
+	if ( jw_gate_should_bypass() ) return;
+
+	// Already unlocked
+	if ( isset($_COOKIE[JW_GATE_COOKIE]) && $_COOKIE[JW_GATE_COOKIE] === '1' ) return;
+
+	$back_url = home_url( '/home/' );
+	$nonce    = wp_create_nonce( 'jw_gate_unlock' );
+	?>
+
+	<style>
+		body.jw-gate-locked { overflow:hidden !important; }
+		.jw-gate-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:999999;display:flex;align-items:center;justify-content:center;padding:18px;}
+		.jw-gate-modal{width:min(680px,100%);background:#0b0b0f;border:1px solid rgba(255,255,255,.15);border-radius:18px;box-shadow:0 20px 80px rgba(0,0,0,.65);padding:26px 22px;}
+		.jw-gate-title{color:#fff;font-size:20px;font-weight:700;margin:0 0 8px;}
+		.jw-gate-sub{color:rgba(255,255,255,.75);margin:0 0 20px;font-size:14px;}
+		.jw-field{margin-bottom:14px;}
+		.jw-field input{width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);color:#fff;outline:none;}
+		.jw-note{margin-top:12px;font-size:12px;color:rgba(255,255,255,.55);}
+		.jw-btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border-radius:50px;font-weight:600;font-size:14px;text-decoration:none;border:1px solid rgba(255,255,255,.15);cursor:pointer;}
+		.jw-btn-primary{background:#fff;color:#000;border-color:#fff;}
+		.jw-btn-ghost{background:transparent;color:#fff;}
+		.jw-error{color:#ffb4b4;margin-top:8px;display:none;font-size:13px;}
+	</style>
+
+	<div class="jw-gate-overlay">
+		<div class="jw-gate-modal">
+			<p class="jw-gate-title">Akses Free Content Preview</p>
+			<p class="jw-gate-sub">Isi nama dan email untuk membuka halaman preview.</p>
+
+			<form id="jwGateForm" name="Free Preview" data-form-name="Free Preview">
+				<input type="hidden" name="nonce" value="<?php echo esc_attr($nonce); ?>">
+
+				<div class="jw-field">
+					<input type="text" name="first_name" placeholder="Nama Depan *" required>
+				</div>
+
+				<div class="jw-field">
+					<input type="text" name="last_name" placeholder="Nama Belakang *" required>
+				</div>
+
+				<div class="jw-field">
+					<input type="email" name="email" placeholder="Email Address *" required>
+				</div>
+
+				<div id="jwGateError" class="jw-error"></div>
+
+				<div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
+					<button type="submit" class="jw-btn jw-btn-primary" id="jwGateSubmit">Buka Preview</button>
+					<a href="<?php echo esc_url($back_url); ?>" class="jw-btn jw-btn-ghost">Kembali / Explore</a>
+				</div>
+
+				<div class="jw-note">
+					Halaman ini akan terbuka selama <?php echo (int) JW_GATE_COOKIE_DAYS; ?> hari di browser ini.
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<script>
+	(function(){
+		document.body.classList.add('jw-gate-locked');
+
+		function setCookie(name,value,days){
+			var d=new Date();
+			d.setTime(d.getTime()+(days*24*60*60*1000));
+			document.cookie=name+"="+value+";expires="+d.toUTCString()+";path=/";
+		}
+
+		var form = document.getElementById('jwGateForm');
+		var err  = document.getElementById('jwGateError');
+		var btn  = document.getElementById('jwGateSubmit');
+
+		form.addEventListener('submit', async function(e){
+			e.preventDefault();
+
+			err.style.display = 'none';
+			btn.disabled = true;
+			btn.textContent = 'Memproses...';
+
+			var formData = new FormData(form);
+
+			try{
+				var res = await fetch('<?php echo esc_url( admin_url('admin-ajax.php') ); ?>', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+					body: new URLSearchParams({
+						action: 'jw_gate_unlock',
+						nonce: formData.get('nonce'),
+						first_name: formData.get('first_name'),
+						last_name: formData.get('last_name'),
+						email: formData.get('email')
+					})
+				});
+
+				var data = await res.json();
+
+				if(!data.success){
+					err.textContent = (data && data.data && data.data.message) ? data.data.message : 'Terjadi kesalahan. Coba lagi.';
+					err.style.display = 'block';
+					btn.disabled = false;
+					btn.textContent = 'Buka Preview';
+					return;
+				}
+
+				setCookie('<?php echo esc_js(JW_GATE_COOKIE); ?>','1',<?php echo (int) JW_GATE_COOKIE_DAYS; ?>);
+				btn.textContent = 'Berhasil ✓';
+				setTimeout(function(){ window.location.reload(); }, 500);
+
+			}catch(ex){
+				err.textContent = 'Koneksi gagal. Coba lagi.';
+				err.style.display = 'block';
+				btn.disabled = false;
+				btn.textContent = 'Buka Preview';
+			}
+		});
+	})();
+	</script>
+
+	<?php
+}, 99 );
+
+/**
+ * 3) AJAX handler: server validation + email admin + trigger Kit tagging hook
+ */
+add_action( 'wp_ajax_jw_gate_unlock', 'jw_gate_unlock_handler' );
+add_action( 'wp_ajax_nopriv_jw_gate_unlock', 'jw_gate_unlock_handler' );
+
+function jw_gate_unlock_handler() {
+
+	$nonce = isset($_POST['nonce']) ? sanitize_text_field($_POST['nonce']) : '';
+	if ( ! wp_verify_nonce( $nonce, 'jw_gate_unlock' ) ) {
+		wp_send_json_error( array( 'message' => 'Invalid session. Refresh page.' ), 403 );
+	}
+
+	$first = sanitize_text_field($_POST['first_name'] ?? '');
+	$last  = sanitize_text_field($_POST['last_name'] ?? '');
+	$email = sanitize_email($_POST['email'] ?? '');
+
+	if ( empty($first) || empty($last) || empty($email) ) {
+		wp_send_json_error( array( 'message' => 'Mohon isi semua field.' ), 400 );
+	}
+
+	if ( ! is_email( $email ) ) {
+		wp_send_json_error( array( 'message' => 'Email tidak valid.' ), 400 );
+	}
+
+	$admin_email = get_option( 'admin_email' );
+
+	$subject = '[JW Gate] Free Preview Access';
+	$message = "New Free Preview Submission:\n\n";
+	$message .= "Name: {$first} {$last}\n";
+	$message .= "Email: {$email}\n";
+	$message .= "Time: " . current_time('mysql') . "\n";
+
+	wp_mail( $admin_email, $subject, $message );
+
+	// ✅ NEW: Send this submission to JW Kit Auto Tagger (your integration plugin)
+	// This hook allows the Kit plugin to tag:
+	// - Preview_Optin
+	// - Stage_Warm (and remove other stage tags)
+	do_action( 'jw_kit_tag_subscriber', array(
+		'email'      => $email,
+		'form_id'    => 'free_preview_gate_keep',
+		'first_name' => $first,
+		'last_name'  => $last,
+	) );
+
+	wp_send_json_success();
+}
+
+// Extend auto-cancel interval for unpaid orders (all gateways).
+add_filter( 'woocommerce_cancel_unpaid_orders_interval', function( $seconds ) {
+	return 60 * 60 * 24; // 24 hours
+}, 10, 1 );
+
+
+
+/**
+ * ABANDONED CHECKOUT (Checkout Started → Kit Tags)
+ * Add this to your child theme functions.php
+ *
+ * What it does:
+ * - When an order is created during checkout (customer clicks "Place order"),
+ *   it triggers your Kit hook with form_id = "Checkout_Started".
+ * - Your Kit plugin mapping should apply:
+ *     - Checkout_Started
+ *     - Stage_High_Intent (and remove other Stage_* tags)
+ *
+ * Notes:
+ * - This does NOT create an "abandoned" tag. Kit automation handles timing (90m/24h/48h/72h).
+ * - Uses order meta to prevent duplicate triggers on refresh / retries.
+ */
+
+if ( ! defined('ABSPATH') ) exit;
+
+/**
+ * Fire tagging on checkout order creation.
+ * Runs when checkout is processed and order is created (even if payment fails).
+ */
+add_action('woocommerce_checkout_order_processed', function( $order_id, $posted_data, $order ) {
+
+	if ( ! $order instanceof WC_Order ) {
+		$order = wc_get_order( $order_id );
+	}
+	if ( ! $order ) return;
+
+	// Avoid duplicate tagging if checkout is re-submitted or refreshed
+	if ( get_post_meta( $order_id, '_jw_checkout_started_tagged', true ) ) {
+		return;
+	}
+
+	$email = $order->get_billing_email();
+	if ( ! $email || ! is_email( $email ) ) return;
+
+	// Mark as tagged before calling external APIs (prevents double calls)
+	update_post_meta( $order_id, '_jw_checkout_started_tagged', 1 );
+
+	/**
+	 * Hand off to your Kit integration plugin:
+	 * - Map form_id "Checkout_Started" -> tags Checkout_Started + Stage_High_Intent
+	 */
+	do_action( 'jw_kit_tag_subscriber', array(
+		'email'      => $email,
+		'form_id'    => 'Checkout_Started',
+		'order_id'   => (int) $order_id,
+		'first_name' => $order->get_billing_first_name(),
+		'last_name'  => $order->get_billing_last_name(),
+	) );
+
+}, 10, 3);
+
+/**
+ * OPTIONAL SAFETY: If an order becomes paid, you can clear the "checkout started" flag,
+ * but generally you don't need this. Your Kit buyer logic should remove Checkout_Started anyway.
+ *
+ * If you want to keep things clean, uncomment below.
+ */
+
+add_action( 'woocommerce_payment_complete', function( $order_id ) {
+	if ( $order_id ) {
+		delete_post_meta( $order_id, '_jw_checkout_started_tagged' );
+	}
+});
+
+
+
+/**************************************************************************************************
+ * Google Tag Manager
+ * GTM ID: GTM-5726L37C
+ */
+
+/**
+ * Add GTM script in <head>
+ */
+function cular_add_gtm_head() {
+	if ( is_admin() ) {
+		return;
+	}
+	?>
+	<!-- Google Tag Manager -->
+	<script>
+	(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','GTM-5726L37C');
+	</script>
+	<!-- End Google Tag Manager -->
+	<?php
+}
+add_action( 'wp_head', 'cular_add_gtm_head', 1 );
+
+/**
+ * Add GTM noscript right after <body>
+ */
+function cular_add_gtm_body() {
+	if ( is_admin() ) {
+		return;
+	}
+	?>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript>
+		<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5726L37C"
+		height="0" width="0" style="display:none;visibility:hidden"></iframe>
+	</noscript>
+	<!-- End Google Tag Manager (noscript) -->
+	<?php
+}
+add_action( 'wp_body_open', 'cular_add_gtm_body' );
+
+
+/**
+ * Checkout Notice — Payment Redirect Info
+ */
+add_action( 'woocommerce_before_checkout_form', function() {
+
+    if ( is_admin() ) return;
+
+    echo '<div style="
+        background:#fff8e5;
+        border:1px solid #ffd27a;
+        padding:14px 16px;
+        margin-bottom:20px;
+        border-radius:6px;
+        font-size:14px;
+        line-height:1.6;
+		color: black;
+    ">
+        ⚠️ <strong>Payment Notice:</strong><br>
+        If the payment page appears blank after OTP verification, please wait a moment and refresh your browser. Your payment may still be processing.
+    </div>';
+
+}, 5 );
+
+/**
+ * Add Google Analytics gtag to head
+ */
+add_action('wp_head', 'add_google_gtag_script');
+function add_google_gtag_script() {
+    ?>
+    <!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-43GCQ182TL"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'G-43GCQ182TL');
+	</script>
+    <?php
+}
+
+/** dataLayer - GA4 Purchase **/
+add_action('woocommerce_thankyou', 'custom_wc_purchase_datalayer', 10);
+function custom_wc_purchase_datalayer($order_id) {
+    if (!$order_id) return;
+
+    $order = wc_get_order($order_id);
+    if (!$order) return;
+
+    $items = [];
+    $contents = [];
+    foreach ($order->get_items() as $item) {
+        $product    = $item->get_product();
+        $product_id = $product ? $product->get_id() : $item->get_product_id();
+        $item_price = (float) $item->get_subtotal() / max(1, (int) $item->get_quantity());
+
+        $items[] = [
+            'item_id'   => (string) $product_id,
+            'item_name' => $item->get_name(),
+            'price'     => $item_price,
+            'quantity'  => (int) $item->get_quantity(),
+        ];
+
+        $contents[] = [
+            'id'         => (string) $product_id,
+            'quantity'   => (int) $item->get_quantity(),
+            'item_price' => $item_price,
+        ];
+    }
+
+    $order_total    = (float) $order->get_total();
+    $currency       = $order->get_currency();
+    $transaction_id = (string) $order->get_order_number();
+    $shipping       = (float) $order->get_shipping_total();
+    $tax            = (float) $order->get_total_tax();
+    ?>
+    <script>
+    (function() {
+      // Client-side dedup: only fire once per browser session per order
+      var dedupKey = 'ga4_purchase_' + <?php echo json_encode($transaction_id); ?>;
+      if (sessionStorage.getItem(dedupKey)) return;
+      sessionStorage.setItem(dedupKey, '1');
+
+      var purchaseData = {
+        transaction_id: <?php echo json_encode($transaction_id); ?>,
+        value:          <?php echo json_encode($order_total); ?>,
+        currency:       <?php echo json_encode($currency); ?>,
+        tax:            <?php echo json_encode($tax); ?>,
+        shipping:       <?php echo json_encode($shipping); ?>,
+        items:          <?php echo wp_json_encode($items); ?>
+      };
+
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event:     'purchase',
+        ecommerce: purchaseData,
+        contents:  <?php echo wp_json_encode($contents); ?>
+      });
+
+      if (typeof gtag === 'function') {
+        gtag('event', 'purchase', purchaseData);
+      }
+
+      console.log('GA4 purchase fired:', Object.assign({}, purchaseData, {
+        contents: <?php echo wp_json_encode($contents); ?>
+      }));
+    })();
+    </script>
+    <?php
+}
+
+
+/**FILTER Elementor PRO**/
+add_filter('wp_mail', function($args) {
+
+    if (!empty($args['message'])) {
+        $args['message'] = str_replace('Powered by: PRO Elements', '', $args['message']);
+    }
+
+    return $args;
+
+});
+
+
+add_action('woocommerce_after_checkout_billing_form', 'custom_alt_transfer_cta', 30);
+
+function custom_alt_transfer_cta() {
+    ?>
+    <div id="alt-transfer-box">
+        <p class="alt-text">
+            Ingin menggunakan pembayaran menggunakan bank transfer secara manual?
+        </p>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfYjTEGC41lwQ9jl8oCVyMuSLOvh5JpXmfrkSLeiCvJlE-iDA/viewform?usp=sharing&ouid=111044366817694125987" class="alt-btn" target="_blank" rel="noopener noreferrer">
+            Gunakan Transfer Manual →
+        </a>
+		<!--div class="alt-note">
+        <p>Setelah transfer, silakan hubungi kami untuk verifikasi pembayaran:</p>
+        <p>
+            Email: <a href="mailto:info@jwtradingacademy.com">info@jwtradingacademy.com</a><br>
+            WhatsApp: <a href="https://wa.me/628113931505" target="_blank">+62 811-3931-505</a><br>
+            Discord: gunakan username yang kamu isi di atas
+        </p>
+    </div>-->
+    </div>
+    <?php
+}
+
+
+add_action('wp_footer', function() {
+    if (is_admin()) return;
+    echo '<script>console.log("is_order_received:", ' . 
+         (is_order_received_page() ? 'true' : 'false') . 
+         ', order_id: ' . absint(get_query_var('order-received')) . ')</script>';
+}, 5);
+
+
+
+<style>
+/* 
+Theme Name: Hello Elementor Child
+Theme URI: https://github.com/elementor/hello-theme-child/
+Description: Hello Elementor Child is a child theme of Hello Elementor, created by Elementor team
+Author: Elementor Team
+Author URI: https://elementor.com/
+Template: hello-elementor
+Version: 2.0.0
+Text Domain: hello-elementor-child
+License: GNU General Public License v3 or later.
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
+Tags: flexible-header, custom-colors, custom-menu, custom-logo, editor-style, featured-images, rtl-language-support, threaded-comments, translation-ready
+*/
+
+/* Add your custom styles here */
+
+
+/* ===============================
+   JW Thank You Page – Sleek UI
+   =============================== */
+
+.woocommerce-order-received .woocommerce-order {
+  max-width: 1100px;
+}
+
+.woocommerce-order-received h1,
+.woocommerce-order-received .woocommerce-thankyou-order-received {
+  letter-spacing: -0.02em;
+}
+
+.jw-thankyou-card{
+  margin: 28px 0;
+  padding: 22px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(6px);
+}
+
+.jw-thankyou-card h3{
+  margin: 0 0 16px;
+  font-size: 22px;
+}
+
+.jw-steps-grid{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 992px){
+  .jw-steps-grid{
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.jw-step{
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.18);
+}
+
+.jw-step-title{
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.jw-step p{
+  margin: 0 0 14px;
+  opacity: 0.9;
+  line-height: 1.5;
+}
+
+/* Buttons */
+.jw-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.jw-btn:hover{ opacity: 0.92; }
+
+.jw-btn-ghost{
+  background: transparent;
+}
+
+.jw-help{
+  margin-top: 16px;
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.jw-help-text{
+  font-weight: 700;
+}
+
+/* Make the order details table feel cleaner */
+.woocommerce-order-received table.shop_table{
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.woocommerce-order-received table.shop_table th,
+.woocommerce-order-received table.shop_table td{
+  padding: 14px 16px;
+}
+
+.woocommerce-order-received table.shop_table tfoot th{
+  opacity: 0.85;
+}
+
+/* Thank you page: remove billing address/customer details block */
+/* Hide any extra company block below the order table (if it still shows) */
+.woocommerce-order-received .woocommerce-order-details + h3,
+.woocommerce-order-received .woocommerce-order-details + section,
+.woocommerce-order-received .woocommerce-order-details ~ .jw-company{
+    display:none !important;
+}
+</style>

@@ -23,6 +23,17 @@ All sections are **dynamic blocks**: `block.json` + `render.php` (server-rendere
 - Homepage pattern with real copy: `patterns/homepage.php` (category "JW Trading" in inserter).
 - To add a block: new `blocks/<name>/` folder + edit component in `src/editor.jsx` + styles in `src/scss/_blocks.scss`, then `npm run build`.
 
+## Funnel / checkout (ported from the live child theme into jwtrading-core)
+- `class-checkout.php` — slim virtual checkout (nama/WA/email + Discord field), terms checkbox (`jwt/terms_url`), buy-now flow (qty 1, skip cart, dupes OK), 2-col layout wrappers, 24h unpaid cancel, fires `jw_kit_tag_subscriber` with form_id `Checkout_Started`.
+- `class-thankyou.php` — localized thank-you + "Langkah Selanjutnya" (Discord/WA filterable), hidden billing, minimal totals.
+- `class-emails.php` — admin new-order email customer table (incl. Discord), default billing block removed, PRO Elements footer strip (delete when Elementor goes).
+- `class-preview-gate.php` — free-preview gate; contract UNCHANGED from live: cookie `jw_free_preview_unlocked`, AJAX `jw_gate_unlock`, form_id `free_preview_gate_keep` → `jw_kit_tag_subscriber`.
+- `class-tracking.php` — GTM `GTM-5726L37C` + GA4 `G-43GCQ182TL` + purchase dataLayer (session-deduped).
+- The `jw_kit_tag_subscriber` action is consumed by the legacy jw-kit-auto-tagger plugin (keep until JWT_Kit_Sync absorbs it).
+
+## Page conversion status (local)
+Block-based (Elementor flag removed, `_elementor_data` kept for recovery): Home #8, Bootcamp #293, Testimonials #284, Discord #1206. Checkout #712 = classic `[woocommerce_checkout]` shortcode (required by the slim-checkout hooks — do NOT switch to blocks checkout). Still Elementor by request (other dev's SEO pages-as-pages + previews, Contact, Free Preview content): leave until owner migrates; Elementor stays ACTIVE meanwhile.
+
 ## Header / Footer
 Fully custom in the child theme (`header.php` / `footer.php` override Kadence; the old Elementor `mainHeader` #45 / `mainFooter` #48 templates are set to draft — do the same on live at launch). Menus: `jwt-primary`, `jwt-footer`, `jwt-legal`, `jwt-social` (social icons auto-match the link URL). Header CTA via `jwt/header_cta` filter (default: Preview Gratis → `/free-content-preview/`). Logo = theme mod `custom_logo`.
 

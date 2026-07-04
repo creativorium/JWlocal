@@ -20,9 +20,16 @@ require_once JWT_CORE_PATH . 'includes/class-sheets-sync.php';
 require_once JWT_CORE_PATH . 'includes/class-woo.php';
 require_once JWT_CORE_PATH . 'includes/class-admin.php';
 require_once JWT_CORE_PATH . 'includes/class-plugin-guard.php';
+require_once JWT_CORE_PATH . 'includes/class-checkout.php';
+require_once JWT_CORE_PATH . 'includes/class-thankyou.php';
+require_once JWT_CORE_PATH . 'includes/class-emails.php';
+require_once JWT_CORE_PATH . 'includes/class-preview-gate.php';
+require_once JWT_CORE_PATH . 'includes/class-tracking.php';
 
-// Owner-only plugin visibility — independent of WooCommerce, boot immediately.
+// WooCommerce-independent features — boot immediately.
 JWT_Plugin_Guard::init();
+JWT_Preview_Gate::init();
+JWT_Tracking::init();
 
 /**
  * Activation: create log table + schedule retry cron.
@@ -64,6 +71,9 @@ add_action( 'plugins_loaded', function () {
 
 	JWT_Woo::init();
 	JWT_Admin::init();
+	JWT_Checkout::init();
+	JWT_Thankyou::init();
+	JWT_Emails::init();
 
 	// Retry cron handler.
 	add_action( 'jwt_retry_failed_syncs', array( 'JWT_Woo', 'retry_failed_syncs' ) );

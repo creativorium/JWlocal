@@ -1,0 +1,86 @@
+// ---------------------------------------------------------------------------
+// Free Content Preview gate popup (markup from jwtrading-core, JWT_Preview_Gate).
+// ---------------------------------------------------------------------------
+
+body.jw-gate-locked {
+	overflow: hidden !important;
+}
+
+.jw-gate-locked-msg {
+	padding: 4rem 0;
+	text-align: center;
+	color: var(--jwt-muted);
+}
+
+.jw-gate-overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(4, 3, 8, 0.85);
+	-webkit-backdrop-filter: blur(6px);
+	backdrop-filter: blur(6px);
+	z-index: 999999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 18px;
+}
+
+.jw-gate-modal {
+	width: min(680px, 100%);
+	background: var(--jwt-surface);
+	border: 1px solid var(--jwt-line);
+	border-radius: var(--jwt-radius);
+	box-shadow: 0 20px 80px rgb(0 0 0 / 0.65);
+	padding: 26px 22px;
+}
+
+.jw-gate-title {
+	color: var(--jwt-text);
+	font-size: 1.25rem;
+	font-weight: 700;
+	margin: 0 0 8px;
+}
+
+.jw-gate-sub {
+	color: var(--jwt-muted);
+	margin: 0 0 20px;
+	font-size: 0.875rem;
+}
+
+.jw-field {
+	margin-bottom: 14px;
+
+	input {
+		width: 100%;
+		padding: 12px;
+		border-radius: var(--jwt-radius-sm);
+		border: 1px solid var(--jwt-line);
+		background: var(--jwt-bg);
+		color: var(--jwt-text);
+		outline: none;
+
+		&:focus {
+			border-color: var(--jwt-accent);
+		}
+	}
+}
+
+.jw-gate-actions {
+	margin-top: 16px;
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+.jw-note {
+	margin-top: 12px;
+	font-size: 0.75rem;
+	color: var(--jwt-muted);
+}
+
+.jw-error {
+	color: #ffb4b4;
+	margin-top: 8px;
+	display: none;
+	font-size: 0.8125rem;
+}
