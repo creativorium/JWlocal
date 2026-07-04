@@ -1,0 +1,121 @@
+// ---------------------------------------------------------------------------
+// Custom site footer (footer.php).
+// ---------------------------------------------------------------------------
+
+.jwt-footer {
+	background: var(--jwt-bg);
+	border-top: 1px solid var(--jwt-line);
+	padding: clamp(3rem, 7vw, 5rem) 0 2rem;
+	color: var(--jwt-muted);
+	font-family: var(--jwt-font-body);
+	font-size: 0.9375rem;
+}
+
+.jwt-footer__grid {
+	display: grid;
+	grid-template-columns: 2fr 1fr 1fr;
+	gap: 2.5rem;
+
+	@media (max-width: 760px) {
+		grid-template-columns: 1fr;
+	}
+}
+
+.jwt-footer__brand img {
+	max-height: 44px;
+	width: auto;
+}
+
+.jwt-footer__tagline {
+	margin: 0.75rem 0 1.25rem;
+}
+
+.jwt-footer__heading {
+	font-size: 0.8125rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--jwt-text);
+	margin: 0 0 1rem;
+}
+
+.jwt-footer__menu {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 0.625rem;
+
+	a {
+		color: var(--jwt-muted);
+		text-decoration: none;
+
+		&:hover {
+			color: var(--jwt-accent);
+		}
+	}
+}
+
+.jwt-social {
+	display: flex;
+	gap: 0.625rem;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+
+	a {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 38px;
+		height: 38px;
+		border: 1px solid var(--jwt-line);
+		border-radius: 10px;
+		color: var(--jwt-muted);
+		transition: all 0.2s;
+
+		&:hover {
+			color: #fff;
+			border-color: var(--jwt-accent);
+			background: var(--jwt-accent);
+		}
+
+		svg {
+			width: 18px;
+			height: 18px;
+		}
+	}
+}
+
+.jwt-footer__bottom {
+	margin-top: 2.5rem;
+	padding-top: 1.5rem;
+	border-top: 1px solid var(--jwt-line);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
+	flex-wrap: wrap;
+	font-size: 0.875rem;
+
+	p {
+		margin: 0;
+	}
+}
+
+.jwt-footer__legal {
+	display: flex;
+	gap: 1.25rem;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+
+	a {
+		color: var(--jwt-muted);
+		text-decoration: none;
+
+		&:hover {
+			color: var(--jwt-accent);
+		}
+	}
+}

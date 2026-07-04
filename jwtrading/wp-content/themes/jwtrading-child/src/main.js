@@ -5,6 +5,24 @@ document.documentElement.classList.add('js');
 
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// --- Mobile nav toggle -------------------------------------------------------
+const navToggle = document.querySelector('.jwt-nav-toggle');
+
+if (navToggle) {
+  navToggle.addEventListener('click', () => {
+    const open = document.body.classList.toggle('jwt-nav-open');
+    navToggle.setAttribute('aria-expanded', String(open));
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && document.body.classList.contains('jwt-nav-open')) {
+      document.body.classList.remove('jwt-nav-open');
+      navToggle.setAttribute('aria-expanded', 'false');
+      navToggle.focus();
+    }
+  });
+}
+
 // --- Scroll reveal ---------------------------------------------------------
 const revealEls = document.querySelectorAll('[data-jwt-reveal]');
 
