@@ -23,8 +23,11 @@ All sections are **dynamic blocks**: `block.json` + `render.php` (server-rendere
 - Homepage pattern with real copy: `patterns/homepage.php` (category "JW Trading" in inserter).
 - To add a block: new `blocks/<name>/` folder + edit component in `src/editor.jsx` + styles in `src/scss/_blocks.scss`, then `npm run build`.
 
+## Header / Footer
+Fully custom in the child theme (`header.php` / `footer.php` override Kadence; the old Elementor `mainHeader` #45 / `mainFooter` #48 templates are set to draft — do the same on live at launch). Menus: `jwt-primary`, `jwt-footer`, `jwt-legal`, `jwt-social` (social icons auto-match the link URL). Header CTA via `jwt/header_cta` filter (default: Preview Gratis → `/free-content-preview/`). Logo = theme mod `custom_logo`.
+
 ## Git
-- Repo root: `Redesign/` (one level above `jwtrading/`). Commit messages: user is **sole author — no Co-Authored-By trailers**.
+- Repo root: `Redesign/` (one level above `jwtrading/`). Remote: `creativorium/JWlocal` (push as nego94, collaborator). Commit messages: user is **sole author — no Co-Authored-By trailers**.
 
 ## Architecture rules
 1. Theme = presentation (templates, styles, enqueues). Plugin = logic (hooks, sync, settings, CPTs).
