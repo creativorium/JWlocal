@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/stats",
+	"title": "JWT Stats",
+	"category": "jwtrading",
+	"icon": "chart-bar",
+	"description": "Baris angka pencapaian (member, rating, dsb).",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"align": [ "full" ],
+		"html": false,
+		"anchor": true
+	}
+}

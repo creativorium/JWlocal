@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/faq-item",
+	"title": "JWT FAQ Item",
+	"category": "jwtrading",
+	"icon": "info-outline",
+	"description": "Satu pertanyaan + jawaban.",
+	"textdomain": "jwtrading",
+	"parent": [ "jwt/faq" ],
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"html": false,
+		"reusable": false
+	},
+	"attributes": {
+		"question": { "type": "string", "default": "" },
+		"answer": { "type": "string", "default": "" }
+	}
+}

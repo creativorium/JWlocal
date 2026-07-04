@@ -1,0 +1,29 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/hero",
+	"title": "JWT Hero",
+	"category": "jwtrading",
+	"icon": "superhero-alt",
+	"description": "Hero section dengan haze ungu, judul besar, dan CTA.",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"align": [ "full" ],
+		"html": false,
+		"anchor": true
+	},
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "" },
+		"titleTag": { "type": "string", "default": "h1" },
+		"lead": { "type": "string", "default": "" },
+		"primaryText": { "type": "string", "default": "" },
+		"primaryUrl": { "type": "string", "default": "" },
+		"secondaryText": { "type": "string", "default": "" },
+		"secondaryUrl": { "type": "string", "default": "" },
+		"note": { "type": "string", "default": "" },
+		"chips": { "type": "string", "default": "" }
+	}
+}

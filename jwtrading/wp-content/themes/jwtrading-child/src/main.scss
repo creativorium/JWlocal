@@ -1,2 +1,5 @@
-// jwtrading custom styles (loaded after Kadence).
-// Keep global overrides minimal; prefer block-level styles in Gutenberg.
+// jwtrading front-end styles — token-driven, loaded after Kadence.
+@use 'scss/tokens';
+@use 'scss/base';
+@use 'scss/ui';
+@use 'scss/blocks';

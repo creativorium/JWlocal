@@ -5,8 +5,26 @@
 - **WordPress** + **WooCommerce**, payment via **Duitku** (official WooCommerce gateway plugin, sandbox first).
 - **Theme:** Kadence (parent) + `jwtrading-child` (all custom presentation code lives here).
 - **Plugin:** `jwtrading-core` (ALL business logic, integrations, sync — never put logic in the theme).
-- **Editor:** Gutenberg + Kadence Blocks. Client edits content only, never layout/code.
+- **Editor:** Gutenberg + custom `jwt/*` blocks (+ Kadence Blocks if needed). Client edits content only, never layout/code.
 - **Assets:** Vite. Build locally with `npm run build`, deploy `dist/` only. Never deploy `src/`, `node_modules/`, or config files.
+
+## Brand
+Two base values run everything (see `src/scss/_tokens.scss` + `theme.json` — keep in sync):
+- `#7c4dff` purple — accent, headings highlight, CTA buttons (shadow `rgba(124,77,255,.38)`)
+- `#08070e` near-black — background. Glows/haze = same purple at low opacity, e.g. hero `radial-gradient(rgba(124,77,255,.3), transparent 65%)` + `blur(20px)`.
+
+## Custom blocks (`jwtrading-child/blocks/`)
+All sections are **dynamic blocks**: `block.json` + `render.php` (server-rendered PHP → SEO-friendly markup, design changes never require re-saving content). Content lives in block **attributes**, so pattern/page markup is just `<!-- wp:jwt/x {...} /-->` comments.
+- Parents: `jwt/hero`, `jwt/stats`, `jwt/features`, `jwt/curriculum`, `jwt/testimonials`, `jwt/faq` (emits FAQPage JSON-LD), `jwt/cta`, `jwt/course-grid` (queries Woo products).
+- Item children (locked to parent via `parent:`): `jwt/stat-item`, `jwt/feature-item`, `jwt/curriculum-item`, `jwt/testimonial-item` (screenshot OR text quote), `jwt/faq-item`.
+- Registration + shared helpers (`jwt_section_header_html()`, `jwt_icon()`): `inc/blocks.php`. Blocks auto-register from any `blocks/*/block.json`.
+- Editor UI: `src/editor.jsx` — JSX compiled by esbuild to `wp.element.createElement` (WordPress globals, **no** `@wordpress/scripts`, no React bundle). One shared handle `jwt-blocks-editor`.
+- Zero front-end JS required by blocks; `src/main.js` adds optional reveal/count-up enhancements only.
+- Homepage pattern with real copy: `patterns/homepage.php` (category "JW Trading" in inserter).
+- To add a block: new `blocks/<name>/` folder + edit component in `src/editor.jsx` + styles in `src/scss/_blocks.scss`, then `npm run build`.
+
+## Git
+- Repo root: `Redesign/` (one level above `jwtrading/`). Commit messages: user is **sole author — no Co-Authored-By trailers**.
 
 ## Architecture rules
 1. Theme = presentation (templates, styles, enqueues). Plugin = logic (hooks, sync, settings, CPTs).
@@ -29,7 +47,7 @@
 
 ## Deploy checklist (SFTP)
 1. `npm run build` in child theme
-2. Upload: theme PHP + `style.css` + `dist/`, plugin folder
+2. Upload: theme PHP + `style.css` + `theme.json` + `dist/` + `blocks/` + `patterns/` + `inc/`, plugin folder
 3. Exclude: `src/`, `node_modules/`, `vite.config.js`, `package.json`, `dist/hot`
 4. Test live: Duitku sandbox transaction end-to-end, Kit tag applied, row appears in Sheet
 5. Redesign only: verify 301 redirect map for changed URLs (Rank Math redirects)

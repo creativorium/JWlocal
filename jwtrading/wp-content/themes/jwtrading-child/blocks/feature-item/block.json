@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/feature-item",
+	"title": "JWT Feature",
+	"category": "jwtrading",
+	"icon": "star-filled",
+	"description": "Satu kartu keunggulan.",
+	"textdomain": "jwtrading",
+	"parent": [ "jwt/features" ],
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"html": false,
+		"reusable": false
+	},
+	"attributes": {
+		"icon": { "type": "string", "default": "spark" },
+		"title": { "type": "string", "default": "" },
+		"text": { "type": "string", "default": "" }
+	}
+}

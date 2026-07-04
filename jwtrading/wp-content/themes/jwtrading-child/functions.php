@@ -9,6 +9,7 @@ define( 'JWT_THEME_DIR', get_stylesheet_directory() );
 define( 'JWT_THEME_URI', get_stylesheet_directory_uri() );
 
 require_once JWT_THEME_DIR . '/inc/woo-tweaks.php';
+require_once JWT_THEME_DIR . '/inc/blocks.php';
 
 /**
  * Vite bridge.
@@ -47,9 +48,10 @@ add_action( 'wp_enqueue_scripts', function () {
 
 /**
  * Load Vite entries as ES modules.
+ * (Filter name is `script_loader_tag` — `script_tag` does not exist.)
  */
-add_filter( 'script_tag', function ( $tag, $handle ) {
-	if ( in_array( $handle, array( 'jwt-vite-client', 'jwt-main' ), true ) ) {
+add_filter( 'script_loader_tag', function ( $tag, $handle ) {
+	if ( in_array( $handle, array( 'jwt-vite-client', 'jwt-main', 'jwt-blocks-editor' ), true ) ) {
 		$tag = str_replace( '<script ', '<script type="module" ', $tag );
 	}
 	return $tag;

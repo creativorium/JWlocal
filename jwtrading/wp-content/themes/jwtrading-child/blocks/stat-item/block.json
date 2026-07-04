@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/stat-item",
+	"title": "JWT Stat",
+	"category": "jwtrading",
+	"icon": "plus-alt2",
+	"description": "Satu angka pencapaian.",
+	"textdomain": "jwtrading",
+	"parent": [ "jwt/stats" ],
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"html": false,
+		"reusable": false
+	},
+	"attributes": {
+		"value": { "type": "string", "default": "" },
+		"label": { "type": "string", "default": "" },
+		"count": { "type": "string", "default": "" },
+		"suffix": { "type": "string", "default": "" }
+	}
+}

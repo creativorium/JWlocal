@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/course-grid",
+	"title": "JWT Course Grid",
+	"category": "jwtrading",
+	"icon": "welcome-learn-more",
+	"description": "Grid produk WooCommerce (bootcamp/kelas) — otomatis dari katalog.",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"align": [ "full" ],
+		"html": false,
+		"anchor": true
+	},
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "" },
+		"lead": { "type": "string", "default": "" },
+		"center": { "type": "boolean", "default": true },
+		"count": { "type": "number", "default": 3 },
+		"columns": { "type": "number", "default": 3 },
+		"category": { "type": "string", "default": "" },
+		"buttonText": { "type": "string", "default": "Lihat Detail" }
+	}
+}

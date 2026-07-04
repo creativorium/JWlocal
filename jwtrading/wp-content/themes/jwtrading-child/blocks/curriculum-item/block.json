@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/curriculum-item",
+	"title": "JWT Module",
+	"category": "jwtrading",
+	"icon": "book",
+	"description": "Satu modul kurikulum.",
+	"textdomain": "jwtrading",
+	"parent": [ "jwt/curriculum" ],
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"html": false,
+		"reusable": false
+	},
+	"attributes": {
+		"title": { "type": "string", "default": "" },
+		"text": { "type": "string", "default": "" },
+		"tag": { "type": "string", "default": "" }
+	}
+}
