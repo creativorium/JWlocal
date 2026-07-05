@@ -33,19 +33,28 @@ defined( 'ABSPATH' ) || exit;
 					'depth'          => 1,
 				)
 			);
+			?>
+		</nav>
 
+		<div class="jwt-header__actions">
+			<?php
 			$jwt_cta = jwt_header_cta();
 			if ( ! empty( $jwt_cta['text'] ) ) :
 				?>
-				<a class="jwt-btn jwt-btn--primary jwt-header__cta" href="<?php echo esc_url( $jwt_cta['url'] ); ?>"><?php echo esc_html( $jwt_cta['text'] ); ?></a>
+				<a class="jwt-btn jwt-btn--light jwt-header__cta" href="<?php echo esc_url( $jwt_cta['url'] ); ?>">
+					<span><?php echo esc_html( $jwt_cta['text'] ); ?></span>
+					<?php if ( false !== stripos( $jwt_cta['url'] . $jwt_cta['text'], 'discord' ) ) : ?>
+						<svg width="22" height="17" viewBox="0 0 22 17" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 0C6.174 0 4.793.308 3.28 1.051a.43.43 0 0 0-.209.192C2.032 2.975 0 7.796 0 13.5c0 .13.05.255.14.348.952.981 1.817 1.703 2.745 2.213.933.512 1.905.797 3.055.935a.43.43 0 0 0 .489-.239l.51-.852c-.743-.26-1.502-.605-1.97-1.073a.75.75 0 1 1 1.061-1.06c.255.255.854.545 1.7.816.699.183 1.916.412 3.27.412s2.571-.229 3.27-.412c.846-.271 1.445-.562 1.7-.816a.75.75 0 0 1 1.06 1.06c-.467.468-1.226.813-1.97 1.073l.511.852a.43.43 0 0 0 .489.24c1.15-.139 2.122-.424 3.055-.936.928-.51 1.793-1.232 2.744-2.213a.5.5 0 0 0 .141-.348c0-5.704-2.032-10.525-3.071-12.257a.43.43 0 0 0-.209-.192C17.207.308 15.826 0 14 0a.43.43 0 0 0-.474.342L13.19 1.35A7.918 7.918 0 0 0 11 1a7.918 7.918 0 0 0-2.19.35L8.474.342A.43.43 0 0 0 8 0ZM9 9.25C9 10.216 8.328 11 7.5 11S6 10.216 6 9.25 6.672 7.5 7.5 7.5 9 8.284 9 9.25ZM14.5 11c.828 0 1.5-.784 1.5-1.75s-.672-1.75-1.5-1.75-1.5.784-1.5 1.75.672 1.75 1.5 1.75Z" fill="currentColor"/></svg>
+					<?php endif; ?>
+				</a>
 			<?php endif; ?>
-		</nav>
 
-		<button class="jwt-nav-toggle" aria-expanded="false" aria-controls="jwt-primary-nav" aria-label="<?php esc_attr_e( 'Buka menu', 'jwtrading' ); ?>">
-			<span class="jwt-nav-toggle__bar"></span>
-			<span class="jwt-nav-toggle__bar"></span>
-			<span class="jwt-nav-toggle__bar"></span>
-		</button>
+			<button class="jwt-nav-toggle" aria-expanded="false" aria-controls="jwt-primary-nav" aria-label="<?php esc_attr_e( 'Buka menu', 'jwtrading' ); ?>">
+				<span class="jwt-nav-toggle__bar"></span>
+				<span class="jwt-nav-toggle__bar"></span>
+				<span class="jwt-nav-toggle__bar"></span>
+			</button>
+		</div>
 	</div>
 </header>
 

@@ -252,14 +252,19 @@ class JWT_Checkout {
 		return function_exists( 'wc_get_checkout_url' ) ? wc_get_checkout_url() : '';
 	}
 
-	/** Cart page is skipped entirely — straight to checkout. */
+	/**
+	 * Cart page is skipped entirely — straight to checkout.
+	 * Empty cart goes to the bootcamp page instead: Woo bounces an empty
+	 * checkout back to the cart, which would otherwise loop forever.
+	 */
 	public static function block_cart_page() {
 		if ( is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 			return;
 		}
 
 		if ( function_exists( 'is_cart' ) && is_cart() ) {
-			wp_safe_redirect( wc_get_checkout_url() );
+			$has_items = function_exists( 'WC' ) && WC()->cart && ! WC()->cart->is_empty();
+			wp_safe_redirect( $has_items ? wc_get_checkout_url() : home_url( '/bootcamp/' ) );
 			exit;
 		}
 	}

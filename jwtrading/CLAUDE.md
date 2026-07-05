@@ -32,7 +32,10 @@ All sections are **dynamic blocks**: `block.json` + `render.php` (server-rendere
 - The `jw_kit_tag_subscriber` action is consumed by the legacy jw-kit-auto-tagger plugin (keep until JWT_Kit_Sync absorbs it).
 
 ## Page conversion status (local)
-Block-based (Elementor flag removed, `_elementor_data` kept for recovery): Home #8, Bootcamp #293, Testimonials #284, Discord #1206. Checkout #712 = classic `[woocommerce_checkout]` shortcode (required by the slim-checkout hooks — do NOT switch to blocks checkout). Still Elementor by request (other dev's SEO pages-as-pages + previews, Contact, Free Preview content): leave until owner migrates; Elementor stays ACTIVE meanwhile.
+**Elementor + PRO Elements are DEACTIVATED** (owner approved). All pages block-based; `_elementor_data` metas kept for recovery. Checkout #712 = classic `[woocommerce_checkout]` shortcode (required by the slim-checkout hooks — do NOT switch to blocks checkout). Blog: the 6 SEO articles are now POSTS (same slugs) under `/blog/…`; `class-redirects.php` 301s the old root URLs; posts page = Blog #2957. Migration tool: `Redesign/tools/convert-elementor-to-blocks.php` (wp eval-file) — reuse when repeating this on live.
+
+## Design source of truth (until final design lands)
+Old-site values extracted from the backup's `uploads/elementor/css/post-6|45|48.css`: fonts **Space Grotesk (headings) / Montserrat (body)** — self-hosted variable woff2 in `src/fonts/`; square-grid pattern (`src/img/pattern-square.png`) + radial purple tint layered on section backgrounds; buttons = full pills with `inset 0 -4px 4px` shadow; nav pill = `rgba(255,255,255,.05)` + inset + blur; footer = translucent accent gradient card; warm hover accent `--jwt-accent-warm #ff8a36`; container 1440px; `html` font-size `clamp(15px, 1vw+14px, 18px)`. Animations: CSS-only (reveal blur, haze drift, header `.is-scrolled` glass) — deliberately no GSAP.
 
 ## Header / Footer
 Fully custom in the child theme (`header.php` / `footer.php` override Kadence; the old Elementor `mainHeader` #45 / `mainFooter` #48 templates are set to draft — do the same on live at launch). Menus: `jwt-primary`, `jwt-footer`, `jwt-legal`, `jwt-social` (social icons auto-match the link URL). Header CTA via `jwt/header_cta` filter (default: Preview Gratis → `/free-content-preview/`). Logo = theme mod `custom_logo`.

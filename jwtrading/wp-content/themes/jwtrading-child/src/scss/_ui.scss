@@ -2,6 +2,7 @@
 // Reusable UI: buttons, cards, pills.
 // ---------------------------------------------------------------------------
 
+// Buttons are full pills with a soft inset bottom shadow — old-site signature.
 .jwt-btn {
 	display: inline-flex;
 	align-items: center;
@@ -12,9 +13,9 @@
 	font-weight: 700;
 	line-height: 1;
 	text-decoration: none;
-	border-radius: var(--jwt-radius-sm);
-	padding: 0.9375rem 1.75rem;
-	transition: transform 0.2s var(--jwt-ease), box-shadow 0.2s var(--jwt-ease), background 0.2s;
+	border-radius: 999px;
+	padding: 0.9375em 2em;
+	transition: transform 0.2s var(--jwt-ease), box-shadow 0.2s var(--jwt-ease), background 0.2s, color 0.2s;
 	cursor: pointer;
 
 	&:hover {
@@ -22,7 +23,7 @@
 	}
 
 	&:focus-visible {
-		outline: 2px solid var(--jwt-accent-alt);
+		outline: 2px solid var(--jwt-accent-hover);
 		outline-offset: 3px;
 	}
 }
@@ -30,11 +31,11 @@
 .jwt-btn--primary {
 	background: var(--jwt-accent);
 	color: #fff;
-	box-shadow: 0 8px 24px var(--jwt-accent-soft);
+	box-shadow: 0 8px 24px var(--jwt-accent-soft), inset 0 -4px 4px rgb(0 0 0 / 0.35);
 
 	&:hover {
 		background: var(--jwt-accent-hover);
-		box-shadow: 0 10px 28px var(--jwt-accent-soft);
+		box-shadow: 0 10px 28px var(--jwt-accent-soft), inset 0 -4px 4px rgb(0 0 0 / 0.35);
 		color: #fff;
 	}
 }
@@ -47,6 +48,25 @@
 	&:hover {
 		border-color: var(--jwt-muted);
 		color: var(--jwt-text);
+	}
+}
+
+// White pill (old-site header Discord button) — hovers to the warm orange.
+.jwt-btn--light {
+	background: #f5f4f4;
+	color: #131113;
+	font-weight: 500;
+	padding: 10px 24px;
+	box-shadow: inset 0 -4px 4px rgb(0 0 0 / 0.25);
+
+	&:hover {
+		background: var(--jwt-accent-warm);
+		color: #fff;
+	}
+
+	svg {
+		width: 20px;
+		height: 16px;
 	}
 }
 

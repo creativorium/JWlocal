@@ -34,8 +34,8 @@ function jwt_header_cta(): array {
 	return apply_filters(
 		'jwt/header_cta',
 		array(
-			'text' => __( 'Preview Gratis', 'jwtrading' ),
-			'url'  => home_url( '/free-content-preview/' ),
+			'text' => __( 'Discord', 'jwtrading' ),
+			'url'  => home_url( '/discord/' ),
 		)
 	);
 }

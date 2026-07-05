@@ -18,6 +18,7 @@
 	padding-block: clamp(5.5rem, 16vh, 9rem);
 
 	// Purple haze per brand spec: radial-gradient(rgba(124,77,255,.3), transparent 65%) + blur(20px)
+	// Slow drift keeps the hero alive without being noisy.
 	&::before {
 		content: '';
 		position: absolute;
@@ -29,6 +30,10 @@
 		background: radial-gradient(var(--jwt-haze), transparent 65%);
 		filter: blur(20px);
 		pointer-events: none;
+
+		@media (prefers-reduced-motion: no-preference) {
+			animation: jwt-haze-drift 14s ease-in-out infinite alternate;
+		}
 	}
 
 	.jwt-container {
@@ -84,6 +89,19 @@
 		height: 6px;
 		border-radius: 50%;
 		background: var(--jwt-accent);
+	}
+}
+
+@keyframes jwt-haze-drift {
+	0% {
+		translate: -56% 0;
+		scale: 1;
+		opacity: 0.85;
+	}
+	100% {
+		translate: -44% 4%;
+		scale: 1.08;
+		opacity: 1;
 	}
 }
 

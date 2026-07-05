@@ -5,6 +5,15 @@ document.documentElement.classList.add('js');
 
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// --- Header: glassy once scrolled ---------------------------------------------
+const header = document.querySelector('.jwt-header');
+
+if (header) {
+  const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+}
+
 // --- Mobile nav toggle -------------------------------------------------------
 const navToggle = document.querySelector('.jwt-nav-toggle');
 

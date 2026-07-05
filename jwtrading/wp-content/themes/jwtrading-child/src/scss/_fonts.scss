@@ -1,0 +1,18 @@
+// Self-hosted variable fonts (downloaded from Google Fonts, latin subset).
+// Space Grotesk = headings · Montserrat = body — same as the live site's kit.
+
+@font-face {
+	font-family: 'Space Grotesk';
+	src: url('../fonts/space-grotesk-var.woff2') format('woff2-variations');
+	font-weight: 300 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Montserrat';
+	src: url('../fonts/montserrat-var.woff2') format('woff2-variations');
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}

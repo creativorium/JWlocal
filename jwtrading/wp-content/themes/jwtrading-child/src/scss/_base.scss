@@ -3,21 +3,49 @@
 // Structural only — visual polish happens when the final design lands.
 // ---------------------------------------------------------------------------
 
-// Every jwt block is a full-width section that carries its own background,
-// so stacked sections form a continuous page regardless of theme body color.
+// Fluid root scale — same formula as the old site's kit.
+html {
+	font-size: clamp(15px, 1vw + 14px, 18px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth;
+	}
+}
+
+body {
+	font-family: var(--jwt-font-body);
+}
+
+// Every jwt block is a full-width section that carries its own background:
+// base color + the old site's square-grid pattern + a faint radial purple tint.
+// `background-attachment: fixed` keeps the pattern seamless across sections.
 [class*='wp-block-jwt-'] {
-	background: var(--jwt-bg);
+	background-color: var(--jwt-bg);
+	background-image:
+		url('../img/pattern-square.png'),
+		radial-gradient(circle at 50% 20%, rgb(124 77 255 / 0) 0%, rgb(124 77 255 / 0.14) 100%);
+	background-size: 32px 32px, 100% 100%;
+	background-repeat: repeat, no-repeat;
+	background-attachment: fixed, fixed;
 	color: var(--jwt-text);
 	font-family: var(--jwt-font-body);
 	margin-block: 0 !important; // defeat theme block-gap between sections
 	padding-block: var(--jwt-section-y);
 	overflow-x: clip;
 
+	// iOS handles fixed backgrounds poorly; the 32px tile stays continuous anyway.
+	@media (max-width: 768px) {
+		background-attachment: scroll, scroll;
+	}
+
 	h1, h2, h3, h4 {
 		font-family: var(--jwt-font-heading);
+		font-weight: 700;
 		color: var(--jwt-text);
 		margin: 0;
-		line-height: 1.15;
+		line-height: 1.25;
 		text-wrap: balance;
 	}
 
@@ -118,12 +146,14 @@
 @media (prefers-reduced-motion: no-preference) {
 	.js [data-jwt-reveal] {
 		opacity: 0;
-		translate: 0 24px;
-		transition: opacity 0.6s var(--jwt-ease), translate 0.6s var(--jwt-ease);
+		translate: 0 28px;
+		filter: blur(6px);
+		transition: opacity 0.7s var(--jwt-ease), translate 0.7s var(--jwt-ease), filter 0.7s var(--jwt-ease);
 
 		&.is-visible {
 			opacity: 1;
 			translate: 0 0;
+			filter: blur(0);
 		}
 	}
 }
