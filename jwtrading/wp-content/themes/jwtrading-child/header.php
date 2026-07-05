@@ -33,8 +33,18 @@ defined( 'ABSPATH' ) || exit;
 					'depth'          => 1,
 				)
 			);
-			?>
+
+			$jwt_social = jwt_social_links_html();
+			if ( '' !== $jwt_social ) :
+				?>
+				<div class="jwt-nav-follow">
+					<span class="jwt-nav-follow__label"><?php esc_html_e( 'Follow Us :', 'jwtrading' ); ?></span>
+					<?php echo $jwt_social; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper. ?>
+				</div>
+			<?php endif; ?>
 		</nav>
+
+		<div class="jwt-nav-backdrop" data-jwt-nav-backdrop></div>
 
 		<div class="jwt-header__actions">
 			<?php

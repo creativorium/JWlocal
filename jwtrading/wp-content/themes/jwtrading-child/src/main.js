@@ -14,19 +14,32 @@ if (header) {
   window.addEventListener('scroll', onScroll, { passive: true });
 }
 
-// --- Mobile nav toggle -------------------------------------------------------
+// --- Mobile nav toggle (slide-in drawer) --------------------------------------
 const navToggle = document.querySelector('.jwt-nav-toggle');
+const navBackdrop = document.querySelector('[data-jwt-nav-backdrop]');
+const navPanel = document.getElementById('jwt-primary-nav');
 
 if (navToggle) {
+  const closeNav = () => {
+    document.body.classList.remove('jwt-nav-open');
+    navToggle.setAttribute('aria-expanded', 'false');
+  };
+
   navToggle.addEventListener('click', () => {
     const open = document.body.classList.toggle('jwt-nav-open');
     navToggle.setAttribute('aria-expanded', String(open));
   });
 
+  navBackdrop?.addEventListener('click', closeNav);
+
+  // Navigating via a drawer link should close it too (same-page anchors etc.).
+  navPanel?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', closeNav);
+  });
+
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && document.body.classList.contains('jwt-nav-open')) {
-      document.body.classList.remove('jwt-nav-open');
-      navToggle.setAttribute('aria-expanded', 'false');
+      closeNav();
       navToggle.focus();
     }
   });

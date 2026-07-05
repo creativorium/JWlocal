@@ -111,11 +111,45 @@ body.admin-bar .jwt-header {
 	display: none;
 }
 
+// Follow-us block inside the drawer — hidden entirely on desktop.
+.jwt-nav-follow {
+	display: none;
+}
+
+// Dimmed backdrop behind the drawer (relevant once the drawer's max-width
+// no longer spans the full viewport, e.g. tablets).
+.jwt-nav-backdrop {
+	position: fixed;
+	inset: 0;
+	background: rgb(4 3 8 / 0.55);
+	-webkit-backdrop-filter: blur(2px);
+	backdrop-filter: blur(2px);
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.3s ease;
+	z-index: 90;
+}
+
+body.jwt-nav-open .jwt-nav-backdrop {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+body.jwt-nav-open {
+	overflow: hidden;
+}
+
 @media (max-width: 880px) {
 	.jwt-header__bar {
 		grid-template-columns: auto auto;
 		justify-content: space-between;
 		min-height: 72px;
+	}
+
+	// Lifted above the drawer so the hamburger/X stays clickable while open.
+	.jwt-header__actions {
+		position: relative;
+		z-index: 110;
 	}
 
 	.jwt-nav-toggle {
@@ -150,40 +184,65 @@ body.admin-bar .jwt-header {
 		}
 	}
 
+	// Full-height panel that slides in from the right.
 	.jwt-header__nav {
-		position: absolute;
-		top: 100%;
-		left: 0;
-		right: 0;
-		display: none;
-		background: var(--jwt-bg);
-		border-bottom: 1px solid var(--jwt-line);
-		padding: 1rem var(--jwt-gutter) 1.5rem;
-		box-shadow: var(--jwt-shadow);
+		position: fixed;
+		inset: 0 0 0 auto;
+		width: 100%;
+		max-width: 360px;
+		height: 100dvh;
+		display: flex;
+		flex-direction: column;
+		background:
+			radial-gradient(560px 380px at 50% -8%, var(--jwt-haze), transparent 68%),
+			linear-gradient(180deg, #0d0a1a 0%, #08070e 60%);
+		box-shadow: -20px 0 60px rgb(0 0 0 / 0.45);
+		padding: 104px 32px 40px;
+		overflow-y: auto;
+		translate: 100% 0;
+		transition: translate 0.35s var(--jwt-ease);
+		z-index: 100;
 	}
 
 	body.jwt-nav-open .jwt-header__nav {
-		display: block;
+		translate: 0 0;
 	}
 
-	// Pill becomes a plain vertical list in the panel.
+	// Pill becomes a spaced-out vertical list in the drawer.
 	.jwt-nav {
 		flex-direction: column;
 		gap: 0;
 		padding: 0;
 		background: none;
-		border: 0;
+		box-shadow: none;
 		border-radius: 0;
 
 		a {
 			display: block;
-			padding: 0.75rem 0;
-			font-size: 1.0625rem;
-			border-bottom: 1px solid var(--jwt-line);
+			padding: 14px 0;
+			font-family: var(--jwt-font-heading);
+			font-size: 1.375rem;
+			font-weight: 600;
+			color: rgb(255 255 255 / 0.85);
+			opacity: 1;
 		}
 
-		li:last-child a {
-			border-bottom: 0;
+		.current-menu-item > a,
+		.current_page_item > a {
+			color: var(--jwt-accent-warm);
 		}
+	}
+
+	.jwt-nav-follow {
+		display: block;
+		margin-top: auto;
+		padding-top: 48px;
+	}
+
+	.jwt-nav-follow__label {
+		display: block;
+		font-size: 0.9375rem;
+		color: rgb(255 255 255 / 0.55);
+		margin-bottom: 16px;
 	}
 }

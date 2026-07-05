@@ -29,6 +29,11 @@ html body {
 	}
 }
 
+// Kadence's default single/page content padding fights our own block spacing.
+.entry-content-wrap {
+	padding: 0;
+}
+
 // Every jwt block is a full-width section on the flat near-black canvas;
 // glows/gradients are local per section (JW Home.dc design language).
 [class*='wp-block-jwt-'] {
