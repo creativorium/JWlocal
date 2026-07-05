@@ -9,7 +9,8 @@ defined( 'ABSPATH' ) || exit;
 add_action( 'after_setup_theme', function () {
 	register_nav_menus(
 		array(
-			'jwt-primary' => __( 'Header — Menu Utama', 'jwtrading' ),
+			'jwt-primary' => __( 'Header — Desktop (menu pendek)', 'jwtrading' ),
+			'jwt-mobile'  => __( 'Header — Mobile Drawer (menu lengkap)', 'jwtrading' ),
 			'jwt-footer'  => __( 'Footer — Navigasi', 'jwtrading' ),
 			'jwt-legal'   => __( 'Footer — Legal', 'jwtrading' ),
 			'jwt-social'  => __( 'Footer — Social (isi custom links)', 'jwtrading' ),

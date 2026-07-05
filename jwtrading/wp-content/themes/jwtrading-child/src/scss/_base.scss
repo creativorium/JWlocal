@@ -16,6 +16,15 @@ html body {
 	font-family: var(--jwt-font-body);
 }
 
+// The closed mobile nav drawer sits off-canvas via `translate: 100% 0` while
+// `position: fixed`, which still extends the page's scrollable width even
+// though it's invisible — clip it at the root so the page can never scroll
+// sideways. Safe to set on `html` alone: it doesn't affect any ancestor of
+// our sticky header (there isn't one between it and `html`).
+html {
+	overflow-x: hidden;
+}
+
 // Readability for non-block content (blog posts, Woo pages) on the dark canvas.
 #jwt-content {
 	color: var(--jwt-text);

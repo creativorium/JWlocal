@@ -5,6 +5,20 @@ document.documentElement.classList.add('js');
 
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// --- Fix Kadence's full-bleed calc for the scrollbar's width ------------------
+// Kadence's .alignfull/.alignwide CSS does `width:100vw; margin-left:calc(50% -
+// 100vw/2)` to break full-width blocks out to the viewport edge. On Windows,
+// 100vw includes the vertical scrollbar's width (~15-17px) while the visible
+// content area does not, so every full-width section (hero included) ends up
+// shifted off-center by half that gap. Kadence's own CSS reads a `--global-vw`
+// custom property as an override (`var(--global-vw, 100vw)`) but never sets
+// it — so we do, using clientWidth (the true scrollbar-excluded width).
+const setGlobalVw = () => {
+  document.documentElement.style.setProperty('--global-vw', `${document.documentElement.clientWidth}px`);
+};
+setGlobalVw();
+window.addEventListener('resize', setGlobalVw);
+
 // --- Header: glassy once scrolled ---------------------------------------------
 const header = document.querySelector('.jwt-header');
 
@@ -17,7 +31,7 @@ if (header) {
 // --- Mobile nav toggle (slide-in drawer) --------------------------------------
 const navToggle = document.querySelector('.jwt-nav-toggle');
 const navBackdrop = document.querySelector('[data-jwt-nav-backdrop]');
-const navPanel = document.getElementById('jwt-primary-nav');
+const navPanel = document.getElementById('jwt-mobile-nav');
 
 if (navToggle) {
   const closeNav = () => {
@@ -42,6 +56,15 @@ if (navToggle) {
       closeNav();
       navToggle.focus();
     }
+  });
+
+  // Safety net: if the viewport crosses back above the drawer's breakpoint
+  // while it's open (resizing the window, rotating, toggling devtools'
+  // responsive mode) force-close it — otherwise the backdrop + scroll lock
+  // are orphaned with no visible drawer/toggle left to close them.
+  const desktopQuery = window.matchMedia('(min-width: 881px)');
+  desktopQuery.addEventListener('change', (e) => {
+    if (e.matches) closeNav();
   });
 }
 

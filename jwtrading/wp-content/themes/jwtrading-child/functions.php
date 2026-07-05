@@ -11,6 +11,7 @@ define( 'JWT_THEME_URI', get_stylesheet_directory_uri() );
 require_once JWT_THEME_DIR . '/inc/woo-tweaks.php';
 require_once JWT_THEME_DIR . '/inc/blocks.php';
 require_once JWT_THEME_DIR . '/inc/theme-setup.php';
+require_once JWT_THEME_DIR . '/inc/kadence-palette.php';
 
 /**
  * Vite bridge.

@@ -1,6 +1,11 @@
 // ---------------------------------------------------------------------------
 // Custom site header — matches the old Elementor mainHeader:
 // logo left · pill nav center · white Discord pill right.
+//
+// Two independent <nav> elements (matches the old site's actual setup):
+// .jwt-header__nav   = desktop pill, short menu (jwt-primary location)
+// .jwt-mobile-nav     = mobile slide-in drawer, full menu (jwt-mobile location)
+// They never share a menu, and only one is ever visible at a given width.
 // ---------------------------------------------------------------------------
 
 // Transparent over the hero; turns glassy once the page scrolls (.is-scrolled via main.js).
@@ -62,7 +67,10 @@ body.admin-bar .jwt-header {
 	justify-self: center;
 }
 
-// The pill — exact values from the old .navfill custom CSS.
+// The pill — exact values from the old .navfill custom CSS. Shared `.jwt-nav`
+// class also renders the mobile drawer's list (see the media query below),
+// so keep any drawer-specific look scoped to `.jwt-mobile-nav .jwt-nav`
+// rather than adding more bare `.jwt-nav` rules here.
 .jwt-nav {
 	display: flex;
 	gap: 2rem;
@@ -82,10 +90,11 @@ body.admin-bar .jwt-header {
 		font-size: 0.9375rem;
 		font-weight: 400;
 		opacity: 0.9;
-		transition: opacity 0.2s;
+		transition: opacity 0.2s, color 0.2s;
 
 		&:hover {
 			opacity: 1;
+			color: var(--jwt-accent-warm);
 		}
 	}
 
@@ -111,14 +120,19 @@ body.admin-bar .jwt-header {
 	display: none;
 }
 
-// Follow-us block inside the drawer — hidden entirely on desktop.
+// Mobile drawer — hidden entirely on desktop; becomes the slide-in panel
+// only inside the <=880px media query below.
+.jwt-mobile-nav {
+	display: none;
+}
+
 .jwt-nav-follow {
 	display: none;
 }
 
 // Dimmed backdrop behind the drawer — flat black, matches the old
 // Elementor popup (#584) scrim exactly (rgba(0,0,0,.8), no blur on the scrim
-// itself; the frosted-glass blur lives on the panel, see .jwt-header__nav).
+// itself; the frosted-glass blur lives on the panel, see .jwt-mobile-nav).
 .jwt-nav-backdrop {
 	position: fixed;
 	inset: 0;
@@ -145,7 +159,20 @@ body.jwt-nav-open {
 		min-height: 72px;
 	}
 
+	// Desktop pill nav plays no part on mobile — the drawer covers it.
+	.jwt-header__nav {
+		display: none;
+	}
+
+	// Matches the old site (elementor-hidden-mobile on the Discord button):
+	// it's redundant on mobile anyway, Discord is already a drawer link.
+	.jwt-header__cta {
+		display: none;
+	}
+
 	// Lifted above the drawer so the hamburger/X stays clickable while open.
+	// (The Discord CTA no longer shares this container's visibility, so it
+	// can't float above the drawer looking detached — see bug report.)
 	.jwt-header__actions {
 		position: relative;
 		z-index: 110;
@@ -184,9 +211,12 @@ body.jwt-nav-open {
 	}
 
 	// Panel that slides in from the right — 420px card flush to the top-right
-	// corner, rounded only on its left edge, frosted purple glass. Values
-	// ported from the old Elementor popup (#584 / post-584.css).
-	.jwt-header__nav {
+	// corner, rounded only on its left edge, frosted purple glass. Ported
+	// from the old Elementor popup (#584 / post-584.css). This is the ONE
+	// legitimate backdrop-filter/border-radius in the drawer — the ones the
+	// bug report meant to flag were a stray duplicate on `.jwt-nav` itself
+	// (fixed below via an explicit reset), not this panel's own glass look.
+	.jwt-mobile-nav {
 		position: fixed;
 		inset: 0 0 0 auto;
 		width: 420px;
@@ -212,18 +242,23 @@ body.jwt-nav-open {
 		z-index: 100;
 	}
 
-	body.jwt-nav-open .jwt-header__nav {
+	body.jwt-nav-open .jwt-mobile-nav {
 		translate: 0 0;
 		opacity: 1;
 	}
 
-	// Pill becomes a spaced-out vertical list in the drawer.
-	.jwt-nav {
+	// The drawer's own list — explicitly reset EVERY property the shared
+	// `.jwt-nav` base rule sets (background/shadow/blur/radius), not just
+	// the ones that were visually obvious; a leftover backdrop-filter here
+	// was invisible-but-wrong (double blur stacked on the panel's own glass).
+	.jwt-mobile-nav .jwt-nav {
 		flex-direction: column;
 		gap: 0;
 		padding: 0;
 		background: none;
 		box-shadow: none;
+		-webkit-backdrop-filter: none;
+		backdrop-filter: none;
 		border-radius: 0;
 
 		li:not(:last-child) {
@@ -259,11 +294,13 @@ body.jwt-nav-open {
 }
 
 @media (max-width: 767px) {
-	.jwt-nav li:not(:last-child) {
-		margin-bottom: 1rem;
-	}
+	.jwt-mobile-nav .jwt-nav {
+		li:not(:last-child) {
+			margin-bottom: 1rem;
+		}
 
-	.jwt-nav a {
-		font-size: 1.25rem;
+		a {
+			font-size: 1.25rem;
+		}
 	}
 }

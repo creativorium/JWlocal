@@ -22,6 +22,8 @@ defined( 'ABSPATH' ) || exit;
 	<div class="jwt-container jwt-header__bar">
 		<div class="jwt-brand"><?php echo jwt_brand_html(); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper. ?></div>
 
+		<!-- Desktop pill nav — short menu, hidden entirely on mobile (own <nav> so it
+		     never has to share a menu location with the mobile drawer below). -->
 		<nav class="jwt-header__nav" id="jwt-primary-nav" aria-label="<?php esc_attr_e( 'Menu utama', 'jwtrading' ); ?>">
 			<?php
 			wp_nav_menu(
@@ -33,18 +35,8 @@ defined( 'ABSPATH' ) || exit;
 					'depth'          => 1,
 				)
 			);
-
-			$jwt_social = jwt_social_links_html();
-			if ( '' !== $jwt_social ) :
-				?>
-				<div class="jwt-nav-follow">
-					<span class="jwt-nav-follow__label"><?php esc_html_e( 'Follow Us :', 'jwtrading' ); ?></span>
-					<?php echo $jwt_social; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper. ?>
-				</div>
-			<?php endif; ?>
+			?>
 		</nav>
-
-		<div class="jwt-nav-backdrop" data-jwt-nav-backdrop></div>
 
 		<div class="jwt-header__actions">
 			<?php
@@ -59,7 +51,7 @@ defined( 'ABSPATH' ) || exit;
 				</a>
 			<?php endif; ?>
 
-			<button class="jwt-nav-toggle" aria-expanded="false" aria-controls="jwt-primary-nav" aria-label="<?php esc_attr_e( 'Buka menu', 'jwtrading' ); ?>">
+			<button class="jwt-nav-toggle" aria-expanded="false" aria-controls="jwt-mobile-nav" aria-label="<?php esc_attr_e( 'Buka menu', 'jwtrading' ); ?>">
 				<span class="jwt-nav-toggle__bar"></span>
 				<span class="jwt-nav-toggle__bar"></span>
 				<span class="jwt-nav-toggle__bar"></span>
@@ -67,5 +59,31 @@ defined( 'ABSPATH' ) || exit;
 		</div>
 	</div>
 </header>
+
+<div class="jwt-nav-backdrop" data-jwt-nav-backdrop></div>
+
+<!-- Mobile slide-in drawer — own menu location (jwt-mobile), independent of
+     the desktop pill's shorter menu. Only ever visible <=880px (see CSS). -->
+<nav class="jwt-mobile-nav" id="jwt-mobile-nav" aria-label="<?php esc_attr_e( 'Menu utama (mobile)', 'jwtrading' ); ?>">
+	<?php
+	wp_nav_menu(
+		array(
+			'theme_location' => 'jwt-mobile',
+			'container'      => false,
+			'menu_class'     => 'jwt-nav',
+			'fallback_cb'    => false,
+			'depth'          => 1,
+		)
+	);
+
+	$jwt_social = jwt_social_links_html();
+	if ( '' !== $jwt_social ) :
+		?>
+		<div class="jwt-nav-follow">
+			<span class="jwt-nav-follow__label"><?php esc_html_e( 'Follow Us :', 'jwtrading' ); ?></span>
+			<?php echo $jwt_social; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper. ?>
+		</div>
+	<?php endif; ?>
+</nav>
 
 <div id="jwt-content" class="jwt-site-content">
