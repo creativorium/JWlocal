@@ -6,7 +6,7 @@
 
 .jwt-footer {
 	background: var(--jwt-bg);
-	padding: 0 clamp(8px, 1.2vw, 18px) clamp(8px, 1.2vw, 18px);
+	padding: 0;
 	color: var(--jwt-muted);
 	font-family: var(--jwt-font-body);
 	font-size: 1rem;
@@ -14,7 +14,7 @@
 
 .jwt-footer__card {
 	// Old .footerStyle gradient (hue moved to the new brand purple),
-	// layered over the square-grid pattern on the base color.
+	// full-bleed with rounded top corners.
 	background-color: var(--jwt-bg);
 	background-image:
 		linear-gradient(
@@ -27,7 +27,7 @@
 		url('../img/pattern-square.png');
 	background-size: 100% 100%, 32px 32px;
 	background-repeat: no-repeat, repeat;
-	border-radius: clamp(20px, 3vw, 36px);
+	border-radius: clamp(20px, 3vw, 36px) clamp(20px, 3vw, 36px) 0 0;
 	padding: clamp(3.5rem, 7vw, 6rem) 0 clamp(1.75rem, 3vw, 2.5rem);
 }
 

@@ -9,8 +9,24 @@
 	}
 }
 
-body {
+// Site-wide dark canvas (outranks Kadence's white body background).
+html body {
+	background: var(--jwt-bg);
+	color: var(--jwt-text);
 	font-family: var(--jwt-font-body);
+}
+
+// Readability for non-block content (blog posts, Woo pages) on the dark canvas.
+#jwt-content {
+	color: var(--jwt-text);
+
+	:is(h1, h2, h3, h4, h5, h6) {
+		color: var(--jwt-text);
+	}
+
+	a:not(.jwt-btn) {
+		color: var(--jwt-accent-light);
+	}
 }
 
 // Every jwt block is a full-width section on the flat near-black canvas;
