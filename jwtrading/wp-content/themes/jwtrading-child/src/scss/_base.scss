@@ -94,12 +94,22 @@ html {
 	max-width: var(--jwt-narrow);
 }
 
-// Shared section header (eyebrow / title / lead)
+// Shared section header (eyebrow / title / lead). `.jwt-section-header`
+// itself is usually one of several siblings inside `.jwt-container` (e.g.
+// alongside a stats grid or a CTA button below it), so it still needs
+// margin-inline:auto to center ITSELF among those siblings — that part
+// isn't optional. What flex replaces is the INSIDE: eyebrow/title/lead
+// center on their own shrink-wrapped width via align-items, rather than
+// each relying on text-align alone (which only centers text lines, not
+// any child that later gets its own intrinsic width/max-width).
 .jwt-section-header {
 	max-width: 700px;
 	margin-bottom: clamp(2.5rem, 6vw, 4rem);
 
 	&.is-center {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 		margin-inline: auto;
 		text-align: center;
 	}

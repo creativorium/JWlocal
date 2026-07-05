@@ -164,21 +164,21 @@ body.jwt-nav-open {
 		display: none;
 	}
 
-	// Matches the old site (elementor-hidden-mobile on the Discord button):
-	// it's redundant on mobile anyway, Discord is already a drawer link.
-	.jwt-header__cta {
-		display: none;
-	}
-
-	// Lifted above the drawer so the hamburger/X stays clickable while open.
-	// (The Discord CTA no longer shares this container's visibility, so it
-	// can't float above the drawer looking detached — see bug report.)
+	// The Discord CTA stays visible on mobile (it's already a drawer link too,
+	// but the header button is kept for quick access when the drawer is
+	// closed). It intentionally has NO z-index lift here, so once the drawer
+	// opens (z-index 100, see .jwt-mobile-nav) it naturally sits BEHIND the
+	// panel instead of floating above it.
 	.jwt-header__actions {
 		position: relative;
-		z-index: 110;
 	}
 
+	// Only the toggle gets lifted above the drawer — not the whole actions
+	// bar — so it alone stays clickable to close the menu while the CTA
+	// next to it correctly disappears behind the open panel.
 	.jwt-nav-toggle {
+		position: relative;
+		z-index: 110;
 		display: inline-flex;
 		flex-direction: column;
 		justify-content: center;

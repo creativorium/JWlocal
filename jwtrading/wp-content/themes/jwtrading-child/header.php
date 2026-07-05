@@ -58,32 +58,41 @@ defined( 'ABSPATH' ) || exit;
 			</button>
 		</div>
 	</div>
+
+	<!--
+	Backdrop + drawer MUST stay nested inside <header>, not as later siblings
+	of it: z-index only competes within the SAME stacking context. If they
+	sat outside <header>, the drawer's box and the header's box would be
+	compared as two equal-z-index wholes (drawer wins on DOM order), which
+	drags the toggle button down with it — no longer clickable to close.
+	Nested here, toggle (z-index 110) can rank above the drawer (z-index
+	100) while the Discord CTA (no z-index) stays below it, i.e. behind it.
+	-->
+	<div class="jwt-nav-backdrop" data-jwt-nav-backdrop></div>
+
+	<!-- Mobile slide-in drawer — own menu location (jwt-mobile), independent
+	     of the desktop pill's shorter menu. Only ever visible <=880px. -->
+	<nav class="jwt-mobile-nav" id="jwt-mobile-nav" aria-label="<?php esc_attr_e( 'Menu utama (mobile)', 'jwtrading' ); ?>">
+		<?php
+		wp_nav_menu(
+			array(
+				'theme_location' => 'jwt-mobile',
+				'container'      => false,
+				'menu_class'     => 'jwt-nav',
+				'fallback_cb'    => false,
+				'depth'          => 1,
+			)
+		);
+
+		$jwt_social = jwt_social_links_html();
+		if ( '' !== $jwt_social ) :
+			?>
+			<div class="jwt-nav-follow">
+				<span class="jwt-nav-follow__label"><?php esc_html_e( 'Follow Us :', 'jwtrading' ); ?></span>
+				<?php echo $jwt_social; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper. ?>
+			</div>
+		<?php endif; ?>
+	</nav>
 </header>
-
-<div class="jwt-nav-backdrop" data-jwt-nav-backdrop></div>
-
-<!-- Mobile slide-in drawer — own menu location (jwt-mobile), independent of
-     the desktop pill's shorter menu. Only ever visible <=880px (see CSS). -->
-<nav class="jwt-mobile-nav" id="jwt-mobile-nav" aria-label="<?php esc_attr_e( 'Menu utama (mobile)', 'jwtrading' ); ?>">
-	<?php
-	wp_nav_menu(
-		array(
-			'theme_location' => 'jwt-mobile',
-			'container'      => false,
-			'menu_class'     => 'jwt-nav',
-			'fallback_cb'    => false,
-			'depth'          => 1,
-		)
-	);
-
-	$jwt_social = jwt_social_links_html();
-	if ( '' !== $jwt_social ) :
-		?>
-		<div class="jwt-nav-follow">
-			<span class="jwt-nav-follow__label"><?php esc_html_e( 'Follow Us :', 'jwtrading' ); ?></span>
-			<?php echo $jwt_social; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper. ?>
-		</div>
-	<?php endif; ?>
-</nav>
 
 <div id="jwt-content" class="jwt-site-content">

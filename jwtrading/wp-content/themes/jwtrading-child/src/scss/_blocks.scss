@@ -36,8 +36,15 @@
 		}
 	}
 
+	// Flex column centers each child (badge/title/lead/actions/note/chips) on
+	// its own shrink-wrapped width, instead of each one separately faking it
+	// with max-width + margin-inline:auto — one centering mechanism, not one
+	// per element, and it holds regardless of any child's intrinsic width.
 	.jwt-container {
 		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 }
 
@@ -46,7 +53,6 @@
 	font-weight: 800;
 	letter-spacing: -0.02em;
 	max-width: 880px;
-	margin-inline: auto;
 
 	mark {
 		background: none;
@@ -63,7 +69,7 @@
 	color: var(--jwt-muted);
 	line-height: 1.6;
 	max-width: 620px;
-	margin: 1.5rem auto 0;
+	margin-top: 1.5rem;
 }
 
 .jwt-hero__actions {
