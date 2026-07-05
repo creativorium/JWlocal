@@ -1,0 +1,16 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/connector",
+	"title": "JWT Connector",
+	"category": "jwtrading",
+	"icon": "arrow-down-alt",
+	"description": "Pil mono kecil penghubung antar section.",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": { "align": [ "full" ], "html": false },
+	"attributes": {
+		"text": { "type": "string", "default": "" }
+	}
+}

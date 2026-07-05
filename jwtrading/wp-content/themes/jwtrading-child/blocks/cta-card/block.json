@@ -1,25 +1,22 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "jwt/stats",
-	"title": "JWT Stats",
+	"name": "jwt/cta-card",
+	"title": "JWT CTA Card",
 	"category": "jwtrading",
-	"icon": "chart-bar",
-	"description": "Baris angka pencapaian (member, rating, dsb).",
+	"icon": "button",
+	"description": "Satu kartu CTA (varian accent atau netral).",
 	"textdomain": "jwtrading",
+	"parent": [ "jwt/duo-cta" ],
 	"editorScript": "jwt-blocks-editor",
 	"render": "file:./render.php",
-	"supports": {
-		"align": [ "full" ],
-		"html": false,
-		"anchor": true
-	},
+	"supports": { "html": false, "reusable": false },
 	"attributes": {
 		"eyebrow": { "type": "string", "default": "" },
 		"title": { "type": "string", "default": "" },
-		"lead": { "type": "string", "default": "" },
-		"center": { "type": "boolean", "default": true },
+		"text": { "type": "string", "default": "" },
 		"buttonText": { "type": "string", "default": "" },
-		"buttonUrl": { "type": "string", "default": "" }
+		"buttonUrl": { "type": "string", "default": "" },
+		"accent": { "type": "boolean", "default": false }
 	}
 }

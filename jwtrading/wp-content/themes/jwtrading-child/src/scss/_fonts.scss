@@ -16,3 +16,20 @@
 	font-style: normal;
 	font-display: swap;
 }
+
+// New-design fonts (JW Home.dc): Manrope body + JetBrains Mono accents.
+@font-face {
+	font-family: 'Manrope';
+	src: url('../fonts/manrope-var.woff2') format('woff2-variations');
+	font-weight: 200 800;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'JetBrains Mono';
+	src: url('../fonts/jetbrains-mono-var.woff2') format('woff2-variations');
+	font-weight: 100 800;
+	font-style: normal;
+	font-display: swap;
+}

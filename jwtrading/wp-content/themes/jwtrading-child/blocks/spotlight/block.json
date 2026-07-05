@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/spotlight",
+	"title": "JWT Product Spotlight",
+	"category": "jwtrading",
+	"icon": "book-alt",
+	"description": "Panel produk 2 kolom dengan mock cover (guide/low-ticket).",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": { "align": [ "full" ], "html": false, "anchor": true },
+	"attributes": {
+		"badge": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "" },
+		"text": { "type": "string", "default": "" },
+		"chips": { "type": "string", "default": "" },
+		"buttonText": { "type": "string", "default": "" },
+		"buttonUrl": { "type": "string", "default": "" },
+		"coverLabel": { "type": "string", "default": "" },
+		"coverTitle": { "type": "string", "default": "" },
+		"imageId": { "type": "number", "default": 0 },
+		"reverse": { "type": "boolean", "default": false }
+	}
+}

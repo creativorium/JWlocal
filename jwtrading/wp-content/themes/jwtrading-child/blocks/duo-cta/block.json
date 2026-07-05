@@ -1,0 +1,13 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/duo-cta",
+	"title": "JWT Duo CTA",
+	"category": "jwtrading",
+	"icon": "columns",
+	"description": "Dua kartu CTA berdampingan (mis. Discord + WhatsApp).",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": { "align": [ "full" ], "html": false, "anchor": true }
+}

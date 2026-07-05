@@ -16,6 +16,7 @@
 	},
 	"attributes": {
 		"icon": { "type": "string", "default": "spark" },
+		"number": { "type": "string", "default": "" },
 		"title": { "type": "string", "default": "" },
 		"text": { "type": "string", "default": "" }
 	}

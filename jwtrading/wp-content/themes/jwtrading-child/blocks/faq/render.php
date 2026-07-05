@@ -52,6 +52,11 @@ if ( ! empty( $attributes['schema'] ) && isset( $block->inner_blocks ) ) {
 		<div class="jwt-faq__list" data-jwt-reveal>
 			<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput -- pre-rendered inner blocks. ?>
 		</div>
+		<?php if ( '' !== trim( (string) ( $attributes['buttonText'] ?? '' ) ) ) : ?>
+			<div class="jwt-faq__cta">
+				<a class="jwt-btn jwt-btn--primary" href="<?php echo esc_url( $attributes['buttonUrl'] ?: '#' ); ?>"><?php echo esc_html( $attributes['buttonText'] ); ?></a>
+			</div>
+		<?php endif; ?>
 	</div>
 	<?php if ( $jwt_schema ) : ?>
 		<script type="application/ld+json"><?php echo $jwt_schema; // phpcs:ignore WordPress.Security.EscapeOutput -- wp_json_encode output. ?></script>

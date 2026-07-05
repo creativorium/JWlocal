@@ -230,24 +230,44 @@ registerBlockType('jwt/hero', {
 // --- Stats ----------------------------------------------------------------------
 
 registerBlockType('jwt/stats', {
-  edit() {
+  edit({ attributes, setAttributes }) {
     const blockProps = useBlockProps({ className: 'jwt-stats' });
     return (
-      <section {...blockProps}>
-        <div className="jwt-container">
-          <div className="jwt-stats__grid">
-            <InnerBlocks
-              allowedBlocks={['jwt/stat-item']}
-              template={[
-                ['jwt/stat-item'],
-                ['jwt/stat-item'],
-                ['jwt/stat-item'],
-                ['jwt/stat-item'],
-              ]}
-            />
+      <>
+        <HeaderPanel attributes={attributes} setAttributes={setAttributes}>
+          <TextControl
+            label={__('Teks tombol (opsional)', 'jwtrading')}
+            value={attributes.buttonText}
+            onChange={(buttonText) => setAttributes({ buttonText })}
+          />
+          <TextControl
+            label={__('URL tombol', 'jwtrading')}
+            value={attributes.buttonUrl}
+            onChange={(buttonUrl) => setAttributes({ buttonUrl })}
+          />
+        </HeaderPanel>
+        <section {...blockProps}>
+          <div className="jwt-container">
+            <HeaderEdit attributes={attributes} setAttributes={setAttributes} />
+            <div className="jwt-stats__grid">
+              <InnerBlocks
+                allowedBlocks={['jwt/stat-item']}
+                template={[
+                  ['jwt/stat-item'],
+                  ['jwt/stat-item'],
+                  ['jwt/stat-item'],
+                  ['jwt/stat-item'],
+                ]}
+              />
+            </div>
+            {attributes.buttonText ? (
+              <div className="jwt-stats__cta">
+                <span className="jwt-btn jwt-btn--ghost">{attributes.buttonText}</span>
+              </div>
+            ) : null}
           </div>
-        </div>
-      </section>
+        </section>
+      </>
     );
   },
   save: saveInner,
@@ -322,7 +342,13 @@ registerBlockType('jwt/feature-item', {
     return (
       <>
         <InspectorControls>
-          <PanelBody title={__('Ikon', 'jwtrading')}>
+          <PanelBody title={__('Ikon / Nomor', 'jwtrading')}>
+            <TextControl
+              label={__('Nomor (opsional)', 'jwtrading')}
+              help={__('Contoh: 01 — kartu berubah jadi gaya pillar bernomor.', 'jwtrading')}
+              value={attributes.number}
+              onChange={(number) => setAttributes({ number })}
+            />
             <SelectControl
               label={__('Pilih ikon', 'jwtrading')}
               value={attributes.icon}
@@ -332,10 +358,14 @@ registerBlockType('jwt/feature-item', {
           </PanelBody>
         </InspectorControls>
         <article {...blockProps}>
+          {attributes.number ? (
+            <div className="jwt-feature__num">{attributes.number}</div>
+          ) : (
           <span
             className="jwt-feature__icon"
             dangerouslySetInnerHTML={{ __html: ICONS[attributes.icon] || ICONS.spark }}
           />
+          )}
           <RichText
             tagName="h3"
             className="jwt-feature__title"
@@ -376,6 +406,16 @@ registerBlockType('jwt/curriculum-item', {
 
     return (
       <div {...blockProps}>
+        <InspectorControls>
+          <PanelBody title={__('Nomor', 'jwtrading')}>
+            <TextControl
+              label={__('Nomor manual (opsional)', 'jwtrading')}
+              help={__('Kosongkan untuk penomoran otomatis. Diisi mis. 04 untuk baris modul di panel Program.', 'jwtrading')}
+              value={attributes.number}
+              onChange={(number) => setAttributes({ number })}
+            />
+          </PanelBody>
+        </InspectorControls>
         <div>
           <RichText
             tagName="h3"
@@ -507,11 +547,23 @@ registerBlockType('jwt/faq', {
     allowed: ['jwt/faq-item'],
     template: [['jwt/faq-item'], ['jwt/faq-item'], ['jwt/faq-item']],
     panelExtras: ({ attributes, setAttributes }) => (
-      <ToggleControl
-        label={__('Skema FAQ untuk Google (SEO)', 'jwtrading')}
-        checked={!!attributes.schema}
-        onChange={(schema) => setAttributes({ schema })}
-      />
+      <>
+        <ToggleControl
+          label={__('Skema FAQ untuk Google (SEO)', 'jwtrading')}
+          checked={!!attributes.schema}
+          onChange={(schema) => setAttributes({ schema })}
+        />
+        <TextControl
+          label={__('Teks tombol di bawah (opsional)', 'jwtrading')}
+          value={attributes.buttonText}
+          onChange={(buttonText) => setAttributes({ buttonText })}
+        />
+        <TextControl
+          label={__('URL tombol', 'jwtrading')}
+          value={attributes.buttonUrl}
+          onChange={(buttonUrl) => setAttributes({ buttonUrl })}
+        />
+      </>
     ),
   }),
   save: saveInner,
@@ -646,6 +698,409 @@ registerBlockType('jwt/course-grid', {
             />
           </div>
         </section>
+      </>
+    );
+  },
+  save: saveNull,
+});
+
+// --- Section heading (JW Home.dc) -----------------------------------------------
+
+registerBlockType('jwt/section-heading', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps({ className: 'jwt-section-heading' });
+    return (
+      <>
+        <HeaderPanel attributes={attributes} setAttributes={setAttributes} />
+        <section {...blockProps}>
+          <div className="jwt-container">
+            <HeaderEdit attributes={attributes} setAttributes={setAttributes} />
+          </div>
+        </section>
+      </>
+    );
+  },
+  save: saveNull,
+});
+
+// --- Media frame --------------------------------------------------------------------
+
+registerBlockType('jwt/media-frame', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps({ className: 'jwt-media-frame' });
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Label Frame', 'jwtrading')}>
+            <TextControl
+              label={__('Label kiri (mono)', 'jwtrading')}
+              value={attributes.labelLeft}
+              onChange={(labelLeft) => setAttributes({ labelLeft })}
+            />
+            <TextControl
+              label={__('Label kanan (hijau)', 'jwtrading')}
+              value={attributes.labelRight}
+              onChange={(labelRight) => setAttributes({ labelRight })}
+            />
+          </PanelBody>
+        </InspectorControls>
+        <section {...blockProps}>
+          <div className="jwt-container jwt-media-frame__wrap">
+            <div className="jwt-media-frame__box">
+              <div className="jwt-media-frame__bar">
+                <div className="jwt-media-frame__dots"><span></span><span></span><span></span></div>
+                <div className="jwt-media-frame__label">{attributes.labelLeft}</div>
+                <div className="jwt-media-frame__label is-green">{attributes.labelRight}</div>
+              </div>
+              <div className="jwt-media-frame__body">
+                <InnerBlocks
+                  allowedBlocks={['core/embed', 'core/video', 'core/image', 'core/html']}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      </>
+    );
+  },
+  save: saveInner,
+});
+
+// --- Statement ------------------------------------------------------------------------
+
+registerBlockType('jwt/statement', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps({ className: 'jwt-statement' });
+    return (
+      <section {...blockProps}>
+        <div className="jwt-container">
+          <div className="jwt-statement__box">
+            <RichText
+              tagName="span"
+              className="jwt-eyebrow"
+              allowedFormats={[]}
+              placeholder={__('Eyebrow…', 'jwtrading')}
+              value={attributes.eyebrow}
+              onChange={(eyebrow) => setAttributes({ eyebrow })}
+            />
+            <RichText
+              tagName="h2"
+              className="jwt-statement__title"
+              placeholder={__('Pernyataan besar…', 'jwtrading')}
+              value={attributes.title}
+              onChange={(title) => setAttributes({ title })}
+            />
+            <RichText
+              tagName="p"
+              className="jwt-statement__lead"
+              placeholder={__('Kalimat pendukung…', 'jwtrading')}
+              value={attributes.lead}
+              onChange={(lead) => setAttributes({ lead })}
+            />
+          </div>
+        </div>
+      </section>
+    );
+  },
+  save: saveNull,
+});
+
+// --- Product spotlight ---------------------------------------------------------------
+
+registerBlockType('jwt/spotlight', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps({
+      className: `jwt-spotlight${attributes.reverse ? ' is-reverse' : ''}`,
+    });
+
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Spotlight', 'jwtrading')}>
+            <TextControl
+              label={__('Chips (pisahkan dengan |)', 'jwtrading')}
+              value={attributes.chips}
+              onChange={(chips) => setAttributes({ chips })}
+            />
+            <TextControl
+              label={__('URL tombol', 'jwtrading')}
+              value={attributes.buttonUrl}
+              onChange={(buttonUrl) => setAttributes({ buttonUrl })}
+            />
+            <ToggleControl
+              label={__('Balik posisi cover', 'jwtrading')}
+              checked={!!attributes.reverse}
+              onChange={(reverse) => setAttributes({ reverse })}
+            />
+            <MediaUploadCheck>
+              <MediaUpload
+                onSelect={(media) => setAttributes({ imageId: media.id })}
+                allowedTypes={['image']}
+                value={attributes.imageId}
+                render={({ open }) => (
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <Button variant="secondary" onClick={open}>
+                      {attributes.imageId ? __('Ganti gambar cover', 'jwtrading') : __('Pakai gambar asli (opsional)', 'jwtrading')}
+                    </Button>
+                    {attributes.imageId ? (
+                      <Button variant="link" isDestructive onClick={() => setAttributes({ imageId: 0 })}>
+                        {__('Hapus', 'jwtrading')}
+                      </Button>
+                    ) : null}
+                  </div>
+                )}
+              />
+            </MediaUploadCheck>
+          </PanelBody>
+        </InspectorControls>
+
+        <section {...blockProps}>
+          <div className="jwt-container">
+            <div className="jwt-spotlight__panel">
+              <div className="jwt-spotlight__media">
+                <div className="jwt-spotlight__cover">
+                  <div className="jwt-spotlight__cover-glow"></div>
+                  <div className="jwt-spotlight__cover-top">
+                    <RichText
+                      tagName="div"
+                      className="jwt-spotlight__cover-label"
+                      allowedFormats={[]}
+                      placeholder={__('Label cover…', 'jwtrading')}
+                      value={attributes.coverLabel}
+                      onChange={(coverLabel) => setAttributes({ coverLabel })}
+                    />
+                  </div>
+                  <RichText
+                    tagName="div"
+                    className="jwt-spotlight__cover-title"
+                    allowedFormats={[]}
+                    placeholder={__('Judul cover…', 'jwtrading')}
+                    value={attributes.coverTitle}
+                    onChange={(coverTitle) => setAttributes({ coverTitle })}
+                  />
+                </div>
+              </div>
+              <div className="jwt-spotlight__body">
+                <RichText
+                  tagName="span"
+                  className="jwt-badge"
+                  allowedFormats={[]}
+                  placeholder={__('Badge…', 'jwtrading')}
+                  value={attributes.badge}
+                  onChange={(badge) => setAttributes({ badge })}
+                />
+                <RichText
+                  tagName="h3"
+                  className="jwt-spotlight__title"
+                  placeholder={__('Judul…', 'jwtrading')}
+                  value={attributes.title}
+                  onChange={(title) => setAttributes({ title })}
+                />
+                <RichText
+                  tagName="p"
+                  className="jwt-spotlight__text"
+                  placeholder={__('Deskripsi…', 'jwtrading')}
+                  value={attributes.text}
+                  onChange={(text) => setAttributes({ text })}
+                />
+                <RichText
+                  tagName="span"
+                  className="jwt-btn jwt-btn--primary"
+                  allowedFormats={[]}
+                  placeholder={__('Teks tombol…', 'jwtrading')}
+                  value={attributes.buttonText}
+                  onChange={(buttonText) => setAttributes({ buttonText })}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      </>
+    );
+  },
+  save: saveNull,
+});
+
+// --- Connector -------------------------------------------------------------------------
+
+registerBlockType('jwt/connector', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps({ className: 'jwt-connector' });
+    return (
+      <div {...blockProps}>
+        <div className="jwt-container jwt-connector__wrap">
+          <RichText
+            tagName="span"
+            className="jwt-connector__pill"
+            allowedFormats={[]}
+            placeholder={__('Teks penghubung…', 'jwtrading')}
+            value={attributes.text}
+            onChange={(text) => setAttributes({ text })}
+          />
+        </div>
+      </div>
+    );
+  },
+  save: saveNull,
+});
+
+// --- Program panel ---------------------------------------------------------------------
+
+registerBlockType('jwt/program', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps({ className: 'jwt-program' });
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Program', 'jwtrading')}>
+            <TextControl
+              label={__('URL tombol', 'jwtrading')}
+              value={attributes.buttonUrl}
+              onChange={(buttonUrl) => setAttributes({ buttonUrl })}
+            />
+            <TextControl
+              label={__('Footnote (mono)', 'jwtrading')}
+              value={attributes.footnote}
+              onChange={(footnote) => setAttributes({ footnote })}
+            />
+          </PanelBody>
+        </InspectorControls>
+        <section {...blockProps}>
+          <div className="jwt-container">
+            <div className="jwt-program__panel">
+              <div className="jwt-program__pitch">
+                <RichText
+                  tagName="span"
+                  className="jwt-eyebrow"
+                  allowedFormats={[]}
+                  placeholder={__('Eyebrow…', 'jwtrading')}
+                  value={attributes.eyebrow}
+                  onChange={(eyebrow) => setAttributes({ eyebrow })}
+                />
+                <RichText
+                  tagName="h2"
+                  className="jwt-program__title"
+                  placeholder={__('Judul…', 'jwtrading')}
+                  value={attributes.title}
+                  onChange={(title) => setAttributes({ title })}
+                />
+                <RichText
+                  tagName="p"
+                  className="jwt-program__lead"
+                  placeholder={__('Deskripsi…', 'jwtrading')}
+                  value={attributes.lead}
+                  onChange={(lead) => setAttributes({ lead })}
+                />
+                <RichText
+                  tagName="span"
+                  className="jwt-btn jwt-btn--primary"
+                  allowedFormats={[]}
+                  placeholder={__('Teks tombol…', 'jwtrading')}
+                  value={attributes.buttonText}
+                  onChange={(buttonText) => setAttributes({ buttonText })}
+                />
+              </div>
+              <div className="jwt-program__modules">
+                <InnerBlocks
+                  allowedBlocks={['jwt/curriculum-item']}
+                  template={[
+                    ['jwt/curriculum-item', { number: '01' }],
+                    ['jwt/curriculum-item', { number: '02' }],
+                    ['jwt/curriculum-item', { number: '03' }],
+                    ['jwt/curriculum-item', { number: '04' }],
+                  ]}
+                />
+                {attributes.footnote ? (
+                  <div className="jwt-program__footnote">{attributes.footnote}</div>
+                ) : null}
+              </div>
+            </div>
+          </div>
+        </section>
+      </>
+    );
+  },
+  save: saveInner,
+});
+
+// --- Duo CTA ---------------------------------------------------------------------------
+
+registerBlockType('jwt/duo-cta', {
+  edit() {
+    const blockProps = useBlockProps({ className: 'jwt-duo-cta' });
+    return (
+      <section {...blockProps}>
+        <div className="jwt-container">
+          <div className="jwt-duo-cta__grid">
+            <InnerBlocks
+              allowedBlocks={['jwt/cta-card']}
+              template={[
+                ['jwt/cta-card', { accent: true }],
+                ['jwt/cta-card'],
+              ]}
+            />
+          </div>
+        </div>
+      </section>
+    );
+  },
+  save: saveInner,
+});
+
+registerBlockType('jwt/cta-card', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps({
+      className: `jwt-cta-card${attributes.accent ? ' is-accent' : ''}`,
+    });
+
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Kartu CTA', 'jwtrading')}>
+            <ToggleControl
+              label={__('Varian accent (ungu)', 'jwtrading')}
+              checked={!!attributes.accent}
+              onChange={(accent) => setAttributes({ accent })}
+            />
+            <TextControl
+              label={__('URL tombol', 'jwtrading')}
+              value={attributes.buttonUrl}
+              onChange={(buttonUrl) => setAttributes({ buttonUrl })}
+            />
+          </PanelBody>
+        </InspectorControls>
+        <div {...blockProps}>
+          <RichText
+            tagName="span"
+            className={`jwt-eyebrow${attributes.accent ? '' : ' is-muted'}`}
+            allowedFormats={[]}
+            placeholder={__('Eyebrow…', 'jwtrading')}
+            value={attributes.eyebrow}
+            onChange={(eyebrow) => setAttributes({ eyebrow })}
+          />
+          <RichText
+            tagName="h3"
+            className="jwt-cta-card__title"
+            placeholder={__('Judul…', 'jwtrading')}
+            value={attributes.title}
+            onChange={(title) => setAttributes({ title })}
+          />
+          <RichText
+            tagName="p"
+            className="jwt-cta-card__text"
+            placeholder={__('Teks…', 'jwtrading')}
+            value={attributes.text}
+            onChange={(text) => setAttributes({ text })}
+          />
+          <RichText
+            tagName="span"
+            className={`jwt-btn ${attributes.accent ? 'jwt-btn--primary' : 'jwt-btn--ghost'}`}
+            allowedFormats={[]}
+            placeholder={__('Teks tombol…', 'jwtrading')}
+            value={attributes.buttonText}
+            onChange={(buttonText) => setAttributes({ buttonText })}
+          />
+        </div>
       </>
     );
   },

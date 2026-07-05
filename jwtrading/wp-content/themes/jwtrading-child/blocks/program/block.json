@@ -1,25 +1,21 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "jwt/stats",
-	"title": "JWT Stats",
+	"name": "jwt/program",
+	"title": "JWT Program Panel",
 	"category": "jwtrading",
-	"icon": "chart-bar",
-	"description": "Baris angka pencapaian (member, rating, dsb).",
+	"icon": "welcome-learn-more",
+	"description": "Panel bootcamp 2 kolom: pitch kiri, daftar modul kanan.",
 	"textdomain": "jwtrading",
 	"editorScript": "jwt-blocks-editor",
 	"render": "file:./render.php",
-	"supports": {
-		"align": [ "full" ],
-		"html": false,
-		"anchor": true
-	},
+	"supports": { "align": [ "full" ], "html": false, "anchor": true },
 	"attributes": {
 		"eyebrow": { "type": "string", "default": "" },
 		"title": { "type": "string", "default": "" },
 		"lead": { "type": "string", "default": "" },
-		"center": { "type": "boolean", "default": true },
 		"buttonText": { "type": "string", "default": "" },
-		"buttonUrl": { "type": "string", "default": "" }
+		"buttonUrl": { "type": "string", "default": "" },
+		"footnote": { "type": "string", "default": "" }
 	}
 }

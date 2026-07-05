@@ -2,20 +2,20 @@
 // Reusable UI: buttons, cards, pills.
 // ---------------------------------------------------------------------------
 
-// Buttons are full pills with a soft inset bottom shadow — old-site signature.
+// Buttons per JW Home.dc: Space Grotesk 600, 12px radius, purple glow.
 .jwt-btn {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	gap: 0.5rem;
-	font-family: var(--jwt-font-body);
+	font-family: var(--jwt-font-heading);
 	font-size: 1rem;
-	font-weight: 700;
+	font-weight: 600;
 	line-height: 1;
 	text-decoration: none;
-	border-radius: 999px;
-	padding: 0.9375em 2em;
-	transition: transform 0.2s var(--jwt-ease), box-shadow 0.2s var(--jwt-ease), background 0.2s, color 0.2s;
+	border-radius: var(--jwt-radius-sm);
+	padding: 15px 30px;
+	transition: transform 0.2s var(--jwt-ease), box-shadow 0.2s var(--jwt-ease), background 0.2s, color 0.2s, border-color 0.2s;
 	cursor: pointer;
 
 	&:hover {
@@ -31,32 +31,33 @@
 .jwt-btn--primary {
 	background: var(--jwt-accent);
 	color: #fff;
-	box-shadow: 0 8px 24px var(--jwt-accent-soft), inset 0 -4px 4px rgb(0 0 0 / 0.35);
+	box-shadow: 0 12px 36px rgb(124 77 255 / 0.45);
 
 	&:hover {
 		background: var(--jwt-accent-hover);
-		box-shadow: 0 10px 28px var(--jwt-accent-soft), inset 0 -4px 4px rgb(0 0 0 / 0.35);
 		color: #fff;
 	}
 }
 
 .jwt-btn--ghost {
-	background: transparent;
+	background: rgb(255 255 255 / 0.05);
 	color: var(--jwt-text);
-	border: 1px solid var(--jwt-line);
+	border: 1px solid var(--jwt-line-strong);
 
 	&:hover {
-		border-color: var(--jwt-muted);
+		border-color: rgb(255 255 255 / 0.25);
 		color: var(--jwt-text);
 	}
 }
 
-// White pill (old-site header Discord button) — hovers to the warm orange.
+// White pill — header Discord button only (header design unchanged).
 .jwt-btn--light {
 	background: #f5f4f4;
 	color: #131113;
+	font-family: 'Montserrat', var(--jwt-font-body);
 	font-weight: 500;
 	padding: 10px 24px;
+	border-radius: 999px;
 	box-shadow: inset 0 -4px 4px rgb(0 0 0 / 0.25);
 
 	&:hover {
@@ -87,10 +88,27 @@
 	align-items: center;
 	gap: 0.375rem;
 	font-size: 0.8125rem;
-	font-weight: 600;
-	color: var(--jwt-text);
+	font-weight: 500;
+	color: #cfd5df;
 	background: var(--jwt-surface-2);
-	border: 1px solid var(--jwt-line);
+	border: 1px solid rgb(255 255 255 / 0.08);
 	border-radius: 999px;
-	padding: 0.375rem 0.875rem;
+	padding: 0.5rem 0.875rem;
+}
+
+// Bordered mono badge (hero + spotlight labels).
+.jwt-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.625rem;
+	font-family: var(--jwt-font-mono);
+	font-size: 0.75rem;
+	font-weight: 500;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--jwt-accent-light);
+	border: 1px solid rgb(124 77 255 / 0.4);
+	background: rgb(124 77 255 / 0.1);
+	padding: 8px 16px;
+	border-radius: 100px;
 }

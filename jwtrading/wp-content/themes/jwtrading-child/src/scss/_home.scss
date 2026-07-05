@@ -1,0 +1,428 @@
+// ---------------------------------------------------------------------------
+// New-design sections (JW Home.dc): media frame, statement, section heading,
+// spotlight, connector, program panel, duo CTA. Values match the design file.
+// ---------------------------------------------------------------------------
+
+// ----- Media frame (browser-chrome VSL holder) -------------------------------
+.wp-block-jwt-media-frame {
+	padding-block: 0 var(--jwt-section-y);
+}
+
+.jwt-media-frame__wrap {
+	max-width: calc(1040px + 2 * var(--jwt-gutter));
+}
+
+.jwt-media-frame__box {
+	border: 1px solid rgb(255 255 255 / 0.08);
+	border-radius: 16px;
+	background: linear-gradient(#13101f, #0b0912);
+	box-shadow: var(--jwt-shadow);
+	overflow: hidden;
+}
+
+.jwt-media-frame__bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 14px 18px;
+	border-bottom: 1px solid rgb(255 255 255 / 0.06);
+}
+
+.jwt-media-frame__dots {
+	display: flex;
+	gap: 7px;
+
+	span {
+		width: 11px;
+		height: 11px;
+		border-radius: 50%;
+		background: #2a2733;
+	}
+}
+
+.jwt-media-frame__label {
+	font-family: var(--jwt-font-mono);
+	font-size: 0.75rem;
+	color: var(--jwt-accent-light);
+
+	&.is-green {
+		color: var(--jwt-success);
+	}
+}
+
+.jwt-media-frame__body {
+	> * {
+		margin: 0 !important;
+	}
+
+	iframe,
+	video,
+	img {
+		display: block;
+		width: 100%;
+	}
+
+	&.is-empty {
+		height: 360px;
+		background: repeating-linear-gradient(135deg, #120f1c, #120f1c 11px, #0d0b14 11px, #0d0b14 22px);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+}
+
+.jwt-media-frame__placeholder {
+	font-family: var(--jwt-font-mono);
+	font-size: 0.8125rem;
+	letter-spacing: 0.08em;
+	color: var(--jwt-dim);
+}
+
+// ----- Numbered pillar cards (jwt/feature-item with number) ---------------------
+.jwt-feature--numbered {
+	position: relative;
+	overflow: hidden;
+	padding: 34px;
+}
+
+.jwt-feature__glow {
+	position: absolute;
+	top: -30px;
+	right: -30px;
+	width: 120px;
+	height: 120px;
+	background: rgb(124 77 255 / 0.18);
+	border-radius: 50%;
+	filter: blur(34px);
+	pointer-events: none;
+}
+
+.jwt-feature__inner {
+	position: relative;
+}
+
+.jwt-feature__num {
+	font-family: var(--jwt-font-mono);
+	font-size: 0.75rem;
+	color: var(--jwt-accent);
+	margin-bottom: 18px;
+}
+
+.jwt-feature--numbered .jwt-feature__title {
+	font-family: var(--jwt-font-heading);
+	font-size: 1.5rem;
+	margin-bottom: 12px;
+}
+
+// ----- Statement panel ------------------------------------------------------------
+.jwt-statement__box {
+	position: relative;
+	overflow: hidden;
+	border-radius: 22px;
+	border: 1px solid rgb(124 77 255 / 0.28);
+	background: linear-gradient(120deg, rgb(124 77 255 / 0.12), rgb(124 77 255 / 0.02));
+	padding: clamp(2.5rem, 6vw, 4rem) clamp(1.5rem, 5vw, 3.5rem);
+	text-align: center;
+
+	&::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: radial-gradient(circle at 50% 0%, rgb(124 77 255 / 0.22), transparent 60%);
+		pointer-events: none;
+	}
+
+	> * {
+		position: relative;
+	}
+}
+
+.jwt-statement__title {
+	font-family: var(--jwt-font-heading);
+	font-size: clamp(1.625rem, 1.3rem + 1.6vw, 2.375rem);
+	line-height: 1.18;
+	letter-spacing: -0.02em;
+	max-width: 760px;
+	margin-inline: auto;
+}
+
+.jwt-statement__lead {
+	font-size: 1.0625rem;
+	line-height: 1.65;
+	color: #b8c0cd;
+	max-width: 600px;
+	margin: 22px auto 0;
+}
+
+// ----- Section heading (opener) -----------------------------------------------------
+.jwt-section-heading {
+	padding-block: var(--jwt-section-y) 0;
+
+	.jwt-section-header {
+		margin-bottom: 0;
+	}
+}
+
+// ----- Product spotlight ---------------------------------------------------------
+.wp-block-jwt-spotlight {
+	padding-block: 2.75rem 1.5rem;
+}
+
+.jwt-spotlight__panel {
+	display: grid;
+	grid-template-columns: 0.85fr 1.15fr;
+	gap: 48px;
+	align-items: center;
+	background: linear-gradient(120deg, #100e1a, #0b0912);
+	border: 1px solid var(--jwt-line);
+	border-radius: 22px;
+	padding: clamp(1.75rem, 4vw, 3.25rem);
+
+	@media (max-width: 860px) {
+		grid-template-columns: 1fr;
+		gap: 32px;
+	}
+}
+
+.is-reverse .jwt-spotlight__media {
+	order: 2;
+
+	@media (max-width: 860px) {
+		order: 0;
+	}
+}
+
+.jwt-spotlight__media {
+	display: flex;
+	justify-content: center;
+}
+
+.jwt-spotlight__img {
+	border-radius: 13px;
+	max-width: 280px;
+	height: auto;
+}
+
+.jwt-spotlight__cover {
+	width: 230px;
+	aspect-ratio: 3 / 4;
+	border-radius: 13px;
+	background: linear-gradient(160deg, #1a1330, #0c0a16);
+	border: 1px solid rgb(124 77 255 / 0.4);
+	box-shadow: 0 30px 70px rgb(124 77 255 / 0.22);
+	padding: 26px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	position: relative;
+	overflow: hidden;
+	rotate: -3deg;
+}
+
+.jwt-spotlight__cover-glow {
+	position: absolute;
+	top: -70px;
+	right: -50px;
+	width: 170px;
+	height: 170px;
+	background: rgb(124 77 255 / 0.3);
+	border-radius: 50%;
+	filter: blur(40px);
+}
+
+.jwt-spotlight__cover-label {
+	position: relative;
+	font-family: var(--jwt-font-mono);
+	font-size: 0.625rem;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--jwt-accent-light);
+	margin-top: 18px;
+}
+
+.jwt-spotlight__cover-title {
+	position: relative;
+	font-family: var(--jwt-font-heading);
+	font-weight: 700;
+	font-size: 1.4375rem;
+	line-height: 1.1;
+	letter-spacing: -0.02em;
+}
+
+.jwt-spotlight__body .jwt-badge {
+	font-size: 0.6875rem;
+	padding: 6px 12px;
+}
+
+.jwt-spotlight__title {
+	font-family: var(--jwt-font-heading);
+	font-size: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+	line-height: 1.14;
+	letter-spacing: -0.02em;
+	margin: 16px 0 14px;
+}
+
+.jwt-spotlight__text {
+	font-size: 1rem;
+	line-height: 1.65;
+	color: var(--jwt-muted);
+	margin: 0 0 22px;
+}
+
+.jwt-spotlight__chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-bottom: 26px;
+}
+
+// ----- Connector pill ---------------------------------------------------------------
+.jwt-connector {
+	padding-block: 0 !important;
+	position: relative;
+	z-index: 3;
+}
+
+.jwt-connector__wrap {
+	display: flex;
+	justify-content: center;
+}
+
+.jwt-connector__pill {
+	font-family: var(--jwt-font-mono);
+	font-size: 0.6875rem;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--jwt-dim);
+	border: 1px solid rgb(255 255 255 / 0.08);
+	border-radius: 100px;
+	padding: 8px 18px;
+	background: var(--jwt-bg);
+}
+
+// ----- Program panel ------------------------------------------------------------------
+.wp-block-jwt-program {
+	padding-block: 2.25rem var(--jwt-section-y);
+}
+
+.jwt-program__panel {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 48px;
+	align-items: center;
+	background: linear-gradient(120deg, #100e1a, #0b0912);
+	border: 1px solid var(--jwt-line);
+	border-radius: 22px;
+	padding: clamp(1.75rem, 4vw, 3.25rem);
+
+	@media (max-width: 860px) {
+		grid-template-columns: 1fr;
+		gap: 32px;
+	}
+}
+
+.jwt-program__title {
+	font-family: var(--jwt-font-heading);
+	font-size: clamp(1.625rem, 1.35rem + 1.4vw, 2.375rem);
+	line-height: 1.12;
+	letter-spacing: -0.02em;
+	margin: 16px 0;
+}
+
+.jwt-program__lead {
+	font-size: 1.03125rem;
+	line-height: 1.65;
+	color: var(--jwt-muted);
+	margin: 0 0 26px;
+}
+
+.jwt-program__modules {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+// Module rows reuse jwt/curriculum-item — reset the list look inside the panel.
+.jwt-program .jwt-curriculum-item {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	background: var(--jwt-surface-2);
+	border: 1px solid rgb(255 255 255 / 0.06);
+	border-radius: 11px;
+	padding: 14px 18px;
+	counter-increment: none;
+
+	&::before {
+		content: none;
+	}
+}
+
+.jwt-program .jwt-curriculum-item__num {
+	font-family: var(--jwt-font-mono);
+	font-size: 0.75rem;
+	color: var(--jwt-accent);
+	flex-shrink: 0;
+}
+
+.jwt-program .jwt-curriculum-item__title {
+	font-family: var(--jwt-font-heading);
+	font-weight: 600;
+	font-size: 0.9375rem;
+}
+
+.jwt-program__footnote {
+	font-family: var(--jwt-font-mono);
+	font-size: 0.75rem;
+	color: var(--jwt-dim);
+	text-align: center;
+	margin-top: 6px;
+}
+
+// ----- Duo CTA -------------------------------------------------------------------------
+.jwt-duo-cta__grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px;
+
+	@media (max-width: 820px) {
+		grid-template-columns: 1fr;
+	}
+}
+
+.jwt-cta-card {
+	border-radius: 20px;
+	border: 1px solid rgb(255 255 255 / 0.08);
+	background: var(--jwt-surface);
+	padding: clamp(1.75rem, 4vw, 2.75rem);
+
+	&.is-accent {
+		position: relative;
+		overflow: hidden;
+		border-color: rgb(124 77 255 / 0.28);
+		background: linear-gradient(140deg, rgb(124 77 255 / 0.14), rgb(124 77 255 / 0.02));
+	}
+
+	.jwt-eyebrow.is-muted {
+		color: var(--jwt-muted);
+	}
+}
+
+.jwt-cta-card__title {
+	font-family: var(--jwt-font-heading);
+	font-size: 1.75rem;
+	letter-spacing: -0.02em;
+	margin: 14px 0 12px;
+}
+
+.jwt-cta-card__text {
+	font-size: 0.96875rem;
+	line-height: 1.6;
+	color: var(--jwt-muted);
+	margin: 0 0 24px;
+
+	.is-accent & {
+		color: #b8c0cd;
+	}
+}

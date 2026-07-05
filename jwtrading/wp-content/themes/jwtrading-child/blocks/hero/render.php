@@ -13,7 +13,7 @@ $jwt_wrapper = get_block_wrapper_attributes( array( 'class' => 'jwt-hero' ) );
 <section <?php echo $jwt_wrapper; // phpcs:ignore WordPress.Security.EscapeOutput ?>>
 	<div class="jwt-container" data-jwt-reveal>
 		<?php if ( '' !== trim( $attributes['eyebrow'] ) ) : ?>
-			<span class="jwt-eyebrow"><?php echo esc_html( $attributes['eyebrow'] ); ?></span>
+			<span class="jwt-badge jwt-hero__badge"><span class="jwt-eyebrow__dot"></span><?php echo esc_html( $attributes['eyebrow'] ); ?></span>
 		<?php endif; ?>
 
 		<?php if ( '' !== trim( $attributes['title'] ) ) : ?>

@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/media-frame",
+	"title": "JWT Media Frame",
+	"category": "jwtrading",
+	"icon": "video-alt3",
+	"description": "Frame ala jendela browser untuk video/VSL dengan label mono.",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": { "align": [ "full" ], "html": false, "anchor": true },
+	"attributes": {
+		"labelLeft": { "type": "string", "default": "" },
+		"labelRight": { "type": "string", "default": "" }
+	}
+}

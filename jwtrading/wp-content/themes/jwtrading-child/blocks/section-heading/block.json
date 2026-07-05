@@ -1,25 +1,19 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "jwt/stats",
-	"title": "JWT Stats",
+	"name": "jwt/section-heading",
+	"title": "JWT Section Heading",
 	"category": "jwtrading",
-	"icon": "chart-bar",
-	"description": "Baris angka pencapaian (member, rating, dsb).",
+	"icon": "heading",
+	"description": "Eyebrow + judul tengah untuk membuka rangkaian section.",
 	"textdomain": "jwtrading",
 	"editorScript": "jwt-blocks-editor",
 	"render": "file:./render.php",
-	"supports": {
-		"align": [ "full" ],
-		"html": false,
-		"anchor": true
-	},
+	"supports": { "align": [ "full" ], "html": false, "anchor": true },
 	"attributes": {
 		"eyebrow": { "type": "string", "default": "" },
 		"title": { "type": "string", "default": "" },
 		"lead": { "type": "string", "default": "" },
-		"center": { "type": "boolean", "default": true },
-		"buttonText": { "type": "string", "default": "" },
-		"buttonUrl": { "type": "string", "default": "" }
+		"center": { "type": "boolean", "default": true }
 	}
 }

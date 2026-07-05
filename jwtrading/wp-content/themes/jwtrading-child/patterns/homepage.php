@@ -1,59 +1,55 @@
 <?php
 /**
- * Title: Beranda — JW Trading Academy
+ * Title: Homepage — JW Trading Academy (New Design)
  * Slug: jwtrading/homepage
  * Categories: jwtrading
  * Viewport Width: 1400
- * Description: Susunan lengkap beranda: hero, stats, kurikulum, fitur, testimoni, program, FAQ, CTA. Sisipkan lalu sesuaikan teks.
+ * Description: Layout homepage sesuai desain JW Home.dc: hero + VSL frame, pillars, statement, dua jalur produk, program, proof, duo CTA, FAQ.
  */
 
 defined( 'ABSPATH' ) || exit;
 ?>
-<!-- wp:jwt/hero {"align":"full","eyebrow":"🔥 Promo Bootcamp — 20% OFF · Kode KG29RRJB","title":"Belajar Trading <mark>Dari Nol</mark> Sampai Konsisten","lead":"Kurikulum terstruktur berbasis ICT & IFVG — dari fondasi market sampai siap prop firm. Tanpa ribet, tanpa sinyal-sinyalan.","primaryText":"Mulai Preview Gratis","primaryUrl":"/preview-gratis/","secondaryText":"Lihat Bootcamp","secondaryUrl":"/bootcamp/","note":"Gratis. Tanpa kartu. Tanpa komitmen.","chips":"Fokus • Disiplin • Tenang"} /-->
+<!-- wp:jwt/hero {"align":"full","titleTag":"h1","eyebrow":"ICT · Prop Firms · No Signals","title":"Learn to trade<br><mark>independently.</mark>","lead":"A structured, beginner-first path built on the ICT approach — read the market for yourself, get prop-firm ready, and never depend on signals again.","primaryText":"Join the Bootcamp","primaryUrl":"/bootcamp/","secondaryText":"See member results","secondaryUrl":"/testimonials/","note":"★★★★★ 100% rating on Trustpilot"} /-->
 
-<!-- wp:jwt/stats {"align":"full"} -->
-<!-- wp:jwt/stat-item {"value":"15.000+","label":"Member Komunitas","count":"15000","suffix":"+"} /-->
-<!-- wp:jwt/stat-item {"value":"7","label":"Modul Terstruktur"} /-->
-<!-- wp:jwt/stat-item {"value":"100%","label":"Rating Trustpilot","count":"100","suffix":"%"} /-->
-<!-- wp:jwt/stat-item {"value":"Selamanya","label":"Akses Materi & Update"} /-->
-<!-- /wp:jwt/stats -->
+<!-- wp:jwt/media-frame {"align":"full","labelLeft":"ICT WORKSHOP · LIVE REVIEW","labelRight":"IFVG SETUP"} -->
+<!-- /wp:jwt/media-frame -->
 
-<!-- wp:jwt/curriculum {"align":"full","eyebrow":"Kurikulum","title":"Belajar dengan Struktur yang Jelas","lead":"Tujuh modul berurutan — tiap tahap dibangun di atas tahap sebelumnya, nggak loncat-loncat."} -->
-<!-- wp:jwt/curriculum-item {"title":"Dasar Trading","text":"Cara market bekerja, istilah penting, dan mindset dasar sebelum masuk chart.","tag":"Fondasi"} /-->
-<!-- wp:jwt/curriculum-item {"title":"Fondasi ICT","text":"Struktur market, liquidity, dan mekanisme pergerakan harga ala ICT."} /-->
-<!-- wp:jwt/curriculum-item {"title":"Technical Analysis","text":"Price action dan pembacaan chart tanpa tumpukan indikator."} /-->
-<!-- wp:jwt/curriculum-item {"title":"Entry Model IFVG","text":"Kriteria entry, identifikasi setup, dan eksekusi yang repeatable.","tag":"Inti"} /-->
-<!-- wp:jwt/curriculum-item {"title":"Risk & Psychology Framework","text":"Manajemen risiko, ukuran posisi, dan disiplin psikologi trading."} /-->
-<!-- wp:jwt/curriculum-item {"title":"Prop Firm Sistem","text":"Persiapan lolos challenge sampai dikelola dana prop firm."} /-->
-<!-- wp:jwt/curriculum-item {"title":"Materi Pendukung","text":"Ringkasan tiap modul plus alat bantu untuk mengukur progres belajarmu.","tag":"PDF • Kuis • Jurnal"} /-->
-<!-- /wp:jwt/curriculum -->
-
-<!-- wp:jwt/features {"align":"full","eyebrow":"Apa yang Kamu Dapatkan","title":"Bukan Sekadar Video Course","lead":"Semua yang kamu butuhkan ada di satu tempat — materi, komunitas, dan review rutin."} -->
-<!-- wp:jwt/feature-item {"icon":"video","title":"Video Course Selamanya","text":"Akses permanen ke seluruh materi, termasuk semua update di masa depan."} /-->
-<!-- wp:jwt/feature-item {"icon":"community","title":"Komunitas Discord Privat","text":"Diskusi harian bareng 15.000+ member dan mentor."} /-->
-<!-- wp:jwt/feature-item {"icon":"live","title":"Live Review Mingguan","text":"Bedah chart dan evaluasi setup bersama setiap minggu."} /-->
-<!-- wp:jwt/feature-item {"icon":"chart","title":"Framework ICT & IFVG","text":"Sistem analisis yang terstruktur — bukan sinyal instan."} /-->
-<!-- wp:jwt/feature-item {"icon":"target","title":"Persiapan Prop Firm","text":"Strategi lolos challenge sampai pengelolaan akun funded."} /-->
-<!-- wp:jwt/feature-item {"icon":"docs","title":"PDF, Kuis & Jurnal","text":"Materi pendukung untuk mengunci pemahaman tiap modul."} /-->
+<!-- wp:jwt/features {"align":"full","eyebrow":"What we stand for","title":"Three pillars. One method."} -->
+<!-- wp:jwt/feature-item {"number":"01","title":"ICT, properly taught","text":"Learn how and why price really moves. We teach the ICT approach so you read market logic — not lagging indicators."} /-->
+<!-- wp:jwt/feature-item {"number":"02","title":"Prop-firm ready","text":"A clear system to pass evaluations and trade real capital. Built around the rules and discipline funded trading demands."} /-->
+<!-- wp:jwt/feature-item {"number":"03","title":"No signals, ever","text":"We never sell calls or copy-trades. You learn to find your own A+ setups so you're independent for life."} /-->
 <!-- /wp:jwt/features -->
 
-<!-- wp:jwt/testimonials {"align":"full","eyebrow":"Testimoni","title":"Hasil Nyata dari Member Kami","lead":"Sebagian kecil dari ribuan feedback member bootcamp. Ganti kartu di bawah dengan screenshot asli."} -->
-<!-- wp:jwt/testimonial-item {"quote":"Materinya urut banget — dari nol sampai paham struktur market. Jurnal trading saya sekarang jauh lebih rapi.","name":"Member Bootcamp","role":"Batch 2024"} /-->
-<!-- wp:jwt/testimonial-item {"quote":"Penjelasan ICT-nya paling masuk akal dari semua course yang pernah saya beli.","name":"Member Bootcamp","role":"Komunitas Discord"} /-->
-<!-- wp:jwt/testimonial-item {"quote":"Live review mingguannya yang bikin beda. Setup salah langsung dikoreksi, jadi cepat paham.","name":"Member Bootcamp","role":"Batch 2024"} /-->
-<!-- wp:jwt/testimonial-item {"quote":"Setelah tiga bulan akhirnya konsisten — profit kecil tapi stabil, dan prosesnya jelas.","name":"Member Bootcamp","role":"Alumni Preview Gratis"} /-->
-<!-- /wp:jwt/testimonials -->
+<!-- wp:jwt/statement {"align":"full","eyebrow":"Why no signals","title":"A signal feeds you for a day. The skill to read price feeds you for a career.","lead":"We don't sell calls or copy-trades. You learn the ICT logic behind every move so you can find your own A+ setups — independent, repeatable, and yours."} /-->
 
-<!-- wp:jwt/course-grid {"align":"full","eyebrow":"Program","title":"Mulai dari Sini","lead":"Pilih program sesuai tahap belajarmu — sekali bayar, akses selamanya.","count":3,"columns":3} /-->
+<!-- wp:jwt/section-heading {"align":"full","eyebrow":"Where to start","title":"Two ways in. Start where you are."} /-->
 
-<!-- wp:jwt/faq {"align":"full","eyebrow":"FAQ","title":"Pertanyaan yang Sering Ditanya","lead":"Masih ragu? Mungkin jawabannya ada di sini."} -->
-<!-- wp:jwt/faq-item {"question":"Apakah perlu pengalaman trading sebelumnya?","answer":"Tidak. Bootcamp dimulai benar-benar dari nol — modul pertama membahas dasar market sebelum masuk materi teknikal."} /-->
-<!-- wp:jwt/faq-item {"question":"Materinya berlaku untuk market apa saja?","answer":"Konsep ICT & IFVG berlaku untuk forex, crypto, indeks, dan komoditas. Contoh kasus di kelas memakai beberapa market sekaligus."} /-->
-<!-- wp:jwt/faq-item {"question":"Apakah harus trading full-time?","answer":"Tidak. Banyak member belajar sambil kerja — video bisa diakses kapan saja dan live review selalu ada rekamannya."} /-->
-<!-- wp:jwt/faq-item {"question":"Apa itu ICT?","answer":"Inner Circle Trader — pendekatan analisis yang fokus pada struktur market dan liquidity, bukan tumpukan indikator."} /-->
-<!-- wp:jwt/faq-item {"question":"Apa itu prop firm?","answer":"Perusahaan yang mendanai trader. Lolos challenge mereka berarti kamu trading memakai dana perusahaan dengan pembagian profit."} /-->
-<!-- wp:jwt/faq-item {"question":"Berapa lama akses materinya?","answer":"Selamanya. Sekali bayar, termasuk semua update materi di masa depan."} /-->
-<!-- wp:jwt/faq-item {"question":"Kalau ternyata tidak cocok bagaimana?","answer":"Mulai dari Bootcamp Preview gratis dulu untuk merasakan cara mengajar kami — tanpa kartu, tanpa komitmen."} /-->
+<!-- wp:jwt/spotlight {"align":"full","badge":"Low-ticket · $10","title":"New to prop firms? Start with the $10 guide.","text":"Prop firms are still new in Indonesia. This short, practical guide explains what they are, which to pick, and how to get funded — the cheapest way to go from confused to ready.","chips":"What prop firms really are|Partner discount codes|30-day pass plan","buttonText":"Learn more →","buttonUrl":"#","coverLabel":"The Ultimate Guide","coverTitle":"How to Rinse Prop Firms in 2026"} /-->
+
+<!-- wp:jwt/connector {"align":"full","text":"Ready to go all-in ↓"} /-->
+
+<!-- wp:jwt/program {"align":"full","eyebrow":"The program","title":"A complete bootcamp, from your first chart to funded.","lead":"Seven structured modules, a four-phase roadmap, live reviews and the JW Trading Journal — everything you need in one place, with lifetime access.","buttonText":"Explore the Bootcamp →","buttonUrl":"/bootcamp/","footnote":"+ 3 more modules inside"} -->
+<!-- wp:jwt/curriculum-item {"number":"01","title":"Trading Foundations"} /-->
+<!-- wp:jwt/curriculum-item {"number":"02","title":"ICT Foundations"} /-->
+<!-- wp:jwt/curriculum-item {"number":"04","title":"IFVG Entry Model"} /-->
+<!-- wp:jwt/curriculum-item {"number":"06","title":"Prop Firm System"} /-->
+<!-- /wp:jwt/program -->
+
+<!-- wp:jwt/stats {"align":"full","eyebrow":"Proof","title":"Members who trusted the process.","buttonText":"View the full track record →","buttonUrl":"/testimonials/"} -->
+<!-- wp:jwt/stat-item {"value":"100%","label":"Trustpilot rating","count":"100","suffix":"%"} /-->
+<!-- wp:jwt/stat-item {"value":"Lifetime","label":"Access included"} /-->
+<!-- wp:jwt/stat-item {"value":"7","label":"Structured modules"} /-->
+<!-- wp:jwt/stat-item {"value":"Weekly","label":"Live reviews"} /-->
+<!-- /wp:jwt/stats -->
+
+<!-- wp:jwt/duo-cta {"align":"full"} -->
+<!-- wp:jwt/cta-card {"accent":true,"eyebrow":"Community","title":"A private Discord that has your back.","text":"Members, mentors and weekly live reviews — share setups, get feedback and stay accountable.","buttonText":"Join the Discord","buttonUrl":"/discord/"} /-->
+<!-- wp:jwt/cta-card {"eyebrow":"Questions?","title":"Talk to us on WhatsApp.","text":"Not sure if the bootcamp is right for you? Message us directly and we'll help you decide.","buttonText":"Chat on WhatsApp →","buttonUrl":"https://wa.me/628113931505"} /-->
+<!-- /wp:jwt/duo-cta -->
+
+<!-- wp:jwt/faq {"align":"full","eyebrow":"FAQ","title":"Quick answers.","buttonText":"Start the Bootcamp →","buttonUrl":"/bootcamp/"} -->
+<!-- wp:jwt/faq-item {"question":"Do I need any experience?","answer":"No. The bootcamp is built for beginners and traders who still feel stuck. We start from the basics and build up to live execution, step by step."} /-->
+<!-- wp:jwt/faq-item {"question":"What is ICT?","answer":"ICT is an approach focused on understanding how and why price moves. Instead of relying on indicators or signals, you learn to read price action logically and understand market behaviour."} /-->
+<!-- wp:jwt/faq-item {"question":"Do you give signals?","answer":"No — and that's the point. We teach you to find your own setups so you're never dependent on someone else's calls."} /-->
+<!-- wp:jwt/faq-item {"question":"Which markets does it work on?","answer":"The ICT and IFVG concepts apply to forex, crypto, indices, gold and commodities. We teach you how to build your own framework for any market."} /-->
 <!-- /wp:jwt/faq -->
-
-<!-- wp:jwt/cta {"align":"full","title":"Mulai dengan Bootcamp Preview Gratis","lead":"Rasakan cara mengajar kami sebelum memutuskan join — materi contoh langsung dikirim ke email kamu.","buttonText":"Ambil Preview Gratis","buttonUrl":"/preview-gratis/","promoText":"🔥 20% OFF dengan kode KG29RRJB","note":"Gratis. Tanpa kartu. Tanpa komitmen."} /-->
