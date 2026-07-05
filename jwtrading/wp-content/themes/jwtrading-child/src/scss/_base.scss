@@ -29,9 +29,20 @@ html body {
 	}
 }
 
-// Kadence's default single/page content padding fights our own block spacing.
+// Kadence's boxed-content card (.entry / .entry-content-wrap) defaults to a
+// light background + padding via customizer-GENERATED inline CSS printed in
+// <head> — it loads after our stylesheet and wins ties on load order alone,
+// so a plain override can't be trusted to win; !important is the only
+// reliable fix for third-party inline CSS whose emit order we don't control.
+// Painting it our own dark bg (not just stripping padding) also means any
+// padding that slips back through never shows up as a white flash.
+.entry,
 .entry-content-wrap {
-	padding: 0;
+	background: var(--jwt-bg) !important;
+}
+
+.entry-content-wrap {
+	padding: 0 !important;
 }
 
 // Every jwt block is a full-width section on the flat near-black canvas;

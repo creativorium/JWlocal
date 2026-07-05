@@ -116,14 +116,13 @@ body.admin-bar .jwt-header {
 	display: none;
 }
 
-// Dimmed backdrop behind the drawer (relevant once the drawer's max-width
-// no longer spans the full viewport, e.g. tablets).
+// Dimmed backdrop behind the drawer — flat black, matches the old
+// Elementor popup (#584) scrim exactly (rgba(0,0,0,.8), no blur on the scrim
+// itself; the frosted-glass blur lives on the panel, see .jwt-header__nav).
 .jwt-nav-backdrop {
 	position: fixed;
 	inset: 0;
-	background: rgb(4 3 8 / 0.55);
-	-webkit-backdrop-filter: blur(2px);
-	backdrop-filter: blur(2px);
+	background: rgb(0 0 0 / 0.8);
 	opacity: 0;
 	pointer-events: none;
 	transition: opacity 0.3s ease;
@@ -184,28 +183,38 @@ body.jwt-nav-open {
 		}
 	}
 
-	// Full-height panel that slides in from the right.
+	// Panel that slides in from the right — 420px card flush to the top-right
+	// corner, rounded only on its left edge, frosted purple glass. Values
+	// ported from the old Elementor popup (#584 / post-584.css).
 	.jwt-header__nav {
 		position: fixed;
 		inset: 0 0 0 auto;
-		width: 100%;
-		max-width: 360px;
-		height: 100dvh;
+		width: 420px;
+		max-width: 100%;
+		min-height: 100dvh;
 		display: flex;
 		flex-direction: column;
-		background:
-			radial-gradient(560px 380px at 50% -8%, var(--jwt-haze), transparent 68%),
-			linear-gradient(180deg, #0d0a1a 0%, #08070e 60%);
-		box-shadow: -20px 0 60px rgb(0 0 0 / 0.45);
-		padding: 104px 32px 40px;
+		justify-content: center;
+		gap: 6rem;
+		background-color: rgb(124 77 255 / 0.16);
+		-webkit-backdrop-filter: blur(5px);
+		backdrop-filter: blur(5px);
+		border-style: solid;
+		border-width: 1px 0 0 1px;
+		border-color: rgb(124 77 255 / 0.5);
+		border-radius: 10px 0 0 10px;
+		box-shadow: 2px 8px 23px 3px rgb(0 0 0 / 0.2);
+		padding: 4rem 2rem;
 		overflow-y: auto;
 		translate: 100% 0;
-		transition: translate 0.35s var(--jwt-ease);
+		opacity: 0;
+		transition: translate 0.45s var(--jwt-ease), opacity 0.45s var(--jwt-ease);
 		z-index: 100;
 	}
 
 	body.jwt-nav-open .jwt-header__nav {
 		translate: 0 0;
+		opacity: 1;
 	}
 
 	// Pill becomes a spaced-out vertical list in the drawer.
@@ -217,13 +226,16 @@ body.jwt-nav-open {
 		box-shadow: none;
 		border-radius: 0;
 
+		li:not(:last-child) {
+			margin-bottom: 2rem;
+		}
+
 		a {
 			display: block;
-			padding: 14px 0;
-			font-family: var(--jwt-font-heading);
-			font-size: 1.375rem;
-			font-weight: 600;
-			color: rgb(255 255 255 / 0.85);
+			font-family: 'Montserrat', var(--jwt-font-body);
+			font-size: 1.5rem;
+			font-weight: 400;
+			color: #f5f4f4;
 			opacity: 1;
 		}
 
@@ -235,14 +247,23 @@ body.jwt-nav-open {
 
 	.jwt-nav-follow {
 		display: block;
-		margin-top: auto;
-		padding-top: 48px;
 	}
 
 	.jwt-nav-follow__label {
 		display: block;
-		font-size: 0.9375rem;
-		color: rgb(255 255 255 / 0.55);
-		margin-bottom: 16px;
+		font-family: 'Montserrat', var(--jwt-font-body);
+		font-size: 1rem;
+		color: #f5f4f4;
+		margin-bottom: 1.5rem;
+	}
+}
+
+@media (max-width: 767px) {
+	.jwt-nav li:not(:last-child) {
+		margin-bottom: 1rem;
+	}
+
+	.jwt-nav a {
+		font-size: 1.25rem;
 	}
 }
