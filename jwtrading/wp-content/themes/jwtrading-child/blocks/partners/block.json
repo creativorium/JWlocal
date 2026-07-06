@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/partners",
+	"title": "JWT Partners",
+	"category": "jwtrading",
+	"icon": "awards",
+	"description": "Strip logo partner/prop firm dengan heading kecil.",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"align": [ "full" ],
+		"html": false,
+		"anchor": true
+	},
+	"attributes": {
+		"heading": { "type": "string", "default": "" }
+	}
+}

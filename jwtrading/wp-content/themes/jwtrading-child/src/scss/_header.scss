@@ -153,6 +153,11 @@ body.jwt-nav-open {
 }
 
 @media (max-width: 880px) {
+	// Header shrinks to 72px here — keep the hero's viewport-fill calc exact.
+	:root {
+		--jwt-header-h: 72px;
+	}
+
 	.jwt-header__bar {
 		grid-template-columns: auto auto;
 		justify-content: space-between;

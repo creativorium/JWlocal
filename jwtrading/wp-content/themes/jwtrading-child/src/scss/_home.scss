@@ -3,6 +3,71 @@
 // spotlight, connector, program panel, duo CTA. Values match the design file.
 // ---------------------------------------------------------------------------
 
+// ----- Partners / prop-firm logo strip ---------------------------------------
+.jwt-partners {
+	// Brand purple at 8% over the dark canvas (per spec).
+	background: rgb(124 77 255 / 0.08);
+	padding-block: clamp(2.25rem, 5vw, 3.25rem);
+}
+
+.jwt-partners__heading {
+	font-family: var(--jwt-font-mono);
+	font-size: 0.75rem;
+	font-weight: 500;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--jwt-muted);
+	text-align: center;
+	margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.jwt-partners__row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: clamp(1.75rem, 5vw, 3.5rem);
+}
+
+.jwt-partner {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: var(--jwt-muted);
+	text-decoration: none;
+	font-family: var(--jwt-font-body);
+	font-size: 0.9375rem;
+	font-weight: 600;
+	white-space: nowrap;
+	// Logos read as one calm monochrome row; real color returns on hover.
+	opacity: 0.75;
+	transition: opacity 0.2s, color 0.2s;
+
+	&:hover {
+		opacity: 1;
+		color: var(--jwt-text);
+	}
+}
+
+.jwt-partner__placeholder svg {
+	display: block;
+	width: 22px;
+	height: 22px;
+}
+
+.jwt-partner__logo {
+	display: block;
+	max-height: 30px;
+	width: auto;
+	// Uploaded logos: desaturate to match the row, full color on hover.
+	filter: grayscale(1) brightness(1.4);
+	transition: filter 0.2s;
+
+	.jwt-partner:hover & {
+		filter: none;
+	}
+}
+
 // ----- Media frame (browser-chrome VSL holder) -------------------------------
 .wp-block-jwt-media-frame {
 	padding-block: 0 var(--jwt-section-y);

@@ -15,7 +15,13 @@
 .jwt-hero {
 	position: relative;
 	text-align: center;
-	// Less space above the title, keep generous breathing room below.
+	// Full-viewport hero: fill exactly the space below the sticky header,
+	// content vertically centered. `min-height` (not height) so it still
+	// grows if the content is ever taller than the viewport.
+	min-height: calc(100vh - var(--jwt-header-h));
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
 	padding-block: clamp(2rem, 6vh, 3.5rem) clamp(4rem, 11vw, 7rem);
 
 	// Purple haze per brand spec: radial-gradient(rgba(124,77,255,.3), transparent 65%) + blur(20px)
@@ -80,6 +86,16 @@
 
 	strong {
 		font-weight: 700;
+	}
+
+	// Force the text pieces white. Needed because the prose-readability rule
+	// `#jwt-content a:not(.jwt-btn)` (specificity 1,1,1) colors this <a> and
+	// its children would otherwise inherit that. Coloring the children
+	// directly beats inheritance regardless of the link color; the separator
+	// and star keep their own colors (excluded / own rule).
+	strong,
+	span:not(.jwt-hero__rating-sep) {
+		color: #fff;
 	}
 
 	&:hover {

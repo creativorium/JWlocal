@@ -1130,3 +1130,105 @@ registerBlockType('jwt/cta-card', {
   },
   save: saveNull,
 });
+
+// --- Partners / prop-firm logo strip -------------------------------------------
+
+registerBlockType('jwt/partners', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps({ className: 'jwt-partners' });
+    return (
+      <section {...blockProps}>
+        <div className="jwt-container">
+          <RichText
+            tagName="p"
+            className="jwt-partners__heading"
+            allowedFormats={[]}
+            placeholder={__('Didukung oleh …', 'jwtrading')}
+            value={attributes.heading}
+            onChange={(heading) => setAttributes({ heading })}
+          />
+          <div className="jwt-partners__row">
+            <InnerBlocks
+              allowedBlocks={['jwt/partner-item']}
+              template={[
+                ['jwt/partner-item'],
+                ['jwt/partner-item'],
+                ['jwt/partner-item'],
+                ['jwt/partner-item'],
+              ]}
+            />
+          </div>
+        </div>
+      </section>
+    );
+  },
+  save: saveInner,
+});
+
+registerBlockType('jwt/partner-item', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps({ className: 'jwt-partner' });
+    const { imageId, imageUrl } = attributes;
+
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Logo Partner', 'jwtrading')}>
+            <p style={{ fontSize: 12, opacity: 0.8 }}>
+              {__('Upload logo asli kalau sudah ada. Kalau kosong, tampil placeholder + nama.', 'jwtrading')}
+            </p>
+            <MediaUploadCheck>
+              <MediaUpload
+                onSelect={(media) =>
+                  setAttributes({ imageId: media.id, imageUrl: media.url })
+                }
+                allowedTypes={['image']}
+                value={imageId}
+                render={({ open }) => (
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <Button variant="secondary" onClick={open}>
+                      {imageId ? __('Ganti logo', 'jwtrading') : __('Upload logo', 'jwtrading')}
+                    </Button>
+                    {imageId ? (
+                      <Button variant="link" isDestructive onClick={() => setAttributes({ imageId: 0, imageUrl: '' })}>
+                        {__('Hapus', 'jwtrading')}
+                      </Button>
+                    ) : null}
+                  </div>
+                )}
+              />
+            </MediaUploadCheck>
+            <TextControl
+              label={__('URL (opsional)', 'jwtrading')}
+              value={attributes.url}
+              onChange={(url) => setAttributes({ url })}
+            />
+          </PanelBody>
+        </InspectorControls>
+        <div {...blockProps}>
+          {imageId ? (
+            <img className="jwt-partner__logo" src={imageUrl} alt={attributes.name} />
+          ) : (
+            <>
+              <span className="jwt-partner__placeholder" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="4" />
+                  <path d="M8 12h8" />
+                </svg>
+              </span>
+              <RichText
+                tagName="span"
+                className="jwt-partner__name"
+                allowedFormats={[]}
+                placeholder={__('Nama partner…', 'jwtrading')}
+                value={attributes.name}
+                onChange={(name) => setAttributes({ name })}
+              />
+            </>
+          )}
+        </div>
+      </>
+    );
+  },
+  save: saveNull,
+});

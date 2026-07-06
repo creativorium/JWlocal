@@ -9,7 +9,16 @@
 
 defined( 'ABSPATH' ) || exit;
 ?>
-<!-- wp:jwt/hero {"align":"full","titleTag":"h1","eyebrow":"ICT · Prop Firms · No Signals","title":"Learn to trade<br><mark>independently.</mark>","lead":"A structured, beginner-first path built on the ICT approach — read the market for yourself, get prop-firm ready, and never depend on signals again.","primaryText":"Join the Bootcamp","primaryUrl":"/bootcamp/","secondaryText":"See member results","secondaryUrl":"/testimonials/","note":"★★★★★ 100% rating on Trustpilot"} /-->
+<!-- wp:jwt/hero {"align":"full","titleTag":"h1","showTrustBadge":true,"title":"Lolos Prop Firm Challenge<br><mark>Dengan ICT Trading.</mark>","lead":"Belajar membaca market sendiri menggunakan ICT — dan persiapkan diri untuk lolos prop firm evaluation. Tanpa sinyal, tanpa tebak-tebakan.","primaryText":"Lihat Bootcamp →","primaryUrl":"/bootcamp/","secondaryText":"Coba Gratis","secondaryUrl":"/free-content-preview/","note":"+17.000 Member Komunitas"} /-->
+
+<!-- wp:jwt/partners {"align":"full","heading":"Didukung oleh Prop Firm Terpercaya"} -->
+<!-- wp:jwt/partner-item {"name":"TopStep"} /-->
+<!-- wp:jwt/partner-item {"name":"Alpha Futures"} /-->
+<!-- wp:jwt/partner-item {"name":"5%ers"} /-->
+<!-- wp:jwt/partner-item {"name":"Apex"} /-->
+<!-- wp:jwt/partner-item {"name":"WeMasterTrade"} /-->
+<!-- wp:jwt/partner-item {"name":"MyFunded Futures"} /-->
+<!-- /wp:jwt/partners -->
 
 <!-- wp:jwt/media-frame {"align":"full","labelLeft":"ICT WORKSHOP · LIVE REVIEW","labelRight":"IFVG SETUP"} -->
 <!-- /wp:jwt/media-frame -->

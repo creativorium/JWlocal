@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/partner-item",
+	"title": "JWT Partner",
+	"category": "jwtrading",
+	"icon": "screenoptions",
+	"description": "Satu logo partner (upload logo asli, atau placeholder + nama).",
+	"textdomain": "jwtrading",
+	"parent": [ "jwt/partners" ],
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"html": false,
+		"reusable": false
+	},
+	"attributes": {
+		"name": { "type": "string", "default": "" },
+		"imageId": { "type": "number", "default": 0 },
+		"imageUrl": { "type": "string", "default": "" },
+		"url": { "type": "string", "default": "" }
+	}
+}
