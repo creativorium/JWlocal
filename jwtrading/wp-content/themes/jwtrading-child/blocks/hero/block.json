@@ -16,6 +16,7 @@
 	},
 	"attributes": {
 		"eyebrow": { "type": "string", "default": "" },
+		"useRatingBadge": { "type": "boolean", "default": false },
 		"ratingText": { "type": "string", "default": "" },
 		"ratingValue": { "type": "string", "default": "" },
 		"ratingBrand": { "type": "string", "default": "" },

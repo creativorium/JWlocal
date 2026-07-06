@@ -12,15 +12,15 @@ $jwt_wrapper = get_block_wrapper_attributes( array( 'class' => 'jwt-hero' ) );
 ?>
 <section <?php echo $jwt_wrapper; // phpcs:ignore WordPress.Security.EscapeOutput ?>>
 	<div class="jwt-container" data-jwt-reveal>
-		<?php
-		$jwt_rating_text = trim( (string) ( $attributes['ratingText'] ?? '' ) );
-
-		if ( '' !== $jwt_rating_text ) :
+		<?php if ( ! empty( $attributes['useRatingBadge'] ) ) : ?>
+			<?php
 			$jwt_rating_url = trim( (string) ( $attributes['ratingUrl'] ?? '' ) );
 			$jwt_tag_name   = '' !== $jwt_rating_url ? 'a' : 'span';
 			?>
 			<<?php echo $jwt_tag_name; // phpcs:ignore WordPress.Security.EscapeOutput ?> class="jwt-hero__rating"<?php echo 'a' === $jwt_tag_name ? ' href="' . esc_url( $jwt_rating_url ) . '" target="_blank" rel="noopener noreferrer"' : ''; // phpcs:ignore WordPress.Security.EscapeOutput -- esc_url above. ?>>
-				<strong><?php echo esc_html( $jwt_rating_text ); ?></strong>
+				<?php if ( '' !== trim( (string) ( $attributes['ratingText'] ?? '' ) ) ) : ?>
+					<strong><?php echo esc_html( $attributes['ratingText'] ); ?></strong>
+				<?php endif; ?>
 				<?php if ( '' !== trim( (string) ( $attributes['ratingValue'] ?? '' ) ) ) : ?>
 					<span><?php echo esc_html( $attributes['ratingValue'] ); ?></span>
 				<?php endif; ?>

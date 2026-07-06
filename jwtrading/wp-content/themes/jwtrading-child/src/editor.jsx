@@ -127,29 +127,23 @@ registerBlockType('jwt/hero', {
       <>
         <InspectorControls>
           <PanelBody title={__('Badge Rating (Trustpilot, dll)', 'jwtrading')} initialOpen={true}>
-            <p style={{ fontSize: 12, opacity: 0.8 }}>
-              {__('Kalau diisi, badge ini menggantikan Eyebrow biasa di bawah — cocok untuk rating/review.', 'jwtrading')}
-            </p>
-            <TextControl
-              label={__('Teks tebal (mis. Excellent)', 'jwtrading')}
-              value={attributes.ratingText}
-              onChange={(ratingText) => setAttributes({ ratingText })}
+            <ToggleControl
+              label={__('Pakai Badge Rating (bukan Eyebrow biasa)', 'jwtrading')}
+              help={
+                attributes.useRatingBadge
+                  ? __('Aktif — edit teksnya langsung di badge pada preview di bawah.', 'jwtrading')
+                  : __('Nonaktif — badge di atas judul memakai Eyebrow biasa (teks promo polos).', 'jwtrading')
+              }
+              checked={!!attributes.useRatingBadge}
+              onChange={(useRatingBadge) => setAttributes({ useRatingBadge })}
             />
-            <TextControl
-              label={__('Nilai rating (mis. 4.4 out of 5)', 'jwtrading')}
-              value={attributes.ratingValue}
-              onChange={(ratingValue) => setAttributes({ ratingValue })}
-            />
-            <TextControl
-              label={__('Nama brand (mis. Trustpilot)', 'jwtrading')}
-              value={attributes.ratingBrand}
-              onChange={(ratingBrand) => setAttributes({ ratingBrand })}
-            />
-            <TextControl
-              label={__('URL (opsional — link ke halaman review)', 'jwtrading')}
-              value={attributes.ratingUrl}
-              onChange={(ratingUrl) => setAttributes({ ratingUrl })}
-            />
+            {attributes.useRatingBadge ? (
+              <TextControl
+                label={__('URL (opsional — link ke halaman review)', 'jwtrading')}
+                value={attributes.ratingUrl}
+                onChange={(ratingUrl) => setAttributes({ ratingUrl })}
+              />
+            ) : null}
           </PanelBody>
 
           <PanelBody title={__('Tombol & Opsi', 'jwtrading')}>
@@ -187,19 +181,33 @@ registerBlockType('jwt/hero', {
 
         <section {...blockProps}>
           <div className="jwt-container">
-            {attributes.ratingText ? (
+            {attributes.useRatingBadge ? (
               <span className="jwt-hero__rating">
-                <strong>{attributes.ratingText}</strong>
-                {attributes.ratingValue ? <span>{attributes.ratingValue}</span> : null}
+                <RichText
+                  tagName="strong"
+                  allowedFormats={[]}
+                  placeholder={__('Excellent', 'jwtrading')}
+                  value={attributes.ratingText}
+                  onChange={(ratingText) => setAttributes({ ratingText })}
+                />
+                <RichText
+                  tagName="span"
+                  allowedFormats={[]}
+                  placeholder={__('4.4 out of 5', 'jwtrading')}
+                  value={attributes.ratingValue}
+                  onChange={(ratingValue) => setAttributes({ ratingValue })}
+                />
                 <svg className="jwt-hero__rating-star" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path d="M10 1.5l2.47 5.53 6.03.58-4.55 4.03 1.33 5.9L10 14.62l-5.28 2.92 1.33-5.9L1.5 7.61l6.03-.58L10 1.5z" />
                 </svg>
-                {attributes.ratingBrand ? (
-                  <>
-                    <span className="jwt-hero__rating-sep">|</span>
-                    <span>{attributes.ratingBrand}</span>
-                  </>
-                ) : null}
+                <span className="jwt-hero__rating-sep">|</span>
+                <RichText
+                  tagName="span"
+                  allowedFormats={[]}
+                  placeholder={__('Trustpilot', 'jwtrading')}
+                  value={attributes.ratingBrand}
+                  onChange={(ratingBrand) => setAttributes({ ratingBrand })}
+                />
               </span>
             ) : (
               <RichText
