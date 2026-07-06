@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/proof",
+	"title": "JWT Proof Marquee",
+	"category": "jwtrading",
+	"icon": "images-alt2",
+	"description": "Baris hasil member yang auto-scroll (marquee) — layout beda dari Testimonials.",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"align": [ "full" ],
+		"html": false,
+		"anchor": true
+	},
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "" },
+		"lead": { "type": "string", "default": "" },
+		"center": { "type": "boolean", "default": true },
+		"speed": { "type": "number", "default": 45 }
+	}
+}

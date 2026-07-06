@@ -20,6 +20,15 @@ defined( 'ABSPATH' ) || exit;
 <!-- wp:jwt/partner-item {"name":"MyFunded Futures"} /-->
 <!-- /wp:jwt/partners -->
 
+<!-- wp:jwt/proof {"align":"full","eyebrow":"Hasil Nyata dari Member Kami","title":"Trader yang sudah buktikan prosesnya"} -->
+<!-- wp:jwt/proof-item {"label":"hasil member 1"} /-->
+<!-- wp:jwt/proof-item {"label":"hasil member 2"} /-->
+<!-- wp:jwt/proof-item {"label":"hasil member 3"} /-->
+<!-- wp:jwt/proof-item {"label":"hasil member 4"} /-->
+<!-- wp:jwt/proof-item {"label":"hasil member 5"} /-->
+<!-- wp:jwt/proof-item {"label":"hasil member 6"} /-->
+<!-- /wp:jwt/proof -->
+
 <!-- wp:jwt/media-frame {"align":"full","labelLeft":"ICT WORKSHOP · LIVE REVIEW","labelRight":"IFVG SETUP"} -->
 <!-- /wp:jwt/media-frame -->
 

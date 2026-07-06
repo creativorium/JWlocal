@@ -68,6 +68,74 @@
 	}
 }
 
+// ----- Proof marquee (auto-scrolling member results) -------------------------
+.jwt-proof__viewport {
+	// Full-bleed track; heading above stays within the container.
+	overflow: hidden;
+	margin-top: clamp(2rem, 5vw, 3.5rem);
+	// Fade the edges so cards enter/exit softly instead of hard-cutting.
+	-webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+	mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+.jwt-proof__track {
+	display: flex;
+	width: max-content;
+
+	@media (prefers-reduced-motion: no-preference) {
+		animation: jwt-proof-scroll var(--jwt-proof-speed, 45s) linear infinite;
+	}
+
+	&:hover {
+		animation-play-state: paused;
+	}
+}
+
+// Two identical groups; each carries a trailing gap (margin-right) equal to
+// its internal gap, so translateX(-50%) lands exactly one group forward =
+// seamless loop with no jump.
+.jwt-proof__group {
+	display: flex;
+	flex-shrink: 0;
+	gap: clamp(1rem, 2vw, 1.5rem);
+	margin-right: clamp(1rem, 2vw, 1.5rem);
+	padding-left: var(--jwt-gutter);
+}
+
+@keyframes jwt-proof-scroll {
+	to {
+		transform: translateX(-50%);
+	}
+}
+
+.jwt-proof-card {
+	flex-shrink: 0;
+	width: clamp(190px, 20vw, 250px);
+	aspect-ratio: 3 / 4;
+	margin: 0;
+	border-radius: var(--jwt-radius);
+	border: 1px solid var(--jwt-line);
+	background: linear-gradient(160deg, #14101f, #0b0912);
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.jwt-proof-card__img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.jwt-proof-card__placeholder {
+	font-family: var(--jwt-font-mono);
+	font-size: 0.8125rem;
+	color: var(--jwt-dim);
+	letter-spacing: 0.04em;
+}
+
 // ----- Media frame (browser-chrome VSL holder) -------------------------------
 .wp-block-jwt-media-frame {
 	padding-block: 0 var(--jwt-section-y);

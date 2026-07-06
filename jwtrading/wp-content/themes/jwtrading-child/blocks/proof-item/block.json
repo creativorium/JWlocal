@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/proof-item",
+	"title": "JWT Proof Card",
+	"category": "jwtrading",
+	"icon": "format-image",
+	"description": "Satu kartu hasil member (screenshot/foto, atau placeholder).",
+	"textdomain": "jwtrading",
+	"parent": [ "jwt/proof" ],
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"html": false,
+		"reusable": false
+	},
+	"attributes": {
+		"imageId": { "type": "number", "default": 0 },
+		"imageUrl": { "type": "string", "default": "" },
+		"imageAlt": { "type": "string", "default": "" },
+		"label": { "type": "string", "default": "" }
+	}
+}

@@ -1232,3 +1232,83 @@ registerBlockType('jwt/partner-item', {
   },
   save: saveNull,
 });
+
+// --- Proof marquee (auto-scrolling member results) -----------------------------
+
+registerBlockType('jwt/proof', {
+  edit: makeSectionEdit({
+    className: 'jwt-proof',
+    innerClass: 'jwt-proof__edit-row',
+    allowed: ['jwt/proof-item'],
+    template: [
+      ['jwt/proof-item', { label: 'hasil member 1' }],
+      ['jwt/proof-item', { label: 'hasil member 2' }],
+      ['jwt/proof-item', { label: 'hasil member 3' }],
+      ['jwt/proof-item', { label: 'hasil member 4' }],
+      ['jwt/proof-item', { label: 'hasil member 5' }],
+    ],
+    panelExtras: ({ attributes, setAttributes }) => (
+      <RangeControl
+        label={__('Kecepatan scroll (detik/putaran)', 'jwtrading')}
+        help={__('Angka lebih besar = lebih lambat.', 'jwtrading')}
+        min={15}
+        max={120}
+        value={attributes.speed}
+        onChange={(speed) => setAttributes({ speed })}
+      />
+    ),
+  }),
+  save: saveInner,
+});
+
+registerBlockType('jwt/proof-item', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps({ className: 'jwt-proof-card' });
+    const { imageId, imageUrl } = attributes;
+
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Gambar Hasil', 'jwtrading')}>
+            <MediaUploadCheck>
+              <MediaUpload
+                onSelect={(media) =>
+                  setAttributes({ imageId: media.id, imageUrl: media.url, imageAlt: media.alt || '' })
+                }
+                allowedTypes={['image']}
+                value={imageId}
+                render={({ open }) => (
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <Button variant="secondary" onClick={open}>
+                      {imageId ? __('Ganti gambar', 'jwtrading') : __('Upload gambar', 'jwtrading')}
+                    </Button>
+                    {imageId ? (
+                      <Button variant="link" isDestructive onClick={() => setAttributes({ imageId: 0, imageUrl: '' })}>
+                        {__('Hapus', 'jwtrading')}
+                      </Button>
+                    ) : null}
+                  </div>
+                )}
+              />
+            </MediaUploadCheck>
+          </PanelBody>
+        </InspectorControls>
+        <figure {...blockProps}>
+          {imageId ? (
+            <img className="jwt-proof-card__img" src={imageUrl} alt={attributes.imageAlt} />
+          ) : (
+            <RichText
+              tagName="span"
+              className="jwt-proof-card__placeholder"
+              allowedFormats={[]}
+              placeholder={__('label…', 'jwtrading')}
+              value={attributes.label}
+              onChange={(label) => setAttributes({ label })}
+            />
+          )}
+        </figure>
+      </>
+    );
+  },
+  save: saveNull,
+});

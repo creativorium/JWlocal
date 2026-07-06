@@ -27,3 +27,13 @@
 	background: transparent;
 }
 
+// Proof marquee in the editor: a plain horizontal scroll row of the cards
+// (no auto-scroll animation while editing, so items stay clickable/editable).
+.jwt-proof__edit-row {
+	display: flex;
+	gap: 1.25rem;
+	overflow-x: auto;
+	padding: 1.5rem 0.25rem;
+	margin-top: 1.5rem;
+}
+
