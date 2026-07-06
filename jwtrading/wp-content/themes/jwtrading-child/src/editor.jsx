@@ -1321,3 +1321,87 @@ registerBlockType('jwt/proof-item', {
   },
   save: saveNull,
 });
+
+// --- Methodology (Apa itu ICT Trading — 4 market boxes + CTA) ------------------
+
+registerBlockType('jwt/methodology', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps({ className: 'jwt-methodology' });
+    return (
+      <>
+        <HeaderPanel attributes={attributes} setAttributes={setAttributes}>
+          <TextControl
+            label={__('Teks tombol (CTA)', 'jwtrading')}
+            value={attributes.buttonText}
+            onChange={(buttonText) => setAttributes({ buttonText })}
+          />
+          <TextControl
+            label={__('URL tombol', 'jwtrading')}
+            value={attributes.buttonUrl}
+            onChange={(buttonUrl) => setAttributes({ buttonUrl })}
+          />
+        </HeaderPanel>
+        <section {...blockProps}>
+          <div className="jwt-container">
+            <HeaderEdit attributes={attributes} setAttributes={setAttributes} />
+            <div className="jwt-methodology__grid">
+              <InnerBlocks
+                templateLock={false}
+                allowedBlocks={['jwt/methodology-item']}
+                template={[
+                  ['jwt/methodology-item', { icon: '📊', title: 'Indices', subtitle: 'NQ, S&P, DAX' }],
+                  ['jwt/methodology-item', { icon: '🥇', title: 'Metals', subtitle: 'Gold, Silver' }],
+                  ['jwt/methodology-item', { icon: '💱', title: 'Forex', subtitle: 'Major & minor pairs' }],
+                  ['jwt/methodology-item', { icon: '₿', title: 'Crypto', subtitle: 'BTC, ETH & lainnya' }],
+                ]}
+              />
+            </div>
+            {attributes.buttonText ? (
+              <div className="jwt-methodology__cta">
+                <span className="jwt-textlink">{attributes.buttonText}</span>
+              </div>
+            ) : null}
+          </div>
+        </section>
+      </>
+    );
+  },
+  save: saveInner,
+});
+
+registerBlockType('jwt/methodology-item', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps({ className: 'jwt-methodology-card' });
+    return (
+      <div {...blockProps}>
+        <RichText
+          tagName="span"
+          className="jwt-methodology-card__icon"
+          allowedFormats={[]}
+          placeholder="📊"
+          value={attributes.icon}
+          onChange={(icon) => setAttributes({ icon })}
+        />
+        <div className="jwt-methodology-card__body">
+          <RichText
+            tagName="h3"
+            className="jwt-methodology-card__title"
+            allowedFormats={[]}
+            placeholder={__('Judul…', 'jwtrading')}
+            value={attributes.title}
+            onChange={(title) => setAttributes({ title })}
+          />
+          <RichText
+            tagName="p"
+            className="jwt-methodology-card__sub"
+            allowedFormats={[]}
+            placeholder={__('Subjudul…', 'jwtrading')}
+            value={attributes.subtitle}
+            onChange={(subtitle) => setAttributes({ subtitle })}
+          />
+        </div>
+      </div>
+    );
+  },
+  save: saveNull,
+});

@@ -29,6 +29,13 @@ defined( 'ABSPATH' ) || exit;
 <!-- wp:jwt/proof-item {"label":"hasil member 6"} /-->
 <!-- /wp:jwt/proof -->
 
+<!-- wp:jwt/methodology {"align":"full","eyebrow":"Metodologi","title":"Apa Itu ICT Trading?","lead":"ICT (Inner Circle Trader) adalah metodologi trading yang menggunakan price action dan konsep smart money untuk membangun analisa yang akurat — tanpa indikator lagging, tanpa sinyal. Berlaku untuk semua market liquid, baik futures maupun CFD.","buttonText":"Pelajari Lebih Lanjut →","buttonUrl":"/bootcamp/"} -->
+<!-- wp:jwt/methodology-item {"icon":"📊","title":"Indices","subtitle":"NQ, S&P, DAX"} /-->
+<!-- wp:jwt/methodology-item {"icon":"🥇","title":"Metals","subtitle":"Gold, Silver"} /-->
+<!-- wp:jwt/methodology-item {"icon":"💱","title":"Forex","subtitle":"Major & minor pairs"} /-->
+<!-- wp:jwt/methodology-item {"icon":"₿","title":"Crypto","subtitle":"BTC, ETH & lainnya"} /-->
+<!-- /wp:jwt/methodology -->
+
 <!-- wp:jwt/media-frame {"align":"full","labelLeft":"ICT WORKSHOP · LIVE REVIEW","labelRight":"IFVG SETUP"} -->
 <!-- /wp:jwt/media-frame -->
 

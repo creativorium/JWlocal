@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/methodology",
+	"title": "JWT Methodology",
+	"category": "jwtrading",
+	"icon": "grid-view",
+	"description": "Penjelasan metodologi + grid 4 kotak market + CTA.",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"align": [ "full" ],
+		"html": false,
+		"anchor": true
+	},
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "" },
+		"lead": { "type": "string", "default": "" },
+		"center": { "type": "boolean", "default": true },
+		"buttonText": { "type": "string", "default": "" },
+		"buttonUrl": { "type": "string", "default": "" }
+	}
+}

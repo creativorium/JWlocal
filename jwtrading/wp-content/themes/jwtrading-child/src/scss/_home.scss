@@ -104,6 +104,7 @@
 // aspect-ratio height so none render taller than the rest.
 .jwt-proof__group {
 	display: flex;
+	flex-wrap: nowrap;
 	align-items: center;
 	flex-shrink: 0;
 	gap: clamp(1rem, 2vw, 1.5rem);
@@ -123,6 +124,7 @@
 	// one card slightly larger than the rest.
 	--jwt-card-w: clamp(190px, 20vw, 250px);
 	flex: none;
+	align-self: center;
 	width: var(--jwt-card-w);
 	height: calc(var(--jwt-card-w) * 4 / 3);
 	margin: 0;
@@ -147,6 +149,86 @@
 	font-size: 0.8125rem;
 	color: var(--jwt-dim);
 	letter-spacing: 0.04em;
+}
+
+// ----- Methodology (Apa itu ICT Trading — 4 market boxes + CTA) --------------
+.jwt-methodology__grid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: clamp(0.875rem, 2vw, 1.25rem);
+
+	@media (max-width: 900px) {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	@media (max-width: 480px) {
+		grid-template-columns: 1fr;
+	}
+}
+
+.jwt-methodology-card {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	padding: clamp(1.25rem, 2.5vw, 1.75rem);
+	background: var(--jwt-surface);
+	border: 1px solid var(--jwt-line);
+	border-radius: var(--jwt-radius);
+	transition: border-color 0.25s, transform 0.25s var(--jwt-ease);
+
+	&:hover {
+		border-color: color-mix(in srgb, var(--jwt-accent) 45%, var(--jwt-line));
+		transform: translateY(-3px);
+	}
+}
+
+.jwt-methodology-card__icon {
+	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 46px;
+	height: 46px;
+	border-radius: var(--jwt-radius-sm);
+	background: var(--jwt-surface-2);
+	font-size: 1.375rem;
+	line-height: 1;
+}
+
+.jwt-methodology-card__title {
+	font-family: var(--jwt-font-heading);
+	font-size: 1.125rem;
+	font-weight: 700;
+}
+
+.jwt-methodology-card__sub {
+	margin-top: 0.25rem;
+	font-size: 0.875rem;
+	color: var(--jwt-muted);
+	line-height: 1.4;
+}
+
+.jwt-methodology__cta {
+	text-align: center;
+	margin-top: clamp(2rem, 4vw, 2.75rem);
+}
+
+// Plain accent text link with an arrow (shared — CTA under sections).
+.jwt-textlink {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	font-family: var(--jwt-font-heading);
+	font-weight: 600;
+	font-size: 1rem;
+	color: var(--jwt-accent);
+	text-decoration: none;
+	transition: color 0.2s, gap 0.2s;
+
+	&:hover {
+		color: var(--jwt-accent-hover);
+		gap: 0.65rem;
+	}
 }
 
 // ----- Media frame (browser-chrome VSL holder) -------------------------------

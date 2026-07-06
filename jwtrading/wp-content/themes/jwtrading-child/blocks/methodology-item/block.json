@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/methodology-item",
+	"title": "JWT Market Box",
+	"category": "jwtrading",
+	"icon": "screenoptions",
+	"description": "Satu kotak market (ikon/emoji + judul + subjudul).",
+	"textdomain": "jwtrading",
+	"parent": [ "jwt/methodology" ],
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"html": false,
+		"reusable": false
+	},
+	"attributes": {
+		"icon": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "" },
+		"subtitle": { "type": "string", "default": "" }
+	}
+}

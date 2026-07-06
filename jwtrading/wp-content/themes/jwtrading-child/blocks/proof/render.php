@@ -22,7 +22,7 @@ $jwt_speed   = max( 15, min( 120, (int) ( $attributes['speed'] ?? 45 ) ) );
 		<?php echo jwt_section_header_html( $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper. ?>
 	</div>
 
-	<div class="jwt-proof__viewport" data-jwt-reveal>
+	<div class="jwt-proof__viewport">
 		<div class="jwt-proof__track" style="--jwt-proof-speed:<?php echo esc_attr( $jwt_speed ); ?>s">
 			<div class="jwt-proof__group">
 				<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput -- pre-rendered inner blocks. ?>
