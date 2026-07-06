@@ -219,6 +219,16 @@ registerBlockType('jwt/hero', {
                 onChange={(eyebrow) => setAttributes({ eyebrow })}
               />
             )}
+            <div style={{ marginTop: 6, marginBottom: attributes.useRatingBadge ? 0 : undefined }}>
+              <Button
+                variant="link"
+                onClick={() => setAttributes({ useRatingBadge: !attributes.useRatingBadge })}
+              >
+                {attributes.useRatingBadge
+                  ? __('← Pakai Eyebrow biasa (bukan Badge Rating)', 'jwtrading')
+                  : __('Pakai Badge Rating (Trustpilot) sebagai gantinya →', 'jwtrading')}
+              </Button>
+            </div>
             <RichText
               tagName={attributes.titleTag || 'h1'}
               className="jwt-hero__title"
