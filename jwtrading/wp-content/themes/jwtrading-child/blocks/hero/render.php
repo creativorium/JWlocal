@@ -12,24 +12,15 @@ $jwt_wrapper = get_block_wrapper_attributes( array( 'class' => 'jwt-hero' ) );
 ?>
 <section <?php echo $jwt_wrapper; // phpcs:ignore WordPress.Security.EscapeOutput ?>>
 	<div class="jwt-container" data-jwt-reveal>
-		<?php if ( ! empty( $attributes['useRatingBadge'] ) ) : ?>
-			<?php
-			$jwt_rating_url = trim( (string) ( $attributes['ratingUrl'] ?? '' ) );
-			$jwt_tag_name   = '' !== $jwt_rating_url ? 'a' : 'span';
-			?>
-			<<?php echo $jwt_tag_name; // phpcs:ignore WordPress.Security.EscapeOutput ?> class="jwt-hero__rating"<?php echo 'a' === $jwt_tag_name ? ' href="' . esc_url( $jwt_rating_url ) . '" target="_blank" rel="noopener noreferrer"' : ''; // phpcs:ignore WordPress.Security.EscapeOutput -- esc_url above. ?>>
-				<?php if ( '' !== trim( (string) ( $attributes['ratingText'] ?? '' ) ) ) : ?>
-					<strong><?php echo esc_html( $attributes['ratingText'] ); ?></strong>
-				<?php endif; ?>
-				<?php if ( '' !== trim( (string) ( $attributes['ratingValue'] ?? '' ) ) ) : ?>
-					<span><?php echo esc_html( $attributes['ratingValue'] ); ?></span>
-				<?php endif; ?>
+		<?php if ( ! empty( $attributes['showTrustBadge'] ) ) : ?>
+			<!-- Fixed content by design — not meant to be per-page editable text. -->
+			<a class="jwt-hero__rating" href="https://www.trustpilot.com/review/jwtradingacademy.com" target="_blank" rel="noopener noreferrer">
+				<strong>Excellent</strong>
+				<span>4.4 out of 5</span>
 				<svg class="jwt-hero__rating-star" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.5l2.47 5.53 6.03.58-4.55 4.03 1.33 5.9L10 14.62l-5.28 2.92 1.33-5.9L1.5 7.61l6.03-.58L10 1.5z"/></svg>
-				<?php if ( '' !== trim( (string) ( $attributes['ratingBrand'] ?? '' ) ) ) : ?>
-					<span class="jwt-hero__rating-sep">|</span>
-					<strong><?php echo esc_html( $attributes['ratingBrand'] ); ?></strong>
-				<?php endif; ?>
-			</<?php echo $jwt_tag_name; // phpcs:ignore WordPress.Security.EscapeOutput ?>>
+				<span class="jwt-hero__rating-sep">|</span>
+				<strong>Trustpilot</strong>
+			</a>
 		<?php elseif ( '' !== trim( $attributes['eyebrow'] ) ) : ?>
 			<span class="jwt-badge jwt-hero__badge"><span class="jwt-eyebrow__dot"></span><?php echo esc_html( $attributes['eyebrow'] ); ?></span>
 		<?php endif; ?>

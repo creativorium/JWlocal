@@ -126,24 +126,13 @@ registerBlockType('jwt/hero', {
     return (
       <>
         <InspectorControls>
-          <PanelBody title={__('Badge Rating (Trustpilot, dll)', 'jwtrading')} initialOpen={true}>
+          <PanelBody title={__('Badge Trustpilot', 'jwtrading')} initialOpen={true}>
             <ToggleControl
-              label={__('Pakai Badge Rating (bukan Eyebrow biasa)', 'jwtrading')}
-              help={
-                attributes.useRatingBadge
-                  ? __('Aktif — edit teksnya langsung di badge pada preview di bawah.', 'jwtrading')
-                  : __('Nonaktif — badge di atas judul memakai Eyebrow biasa (teks promo polos).', 'jwtrading')
-              }
-              checked={!!attributes.useRatingBadge}
-              onChange={(useRatingBadge) => setAttributes({ useRatingBadge })}
+              label={__('Tampilkan Badge Trustpilot', 'jwtrading')}
+              help={__('Isinya tetap (Excellent · 4.4 out of 5 · Trustpilot) — bukan teks yang bisa diedit per halaman. Kalau nonaktif, badge Eyebrow biasa di bawah yang tampil.', 'jwtrading')}
+              checked={!!attributes.showTrustBadge}
+              onChange={(showTrustBadge) => setAttributes({ showTrustBadge })}
             />
-            {attributes.useRatingBadge ? (
-              <TextControl
-                label={__('URL (opsional — link ke halaman review)', 'jwtrading')}
-                value={attributes.ratingUrl}
-                onChange={(ratingUrl) => setAttributes({ ratingUrl })}
-              />
-            ) : null}
           </PanelBody>
 
           <PanelBody title={__('Tombol & Opsi', 'jwtrading')}>
@@ -181,33 +170,15 @@ registerBlockType('jwt/hero', {
 
         <section {...blockProps}>
           <div className="jwt-container">
-            {attributes.useRatingBadge ? (
+            {attributes.showTrustBadge ? (
               <span className="jwt-hero__rating">
-                <RichText
-                  tagName="strong"
-                  allowedFormats={[]}
-                  placeholder={__('Excellent', 'jwtrading')}
-                  value={attributes.ratingText}
-                  onChange={(ratingText) => setAttributes({ ratingText })}
-                />
-                <RichText
-                  tagName="span"
-                  allowedFormats={[]}
-                  placeholder={__('4.4 out of 5', 'jwtrading')}
-                  value={attributes.ratingValue}
-                  onChange={(ratingValue) => setAttributes({ ratingValue })}
-                />
+                <strong>Excellent</strong>
+                <span>4.4 out of 5</span>
                 <svg className="jwt-hero__rating-star" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path d="M10 1.5l2.47 5.53 6.03.58-4.55 4.03 1.33 5.9L10 14.62l-5.28 2.92 1.33-5.9L1.5 7.61l6.03-.58L10 1.5z" />
                 </svg>
                 <span className="jwt-hero__rating-sep">|</span>
-                <RichText
-                  tagName="strong"
-                  allowedFormats={[]}
-                  placeholder={__('Trustpilot', 'jwtrading')}
-                  value={attributes.ratingBrand}
-                  onChange={(ratingBrand) => setAttributes({ ratingBrand })}
-                />
+                <strong>Trustpilot</strong>
               </span>
             ) : (
               <RichText
@@ -219,16 +190,6 @@ registerBlockType('jwt/hero', {
                 onChange={(eyebrow) => setAttributes({ eyebrow })}
               />
             )}
-            <div style={{ marginTop: 6, marginBottom: attributes.useRatingBadge ? 0 : undefined }}>
-              <Button
-                variant="link"
-                onClick={() => setAttributes({ useRatingBadge: !attributes.useRatingBadge })}
-              >
-                {attributes.useRatingBadge
-                  ? __('← Pakai Eyebrow biasa (bukan Badge Rating)', 'jwtrading')
-                  : __('Pakai Badge Rating (Trustpilot) sebagai gantinya →', 'jwtrading')}
-              </Button>
-            </div>
             <RichText
               tagName={attributes.titleTag || 'h1'}
               className="jwt-hero__title"

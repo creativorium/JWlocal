@@ -60,10 +60,6 @@
 	}
 }
 
-.jwt-hero__badge {
-	margin-bottom: 36px;
-}
-
 // Rating/review badge (e.g. Trustpilot) — deliberately its own look, not
 // `.jwt-badge`'s mono/uppercase treatment: normal case, soft glass pill.
 .jwt-hero__rating {
@@ -115,7 +111,6 @@
 	justify-content: center;
 	flex-wrap: wrap;
 	gap: 1rem;
-	margin-top: 2.75rem;
 }
 
 .jwt-hero__note {
