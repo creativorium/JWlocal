@@ -71,7 +71,10 @@
 // ----- Proof marquee (auto-scrolling member results) -------------------------
 .jwt-proof__viewport {
 	// Full-bleed track; heading above stays within the container.
-	overflow: hidden;
+	// `clip` (not hidden) — stricter, and never becomes a scroll container
+	// that could be dragged sideways on touch.
+	overflow: clip;
+	max-width: 100%;
 	margin-top: clamp(2rem, 5vw, 3.5rem);
 	// Fade the edges so cards enter/exit softly instead of hard-cutting.
 	-webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
@@ -80,6 +83,7 @@
 
 .jwt-proof__track {
 	display: flex;
+	align-items: center;
 	width: max-content;
 
 	@media (prefers-reduced-motion: no-preference) {
@@ -113,8 +117,14 @@
 }
 
 .jwt-proof-card {
-	flex: 0 0 clamp(190px, 20vw, 250px);
-	aspect-ratio: 3 / 4;
+	// Explicit width AND height (no aspect-ratio, no clamp-in-flex-shorthand)
+	// so every card is byte-for-byte the same box — the earlier
+	// `flex:0 0 clamp()` + aspect-ratio combo let the browser round/derive
+	// one card slightly larger than the rest.
+	--jwt-card-w: clamp(190px, 20vw, 250px);
+	flex: none;
+	width: var(--jwt-card-w);
+	height: calc(var(--jwt-card-w) * 4 / 3);
 	margin: 0;
 	border-radius: var(--jwt-radius);
 	border: 1px solid var(--jwt-line);

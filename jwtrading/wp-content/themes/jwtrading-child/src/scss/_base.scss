@@ -16,12 +16,14 @@ html body {
 	font-family: var(--jwt-font-body);
 }
 
-// The closed mobile nav drawer sits off-canvas via `translate: 100% 0` while
-// `position: fixed`, which still extends the page's scrollable width even
-// though it's invisible — clip it at the root so the page can never scroll
-// sideways. Safe to set on `html` alone: it doesn't affect any ancestor of
-// our sticky header (there isn't one between it and `html`).
-html {
+// Clip horizontal overflow at BOTH html and body. Two independent sources
+// need this: the off-canvas mobile nav drawer (position:fixed, translated
+// 100% off-screen) and the full-bleed proof marquee (width:max-content
+// track). Setting it on html alone proved insufficient on mobile — some
+// engines still let a wide descendant grow the body's scroll width — so
+// body carries it too.
+html,
+body {
 	overflow-x: hidden;
 }
 
