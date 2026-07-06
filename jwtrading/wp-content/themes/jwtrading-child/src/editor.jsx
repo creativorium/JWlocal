@@ -106,7 +106,11 @@ const makeSectionEdit =
           <div className="jwt-container">
             <HeaderEdit attributes={attributes} setAttributes={setAttributes} />
             <div className={innerClass}>
-              <InnerBlocks allowedBlocks={allowed} template={template} />
+              {/* templateLock=false: the page root is locked ('all') which
+                  otherwise cascades and freezes these items too — this
+                  re-opens add/remove/reorder of items within the
+                  (still-locked) section. */}
+              <InnerBlocks allowedBlocks={allowed} template={template} templateLock={false} />
             </div>
           </div>
         </section>
@@ -275,6 +279,7 @@ registerBlockType('jwt/stats', {
             <HeaderEdit attributes={attributes} setAttributes={setAttributes} />
             <div className="jwt-stats__grid">
               <InnerBlocks
+                templateLock={false}
                 allowedBlocks={['jwt/stat-item']}
                 template={[
                   ['jwt/stat-item'],
@@ -778,6 +783,7 @@ registerBlockType('jwt/media-frame', {
               </div>
               <div className="jwt-media-frame__body">
                 <InnerBlocks
+                  templateLock={false}
                   allowedBlocks={['core/embed', 'core/video', 'core/image', 'core/html']}
                 />
               </div>
@@ -1026,6 +1032,7 @@ registerBlockType('jwt/program', {
               </div>
               <div className="jwt-program__modules">
                 <InnerBlocks
+                  templateLock={false}
                   allowedBlocks={['jwt/curriculum-item']}
                   template={[
                     ['jwt/curriculum-item', { number: '01' }],
@@ -1057,6 +1064,7 @@ registerBlockType('jwt/duo-cta', {
         <div className="jwt-container">
           <div className="jwt-duo-cta__grid">
             <InnerBlocks
+              templateLock={false}
               allowedBlocks={['jwt/cta-card']}
               template={[
                 ['jwt/cta-card', { accent: true }],
@@ -1149,6 +1157,7 @@ registerBlockType('jwt/partners', {
           />
           <div className="jwt-partners__row">
             <InnerBlocks
+              templateLock={false}
               allowedBlocks={['jwt/partner-item']}
               template={[
                 ['jwt/partner-item'],

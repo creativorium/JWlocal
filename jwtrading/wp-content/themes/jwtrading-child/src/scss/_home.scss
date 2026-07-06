@@ -91,15 +91,19 @@
 	}
 }
 
-// Two identical groups; each carries a trailing gap (margin-right) equal to
-// its internal gap, so translateX(-50%) lands exactly one group forward =
-// seamless loop with no jump.
+// Two identical groups; each carries a trailing gap (margin-right) EXACTLY
+// equal to its internal card gap, so translateX(-50%) lands one group
+// forward and the loop is seamless. No padding here on purpose — any extra
+// inset would make the member-6 → member-1 wrap gap larger than the gap
+// between the other cards (that was the visible "not infinite" jump).
+// align-items:center (not the flex default stretch) keeps every card at its
+// aspect-ratio height so none render taller than the rest.
 .jwt-proof__group {
 	display: flex;
+	align-items: center;
 	flex-shrink: 0;
 	gap: clamp(1rem, 2vw, 1.5rem);
 	margin-right: clamp(1rem, 2vw, 1.5rem);
-	padding-left: var(--jwt-gutter);
 }
 
 @keyframes jwt-proof-scroll {
@@ -109,8 +113,7 @@
 }
 
 .jwt-proof-card {
-	flex-shrink: 0;
-	width: clamp(190px, 20vw, 250px);
+	flex: 0 0 clamp(190px, 20vw, 250px);
 	aspect-ratio: 3 / 4;
 	margin: 0;
 	border-radius: var(--jwt-radius);
