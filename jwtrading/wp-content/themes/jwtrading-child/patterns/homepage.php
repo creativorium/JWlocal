@@ -41,45 +41,20 @@ defined( 'ABSPATH' ) || exit;
 <!-- wp:jwt/offer-card {"variant":"dark","eyebrow":"Komunitas","badge":"Gratis","title":"Discord — 17.000+ Member","text":"Komunitas trader aktif di Indonesia. Share setup, dapat feedback langsung, dan belajar bersama trader yang sudah jalan lebih dulu.","features":"<li>Live stream harian — market review</li><li>Channel diskusi ICT & prop firm</li><li>Feedback setup dari mentor</li><li>100% Gratis untuk semua trader</li>","buttonText":"Gabung Discord →","buttonUrl":"/discord/"} /-->
 <!-- /wp:jwt/offer -->
 
-<!-- wp:jwt/media-frame {"align":"full","labelLeft":"ICT WORKSHOP · LIVE REVIEW","labelRight":"IFVG SETUP"} -->
-<!-- /wp:jwt/media-frame -->
-
-<!-- wp:jwt/features {"align":"full","eyebrow":"What we stand for","title":"Three pillars. One method."} -->
-<!-- wp:jwt/feature-item {"number":"01","title":"ICT, properly taught","text":"Learn how and why price really moves. We teach the ICT approach so you read market logic — not lagging indicators."} /-->
-<!-- wp:jwt/feature-item {"number":"02","title":"Prop-firm ready","text":"A clear system to pass evaluations and trade real capital. Built around the rules and discipline funded trading demands."} /-->
-<!-- wp:jwt/feature-item {"number":"03","title":"No signals, ever","text":"We never sell calls or copy-trades. You learn to find your own A+ setups so you're independent for life."} /-->
-<!-- /wp:jwt/features -->
-
-<!-- wp:jwt/statement {"align":"full","eyebrow":"Why no signals","title":"A signal feeds you for a day. The skill to read price feeds you for a career.","lead":"We don't sell calls or copy-trades. You learn the ICT logic behind every move so you can find your own A+ setups — independent, repeatable, and yours."} /-->
-
-<!-- wp:jwt/section-heading {"align":"full","eyebrow":"Where to start","title":"Two ways in. Start where you are."} /-->
-
-<!-- wp:jwt/spotlight {"align":"full","badge":"Low-ticket · $10","title":"New to prop firms? Start with the $10 guide.","text":"Prop firms are still new in Indonesia. This short, practical guide explains what they are, which to pick, and how to get funded — the cheapest way to go from confused to ready.","chips":"What prop firms really are|Partner discount codes|30-day pass plan","buttonText":"Learn more →","buttonUrl":"#","coverLabel":"The Ultimate Guide","coverTitle":"How to Rinse Prop Firms in 2026"} /-->
-
-<!-- wp:jwt/connector {"align":"full","text":"Ready to go all-in ↓"} /-->
-
-<!-- wp:jwt/program {"align":"full","eyebrow":"The program","title":"A complete bootcamp, from your first chart to funded.","lead":"Seven structured modules, a four-phase roadmap, live reviews and the JW Trading Journal — everything you need in one place, with lifetime access.","buttonText":"Explore the Bootcamp →","buttonUrl":"/bootcamp/","footnote":"+ 3 more modules inside"} -->
-<!-- wp:jwt/curriculum-item {"number":"01","title":"Trading Foundations"} /-->
-<!-- wp:jwt/curriculum-item {"number":"02","title":"ICT Foundations"} /-->
-<!-- wp:jwt/curriculum-item {"number":"04","title":"IFVG Entry Model"} /-->
-<!-- wp:jwt/curriculum-item {"number":"06","title":"Prop Firm System"} /-->
-<!-- /wp:jwt/program -->
-
-<!-- wp:jwt/stats {"align":"full","eyebrow":"Proof","title":"Members who trusted the process.","buttonText":"View the full track record →","buttonUrl":"/testimonials/"} -->
-<!-- wp:jwt/stat-item {"value":"100%","label":"Trustpilot rating","count":"100","suffix":"%"} /-->
-<!-- wp:jwt/stat-item {"value":"Lifetime","label":"Access included"} /-->
-<!-- wp:jwt/stat-item {"value":"7","label":"Structured modules"} /-->
-<!-- wp:jwt/stat-item {"value":"Weekly","label":"Live reviews"} /-->
+<!-- wp:jwt/stats {"align":"full","eyebrow":"Bukti Nyata","title":"Hasil Trader yang Belajar ICT di JW.","lead":"(Dan masih ribuan lagi di channel #profit-wins Discord kami)","buttonText":"Lihat Track Record Lengkap →","buttonUrl":"/testimonials/"} -->
+<!-- wp:jwt/stat-item {"value":"5/5","label":"Trustpilot Rating"} /-->
+<!-- wp:jwt/stat-item {"value":"Lifetime","label":"Akses Seumur Hidup"} /-->
+<!-- wp:jwt/stat-item {"value":"17.000+","label":"Member Aktif","count":"17000","suffix":"+"} /-->
+<!-- wp:jwt/stat-item {"value":"Live Stream","label":"Harian"} /-->
 <!-- /wp:jwt/stats -->
 
-<!-- wp:jwt/duo-cta {"align":"full"} -->
-<!-- wp:jwt/cta-card {"accent":true,"eyebrow":"Community","title":"A private Discord that has your back.","text":"Members, mentors and weekly live reviews — share setups, get feedback and stay accountable.","buttonText":"Join the Discord","buttonUrl":"/discord/"} /-->
-<!-- wp:jwt/cta-card {"eyebrow":"Questions?","title":"Talk to us on WhatsApp.","text":"Not sure if the bootcamp is right for you? Message us directly and we'll help you decide.","buttonText":"Chat on WhatsApp →","buttonUrl":"https://wa.me/628113931505"} /-->
-<!-- /wp:jwt/duo-cta -->
+<!-- wp:jwt/cta-banner {"align":"full","title":"Ada pertanyaan? Chat langsung di WhatsApp.","text":"Belum yakin apakah bootcamp ini cocok untukmu? Hubungi kami langsung — kami bantu kamu memutuskan.","buttonText":"Chat di WhatsApp →","buttonUrl":"https://wa.me/628113931505"} /-->
 
-<!-- wp:jwt/faq {"align":"full","eyebrow":"FAQ","title":"Quick answers.","buttonText":"Start the Bootcamp →","buttonUrl":"/bootcamp/"} -->
-<!-- wp:jwt/faq-item {"question":"Do I need any experience?","answer":"No. The bootcamp is built for beginners and traders who still feel stuck. We start from the basics and build up to live execution, step by step."} /-->
-<!-- wp:jwt/faq-item {"question":"What is ICT?","answer":"ICT is an approach focused on understanding how and why price moves. Instead of relying on indicators or signals, you learn to read price action logically and understand market behaviour."} /-->
-<!-- wp:jwt/faq-item {"question":"Do you give signals?","answer":"No — and that's the point. We teach you to find your own setups so you're never dependent on someone else's calls."} /-->
-<!-- wp:jwt/faq-item {"question":"Which markets does it work on?","answer":"The ICT and IFVG concepts apply to forex, crypto, indices, gold and commodities. We teach you how to build your own framework for any market."} /-->
+<!-- wp:jwt/faq {"align":"full","eyebrow":"FAQ","title":"Pertanyaan yang sering ditanyakan.","buttonText":"Lihat Detail Bootcamp →","buttonUrl":"/bootcamp/"} -->
+<!-- wp:jwt/faq-item {"question":"Apakah saya perlu pengalaman sebelumnya?","answer":"Bisa. Bootcamp ini memang dirancang untuk pemula yang belum tahu apa-apa. Kita mulai dari cara kerja market, kenapa harga bergerak, sampai ke eksekusi trade secara live — step by step. Tidak ada yang ketinggalan selama kamu ikuti prosesnya."} /-->
+<!-- wp:jwt/faq-item {"question":"Apa itu ICT trading?","answer":"Kebanyakan kursus trading mengajarkan indikator — RSI, MACD, moving average. ICT mengajarkan kenapa harga benar-benar bergerak: liquidity, order flow, dan cara institusi besar menggerakkan market. Hasilnya, kamu bisa membaca chart tanpa bergantung pada indikator apapun."} /-->
+<!-- wp:jwt/faq-item {"question":"Berapa lama sampai konsisten?","answer":"Jujur — tidak ada jawaban pasti, dan siapapun yang kasih angka spesifik sebaiknya diwaspadai. Yang bisa kami bilang: trader yang serius mengikuti proses — belajar, backtesting, simulasi, baru live — biasanya mulai melihat konsistensi dalam 3–6 bulan. Prosesnya tidak bisa di-skip, tapi bisa dipercepat dengan sistem yang benar."} /-->
+<!-- wp:jwt/faq-item {"question":"Apakah prop firm cocok untuk saya?","answer":"Ya — dan ini salah satu alasan kenapa kami fokus di sini. Prop firm memberi akses ke modal besar tanpa kamu harus taruh uang sendiri dalam jumlah besar. Untuk trader Indonesia yang ingin serius tapi modalnya terbatas, prop firm adalah jalur yang sangat masuk akal. Yang dibutuhkan adalah skill dan disiplin — dua hal itulah yang kami ajarkan."} /-->
+<!-- wp:jwt/faq-item {"question":"ICT ini works di market apa saja?","answer":"Konsep ICT berlaku di semua market liquid — forex, indices, gold, crypto, futures. Di JW, kami fokus mengajarkan lewat NQ (Nasdaq) karena struktur marketnya bersih dan sangat cocok untuk metodologi ICT. Tapi framework yang kamu pelajari bisa langsung kamu terapkan ke market lain."} /-->
+<!-- wp:jwt/faq-item {"question":"Ada support setelah beli bootcamp?","answer":"Ada. Kamu dapat akses ke Discord komunitas kami dengan 17.000+ member aktif, sesi live review mingguan, dan channel khusus untuk tanya jawab dan koreksi setup. Kamu tidak belajar sendirian."} /-->
 <!-- /wp:jwt/faq -->

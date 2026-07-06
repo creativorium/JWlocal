@@ -19,12 +19,14 @@ html body {
 // Clip horizontal overflow at BOTH html and body. Two independent sources
 // need this: the off-canvas mobile nav drawer (position:fixed, translated
 // 100% off-screen) and the full-bleed proof marquee (width:max-content
-// track). Setting it on html alone proved insufficient on mobile — some
-// engines still let a wide descendant grow the body's scroll width — so
-// body carries it too.
+// track).
+// MUST be `clip`, not `hidden`: `overflow:hidden` on html/body turns them
+// into a scroll container, which breaks `position:sticky` on the header
+// (it stops sticking). `clip` clips the same overflow WITHOUT creating a
+// scroll container, so the sticky header keeps working.
 html,
 body {
-	overflow-x: hidden;
+	overflow-x: clip;
 }
 
 // Readability for non-block content (blog posts, Woo pages) on the dark canvas.

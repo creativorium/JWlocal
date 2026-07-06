@@ -1507,3 +1507,55 @@ registerBlockType('jwt/offer-card', {
   },
   save: saveNull,
 });
+
+// --- CTA banner (horizontal — WhatsApp etc.) ----------------------------------
+
+registerBlockType('jwt/cta-banner', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps({ className: 'jwt-cta-banner' });
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Tombol', 'jwtrading')}>
+            <TextControl
+              label={__('URL tombol', 'jwtrading')}
+              value={attributes.buttonUrl}
+              onChange={(buttonUrl) => setAttributes({ buttonUrl })}
+            />
+          </PanelBody>
+        </InspectorControls>
+        <section {...blockProps}>
+          <div className="jwt-container">
+            <div className="jwt-cta-banner__card">
+              <div className="jwt-cta-banner__text">
+                <RichText
+                  tagName="h3"
+                  className="jwt-cta-banner__title"
+                  placeholder={__('Judul…', 'jwtrading')}
+                  value={attributes.title}
+                  onChange={(title) => setAttributes({ title })}
+                />
+                <RichText
+                  tagName="p"
+                  className="jwt-cta-banner__sub"
+                  placeholder={__('Deskripsi…', 'jwtrading')}
+                  value={attributes.text}
+                  onChange={(text) => setAttributes({ text })}
+                />
+              </div>
+              <RichText
+                tagName="span"
+                className="jwt-btn jwt-btn--primary jwt-cta-banner__btn"
+                allowedFormats={[]}
+                placeholder={__('Teks tombol…', 'jwtrading')}
+                value={attributes.buttonText}
+                onChange={(buttonText) => setAttributes({ buttonText })}
+              />
+            </div>
+          </div>
+        </section>
+      </>
+    );
+  },
+  save: saveNull,
+});
