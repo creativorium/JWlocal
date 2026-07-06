@@ -39,8 +39,9 @@
 	--jwt-size-xl: clamp(1.9rem, 1.55rem + 1.5vw, 2.625rem);
 	--jwt-size-2xl: clamp(2.75rem, 2rem + 3.3vw, 4.375rem);
 
-	// Layout (design canvas = 1180px)
-	--jwt-container: 1180px;
+	// Layout — container at MacBook 13"/14" logical width (1440px) so content
+	// uses the full laptop viewport rather than the narrower 1180 design canvas.
+	--jwt-container: 1440px;
 	--jwt-narrow: 820px;
 	--jwt-gutter: clamp(1.25rem, 4vw, 2rem);
 	--jwt-section-y: clamp(3.5rem, 8vw, 5.625rem);

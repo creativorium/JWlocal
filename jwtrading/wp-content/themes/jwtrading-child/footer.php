@@ -20,33 +20,35 @@ defined( 'ABSPATH' ) || exit;
 					<?php echo jwt_social_links_html(); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper. ?>
 				</div>
 
-				<?php if ( has_nav_menu( 'jwt-footer' ) ) : ?>
-					<nav class="jwt-footer__col" aria-label="<?php esc_attr_e( 'Quick Links', 'jwtrading' ); ?>">
-						<h2 class="jwt-footer__heading"><?php esc_html_e( 'Quick Links', 'jwtrading' ); ?></h2>
-						<?php
-						wp_nav_menu(
-							array(
-								'theme_location' => 'jwt-footer',
-								'container'      => false,
-								'menu_class'     => 'jwt-footer__menu',
-								'fallback_cb'    => false,
-								'depth'          => 1,
-							)
-						);
-						?>
-					</nav>
-				<?php endif; ?>
+				<div class="jwt-footer__cols">
+					<?php if ( has_nav_menu( 'jwt-footer' ) ) : ?>
+						<nav class="jwt-footer__col" aria-label="<?php esc_attr_e( 'Quick Links', 'jwtrading' ); ?>">
+							<h2 class="jwt-footer__heading"><?php esc_html_e( 'Quick Links', 'jwtrading' ); ?></h2>
+							<?php
+							wp_nav_menu(
+								array(
+									'theme_location' => 'jwt-footer',
+									'container'      => false,
+									'menu_class'     => 'jwt-footer__menu',
+									'fallback_cb'    => false,
+									'depth'          => 1,
+								)
+							);
+							?>
+						</nav>
+					<?php endif; ?>
 
-				<div class="jwt-footer__col">
-					<h2 class="jwt-footer__heading"><?php esc_html_e( 'Contact', 'jwtrading' ); ?></h2>
-					<ul class="jwt-footer__menu">
-						<li><a href="mailto:info@jwtradingacademy.com">info@jwtradingacademy.com</a></li>
-					</ul>
+					<div class="jwt-footer__col">
+						<h2 class="jwt-footer__heading"><?php esc_html_e( 'Contact', 'jwtrading' ); ?></h2>
+						<ul class="jwt-footer__menu">
+							<li><a href="mailto:info@jwtradingacademy.com">info@jwtradingacademy.com</a></li>
+						</ul>
 
-					<h2 class="jwt-footer__heading"><?php esc_html_e( 'Lokasi', 'jwtrading' ); ?></h2>
-					<ul class="jwt-footer__menu">
-						<li><?php esc_html_e( 'Bali, Indonesia', 'jwtrading' ); ?></li>
-					</ul>
+						<h2 class="jwt-footer__heading"><?php esc_html_e( 'Lokasi', 'jwtrading' ); ?></h2>
+						<ul class="jwt-footer__menu">
+							<li><?php esc_html_e( 'Bali, Indonesia', 'jwtrading' ); ?></li>
+						</ul>
+					</div>
 				</div>
 			</div>
 
