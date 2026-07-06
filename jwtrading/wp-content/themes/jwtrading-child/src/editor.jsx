@@ -202,7 +202,7 @@ registerBlockType('jwt/hero', {
                 </svg>
                 <span className="jwt-hero__rating-sep">|</span>
                 <RichText
-                  tagName="span"
+                  tagName="strong"
                   allowedFormats={[]}
                   placeholder={__('Trustpilot', 'jwtrading')}
                   value={attributes.ratingBrand}

@@ -27,7 +27,7 @@ $jwt_wrapper = get_block_wrapper_attributes( array( 'class' => 'jwt-hero' ) );
 				<svg class="jwt-hero__rating-star" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.5l2.47 5.53 6.03.58-4.55 4.03 1.33 5.9L10 14.62l-5.28 2.92 1.33-5.9L1.5 7.61l6.03-.58L10 1.5z"/></svg>
 				<?php if ( '' !== trim( (string) ( $attributes['ratingBrand'] ?? '' ) ) ) : ?>
 					<span class="jwt-hero__rating-sep">|</span>
-					<span><?php echo esc_html( $attributes['ratingBrand'] ); ?></span>
+					<strong><?php echo esc_html( $attributes['ratingBrand'] ); ?></strong>
 				<?php endif; ?>
 			</<?php echo $jwt_tag_name; // phpcs:ignore WordPress.Security.EscapeOutput ?>>
 		<?php elseif ( '' !== trim( $attributes['eyebrow'] ) ) : ?>
