@@ -1405,3 +1405,105 @@ registerBlockType('jwt/methodology-item', {
   },
   save: saveNull,
 });
+
+// --- Offer section (Pilih Jalur Belajarmu — 2 rich cards) ---------------------
+
+registerBlockType('jwt/offer', {
+  edit: makeSectionEdit({
+    className: 'jwt-offer',
+    innerClass: 'jwt-offer__grid',
+    allowed: ['jwt/offer-card'],
+    template: [
+      ['jwt/offer-card', { variant: 'accent' }],
+      ['jwt/offer-card', { variant: 'dark' }],
+    ],
+  }),
+  save: saveInner,
+});
+
+registerBlockType('jwt/offer-card', {
+  edit({ attributes, setAttributes }) {
+    const isAccent = attributes.variant !== 'dark';
+    const blockProps = useBlockProps({
+      className: `jwt-offer-card is-${isAccent ? 'accent' : 'dark'}`,
+    });
+
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Kartu Penawaran', 'jwtrading')}>
+            <SelectControl
+              label={__('Varian', 'jwtrading')}
+              value={attributes.variant}
+              options={[
+                { label: __('Accent (ungu, gradient)', 'jwtrading'), value: 'accent' },
+                { label: __('Dark (gelap)', 'jwtrading'), value: 'dark' },
+              ]}
+              onChange={(variant) => setAttributes({ variant })}
+            />
+            <TextControl
+              label={__('Badge (mis. GRATIS — opsional)', 'jwtrading')}
+              value={attributes.badge}
+              onChange={(badge) => setAttributes({ badge })}
+            />
+            <TextControl
+              label={__('URL tombol', 'jwtrading')}
+              value={attributes.buttonUrl}
+              onChange={(buttonUrl) => setAttributes({ buttonUrl })}
+            />
+          </PanelBody>
+        </InspectorControls>
+
+        <div {...blockProps}>
+          {isAccent ? <span className="jwt-offer-card__glow" aria-hidden="true" /> : null}
+          <div className="jwt-offer-card__main">
+            <div className="jwt-offer-card__head">
+              <RichText
+                tagName="span"
+                className="jwt-offer-card__eyebrow"
+                allowedFormats={[]}
+                placeholder={__('Eyebrow…', 'jwtrading')}
+                value={attributes.eyebrow}
+                onChange={(eyebrow) => setAttributes({ eyebrow })}
+              />
+              {attributes.badge ? <span className="jwt-badge-gratis">{attributes.badge}</span> : null}
+            </div>
+            <RichText
+              tagName="h3"
+              className="jwt-offer-card__title"
+              placeholder={__('Judul…', 'jwtrading')}
+              value={attributes.title}
+              onChange={(title) => setAttributes({ title })}
+            />
+            <RichText
+              tagName="p"
+              className="jwt-offer-card__text"
+              placeholder={__('Deskripsi…', 'jwtrading')}
+              value={attributes.text}
+              onChange={(text) => setAttributes({ text })}
+            />
+          </div>
+          <div className="jwt-offer-card__aside">
+            <RichText
+              tagName="ul"
+              multiline="li"
+              className="jwt-offer-card__features"
+              placeholder={__('Daftar fitur (Enter untuk baris baru)…', 'jwtrading')}
+              value={attributes.features}
+              onChange={(features) => setAttributes({ features })}
+            />
+            <RichText
+              tagName="span"
+              className={`jwt-btn ${isAccent ? 'jwt-btn--primary' : 'jwt-btn--ghost'} jwt-offer-card__btn`}
+              allowedFormats={[]}
+              placeholder={__('Teks tombol…', 'jwtrading')}
+              value={attributes.buttonText}
+              onChange={(buttonText) => setAttributes({ buttonText })}
+            />
+          </div>
+        </div>
+      </>
+    );
+  },
+  save: saveNull,
+});

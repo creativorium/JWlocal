@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash('C:\\\\Users\\\\Nego/AppData/Roaming/Local/lightning-services/php-8.2.29+0/bin/win64/php.exe' -c 'C:\\\\Users\\\\Nego/AppData/Roaming/Local/run/41vzj4JCG/conf/php/php.ini' -d display_startup_errors=Off '/c/Program Files \\(x86\\)/Local/resources/extraResources/bin/wp-cli/wp-cli.phar' '--path=/c/Users/Nego/Local Sites/jwtradinglocal/app/public' cache flush)",
-      "Bash('C:\\\\Users\\\\Nego/AppData/Roaming/Local/lightning-services/php-8.2.29+0/bin/win64/php.exe' -c 'C:\\\\Users\\\\Nego/AppData/Roaming/Local/run/41vzj4JCG/conf/php/php.ini' -d display_startup_errors=Off '/c/Program Files \\(x86\\)/Local/resources/extraResources/bin/wp-cli/wp-cli.phar' '--path=/c/Users/Nego/Local Sites/jwtradinglocal/app/public' eval ' *)"
+      "Bash('C:\\\\Users\\\\Nego/AppData/Roaming/Local/lightning-services/php-8.2.29+0/bin/win64/php.exe' -c 'C:\\\\Users\\\\Nego/AppData/Roaming/Local/run/41vzj4JCG/conf/php/php.ini' -d display_startup_errors=Off '/c/Program Files \\(x86\\)/Local/resources/extraResources/bin/wp-cli/wp-cli.phar' '--path=/c/Users/Nego/Local Sites/jwtradinglocal/app/public' eval ' *)",
+      "Bash(curl -s http://jwtradinglocal.local -o /tmp/fe.html)",
+      "Bash(awk 'BEGIN{RS=\"\\\\0\"} {n=index\\($0,\"hasil member 5\"\\); print substr\\($0,n-120,400\\)}' /tmp/fe.html)"
     ]
   }
 }

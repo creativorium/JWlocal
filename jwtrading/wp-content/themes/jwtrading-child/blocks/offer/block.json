@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/offer",
+	"title": "JWT Offer",
+	"category": "jwtrading",
+	"icon": "cart",
+	"description": "Section penawaran: heading + kartu penawaran (Bootcamp / Discord).",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"align": [ "full" ],
+		"html": false,
+		"anchor": true
+	},
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "" },
+		"lead": { "type": "string", "default": "" },
+		"center": { "type": "boolean", "default": true }
+	}
+}

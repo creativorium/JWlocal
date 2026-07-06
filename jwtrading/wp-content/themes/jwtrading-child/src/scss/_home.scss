@@ -69,12 +69,24 @@
 }
 
 // ----- Proof marquee (auto-scrolling member results) -------------------------
+// One shared card width/height, declared on the section and used at EVERY
+// level (viewport, track, group, card) so the cross-axis can't drift — the
+// track/group/card are all exactly the card height, making vertical
+// alignment deterministic (was the "member 6 sits lower" bug: nested flex
+// centering with any sub-pixel height variance offset the last card).
+.jwt-proof {
+	--jwt-card-w: clamp(190px, 20vw, 250px);
+	--jwt-card-h: calc(var(--jwt-card-w) * 4 / 3);
+	--jwt-card-gap: clamp(1rem, 2vw, 1.5rem);
+}
+
 .jwt-proof__viewport {
 	// Full-bleed track; heading above stays within the container.
 	// `clip` (not hidden) — stricter, and never becomes a scroll container
 	// that could be dragged sideways on touch.
 	overflow: clip;
 	max-width: 100%;
+	height: var(--jwt-card-h);
 	margin-top: clamp(2rem, 5vw, 3.5rem);
 	// Fade the edges so cards enter/exit softly instead of hard-cutting.
 	-webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
@@ -83,7 +95,7 @@
 
 .jwt-proof__track {
 	display: flex;
-	align-items: center;
+	height: var(--jwt-card-h);
 	width: max-content;
 
 	@media (prefers-reduced-motion: no-preference) {
@@ -97,18 +109,15 @@
 
 // Two identical groups; each carries a trailing gap (margin-right) EXACTLY
 // equal to its internal card gap, so translateX(-50%) lands one group
-// forward and the loop is seamless. No padding here on purpose — any extra
-// inset would make the member-6 → member-1 wrap gap larger than the gap
-// between the other cards (that was the visible "not infinite" jump).
-// align-items:center (not the flex default stretch) keeps every card at its
-// aspect-ratio height so none render taller than the rest.
+// forward and the loop is seamless. Fixed height + no wrap = no chance of a
+// card dropping to a second row or sub-pixel-centering below the rest.
 .jwt-proof__group {
 	display: flex;
 	flex-wrap: nowrap;
-	align-items: center;
+	height: var(--jwt-card-h);
 	flex-shrink: 0;
-	gap: clamp(1rem, 2vw, 1.5rem);
-	margin-right: clamp(1rem, 2vw, 1.5rem);
+	gap: var(--jwt-card-gap);
+	margin-right: var(--jwt-card-gap);
 }
 
 @keyframes jwt-proof-scroll {
@@ -118,15 +127,9 @@
 }
 
 .jwt-proof-card {
-	// Explicit width AND height (no aspect-ratio, no clamp-in-flex-shorthand)
-	// so every card is byte-for-byte the same box — the earlier
-	// `flex:0 0 clamp()` + aspect-ratio combo let the browser round/derive
-	// one card slightly larger than the rest.
-	--jwt-card-w: clamp(190px, 20vw, 250px);
 	flex: none;
-	align-self: center;
 	width: var(--jwt-card-w);
-	height: calc(var(--jwt-card-w) * 4 / 3);
+	height: var(--jwt-card-h); // exact same height as its parents — no centering math
 	margin: 0;
 	border-radius: var(--jwt-radius);
 	border: 1px solid var(--jwt-line);
@@ -149,6 +152,142 @@
 	font-size: 0.8125rem;
 	color: var(--jwt-dim);
 	letter-spacing: 0.04em;
+}
+
+// ----- Offer section (Pilih Jalur Belajarmu — 2 rich cards) ------------------
+.jwt-offer__grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.jwt-offer-card {
+	position: relative;
+	overflow: hidden;
+	border-radius: var(--jwt-radius);
+	padding: clamp(1.75rem, 4vw, 3rem);
+	display: grid;
+	grid-template-columns: 1.05fr 0.95fr;
+	gap: clamp(1.5rem, 4vw, 3rem);
+	align-items: center;
+
+	@media (max-width: 720px) {
+		grid-template-columns: 1fr;
+		gap: 1.75rem;
+	}
+
+	// Accent (Bootcamp) — gradient + border + soft glow, per spec.
+	&.is-accent {
+		background: linear-gradient(140deg, rgb(124 77 255 / 0.14), rgb(124 77 255 / 0.02));
+		border: 1px solid rgb(124 77 255 / 0.28);
+	}
+
+	// Dark (Discord).
+	&.is-dark {
+		background: var(--jwt-surface); // #100e1a
+		border: 1px solid rgb(255 255 255 / 0.07);
+	}
+}
+
+.jwt-offer-card__glow {
+	position: absolute;
+	top: -40px;
+	right: -30px;
+	width: 240px;
+	height: 240px;
+	background: rgb(124 77 255 / 0.18);
+	border-radius: 50%;
+	filter: blur(50px);
+	pointer-events: none;
+}
+
+.jwt-offer-card__main,
+.jwt-offer-card__aside {
+	position: relative; // above the glow
+}
+
+.jwt-offer-card__head {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	margin-bottom: 1rem;
+}
+
+.jwt-offer-card__eyebrow {
+	font-family: var(--jwt-font-mono);
+	font-size: 0.6875rem;
+	font-weight: 500;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--jwt-muted);
+}
+
+// "Gratis" badge — green, per spec.
+.jwt-badge-gratis {
+	font-family: var(--jwt-font-mono);
+	font-size: 0.625rem;
+	font-weight: 600;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: #3ecf8e;
+	background: rgb(62 207 142 / 0.12);
+	border: 1px solid rgb(62 207 142 / 0.3);
+	padding: 4px 10px;
+	border-radius: 100px;
+}
+
+.jwt-offer-card__title {
+	font-family: var(--jwt-font-heading);
+	font-size: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	margin-bottom: 0.875rem;
+}
+
+.jwt-offer-card__text {
+	font-size: 1rem;
+	line-height: 1.65;
+	color: var(--jwt-muted);
+	max-width: 42ch;
+}
+
+.jwt-offer-card__features {
+	list-style: none;
+	margin: 0 0 1.75rem;
+	padding: 0;
+	display: grid;
+	gap: 0.75rem;
+
+	li {
+		position: relative;
+		padding-left: 1.375rem;
+		font-size: 0.9375rem;
+		color: #cfd5df;
+		line-height: 1.4;
+
+		&::before {
+			content: '';
+			position: absolute;
+			left: 0;
+			top: 0.5em;
+			width: 7px;
+			height: 7px;
+			border-radius: 50%;
+		}
+	}
+}
+
+// Bullet colour tracks the card variant (purple for Bootcamp, green for Discord).
+.is-accent .jwt-offer-card__features li::before {
+	background: var(--jwt-accent);
+}
+
+.is-dark .jwt-offer-card__features li::before {
+	background: #3ecf8e;
+}
+
+.jwt-offer-card__btn {
+	width: 100%;
 }
 
 // ----- Methodology (Apa itu ICT Trading — 4 market boxes + CTA) --------------

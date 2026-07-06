@@ -36,6 +36,11 @@ defined( 'ABSPATH' ) || exit;
 <!-- wp:jwt/methodology-item {"icon":"₿","title":"Crypto","subtitle":"BTC, ETH & lainnya"} /-->
 <!-- /wp:jwt/methodology -->
 
+<!-- wp:jwt/offer {"align":"full","eyebrow":"Mulai Dari Mana?","title":"Pilih Jalur Belajarmu."} -->
+<!-- wp:jwt/offer-card {"variant":"accent","eyebrow":"Program Utama","title":"JW Trading Bootcamp","text":"Bootcamp ICT lengkap dalam 7 modul terstruktur — dari fondasi market sampai lolos prop firm challenge. Akses seumur hidup, live review mingguan, dan JW Trading Journal.","features":"<li>7 modul — akses seumur hidup</li><li>ICT foundations + IFVG entry model</li><li>Prop firm system + risk management</li><li>Live review mingguan</li>","buttonText":"Lihat Bootcamp →","buttonUrl":"/bootcamp/"} /-->
+<!-- wp:jwt/offer-card {"variant":"dark","eyebrow":"Komunitas","badge":"Gratis","title":"Discord — 17.000+ Member","text":"Komunitas trader aktif di Indonesia. Share setup, dapat feedback langsung, dan belajar bersama trader yang sudah jalan lebih dulu.","features":"<li>Live stream harian — market review</li><li>Channel diskusi ICT & prop firm</li><li>Feedback setup dari mentor</li><li>100% Gratis untuk semua trader</li>","buttonText":"Gabung Discord →","buttonUrl":"/discord/"} /-->
+<!-- /wp:jwt/offer -->
+
 <!-- wp:jwt/media-frame {"align":"full","labelLeft":"ICT WORKSHOP · LIVE REVIEW","labelRight":"IFVG SETUP"} -->
 <!-- /wp:jwt/media-frame -->
 

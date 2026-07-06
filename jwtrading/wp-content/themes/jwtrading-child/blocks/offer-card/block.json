@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/offer-card",
+	"title": "JWT Offer Card",
+	"category": "jwtrading",
+	"icon": "index-card",
+	"description": "Kartu penawaran: eyebrow (+badge), judul, deskripsi, daftar fitur, tombol.",
+	"textdomain": "jwtrading",
+	"parent": [ "jwt/offer" ],
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"html": false,
+		"reusable": false
+	},
+	"attributes": {
+		"variant": { "type": "string", "default": "accent" },
+		"eyebrow": { "type": "string", "default": "" },
+		"badge": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "" },
+		"text": { "type": "string", "default": "" },
+		"features": { "type": "string", "default": "" },
+		"buttonText": { "type": "string", "default": "" },
+		"buttonUrl": { "type": "string", "default": "" }
+	}
+}
