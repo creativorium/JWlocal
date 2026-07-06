@@ -5,7 +5,7 @@
 - **WordPress** + **WooCommerce**, payment via **Duitku** (official WooCommerce gateway plugin, sandbox first).
 - **Theme:** Kadence (parent) + `jwtrading-child` (all custom presentation code lives here).
 - **Plugin:** `jwtrading-core` (ALL business logic, integrations, sync — never put logic in the theme).
-- **Editor:** Gutenberg + custom `jwt/*` blocks (+ Kadence Blocks if needed). Client edits content only, never layout/code.
+- **Editor:** Gutenberg + custom `jwt/*` blocks (+ Kadence Blocks if needed). Client edits content only, never layout/code — enforced via `inc/editor-lock.php`, see below.
 - **Assets:** Vite. Build locally with `npm run build`, deploy `dist/` only. Never deploy `src/`, `node_modules/`, or config files.
 
 ## Brand
@@ -36,6 +36,9 @@ All sections are **dynamic blocks**: `block.json` + `render.php` (server-rendere
 
 ## Design source of truth (until final design lands)
 Old-site values extracted from the backup's `uploads/elementor/css/post-6|45|48.css`: fonts **Space Grotesk (headings) / Montserrat (body)** — self-hosted variable woff2 in `src/fonts/`; square-grid pattern (`src/img/pattern-square.png`) + radial purple tint layered on section backgrounds; buttons = full pills with `inset 0 -4px 4px` shadow; nav pill = `rgba(255,255,255,.05)` + inset + blur; footer = translucent accent gradient card; warm hover accent `--jwt-accent-warm #ff8a36`; container 1440px; `html` font-size `clamp(15px, 1vw+14px, 18px)`. Animations: CSS-only (reveal blur, haze drift, header `.is-scrolled` glass) — deliberately no GSAP.
+
+## Editor locking (inc/editor-lock.php)
+Pages (post_type=page) with existing content get `templateLock: 'all'` on the root block list — the section skeleton (which blocks, how many, what order) can't be moved/removed/added-to via the editor UI. What stays editable: inline text (RichText), every block's own Inspector fields (URLs, images, toggles), and — deliberately unlocked — the repeatable items *inside* a section (testimonial cards, FAQ entries, feature cards, stats, curriculum modules, CTA cards), since those `InnerBlocks` never got a `templateLock` prop in `editor.jsx`. A brand-new blank page stays unlocked until it has content, so it can still be built out from scratch; it locks itself the next time it's loaded once something's been saved. One-off exception: filter `jwt/lock_page_editor`, return false for that `$post`. Blog posts (post_type=post) are untouched — always fully flexible core blocks.
 
 ## Header / Footer
 Fully custom in the child theme (`header.php` / `footer.php` override Kadence; the old Elementor `mainHeader` #45 / `mainFooter` #48 templates are set to draft — do the same on live at launch). Menus: `jwt-primary`, `jwt-footer`, `jwt-legal`, `jwt-social` (social icons auto-match the link URL). Header CTA via `jwt/header_cta` filter (default: Preview Gratis → `/free-content-preview/`). Logo = theme mod `custom_logo`.
