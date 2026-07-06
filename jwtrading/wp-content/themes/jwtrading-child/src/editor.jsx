@@ -126,7 +126,7 @@ registerBlockType('jwt/hero', {
     return (
       <>
         <InspectorControls>
-          <PanelBody title={__('Badge Rating (Trustpilot, dll)', 'jwtrading')} initialOpen={false}>
+          <PanelBody title={__('Badge Rating (Trustpilot, dll)', 'jwtrading')} initialOpen={true}>
             <p style={{ fontSize: 12, opacity: 0.8 }}>
               {__('Kalau diisi, badge ini menggantikan Eyebrow biasa di bawah — cocok untuk rating/review.', 'jwtrading')}
             </p>
@@ -163,20 +163,13 @@ registerBlockType('jwt/hero', {
               ]}
               onChange={(titleTag) => setAttributes({ titleTag })}
             />
-            <TextControl
-              label={__('Teks tombol utama', 'jwtrading')}
-              value={attributes.primaryText}
-              onChange={(primaryText) => setAttributes({ primaryText })}
-            />
+            <p style={{ fontSize: 12, opacity: 0.8 }}>
+              {__('Teks tombol diedit langsung di tombolnya (klik tombol di preview). URL diatur di sini.', 'jwtrading')}
+            </p>
             <TextControl
               label={__('URL tombol utama', 'jwtrading')}
               value={attributes.primaryUrl}
               onChange={(primaryUrl) => setAttributes({ primaryUrl })}
-            />
-            <TextControl
-              label={__('Teks tombol kedua', 'jwtrading')}
-              value={attributes.secondaryText}
-              onChange={(secondaryText) => setAttributes({ secondaryText })}
             />
             <TextControl
               label={__('URL tombol kedua', 'jwtrading')}
@@ -233,12 +226,22 @@ registerBlockType('jwt/hero', {
               onChange={(lead) => setAttributes({ lead })}
             />
             <div className="jwt-hero__actions">
-              {attributes.primaryText ? (
-                <span className="jwt-btn jwt-btn--primary">{attributes.primaryText}</span>
-              ) : null}
-              {attributes.secondaryText ? (
-                <span className="jwt-btn jwt-btn--ghost">{attributes.secondaryText}</span>
-              ) : null}
+              <RichText
+                tagName="span"
+                className="jwt-btn jwt-btn--primary"
+                allowedFormats={[]}
+                placeholder={__('Teks tombol utama…', 'jwtrading')}
+                value={attributes.primaryText}
+                onChange={(primaryText) => setAttributes({ primaryText })}
+              />
+              <RichText
+                tagName="span"
+                className="jwt-btn jwt-btn--ghost"
+                allowedFormats={[]}
+                placeholder={__('Teks tombol kedua…', 'jwtrading')}
+                value={attributes.secondaryText}
+                onChange={(secondaryText) => setAttributes({ secondaryText })}
+              />
             </div>
             <RichText
               tagName="p"
