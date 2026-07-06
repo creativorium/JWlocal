@@ -126,6 +126,32 @@ registerBlockType('jwt/hero', {
     return (
       <>
         <InspectorControls>
+          <PanelBody title={__('Badge Rating (Trustpilot, dll)', 'jwtrading')} initialOpen={false}>
+            <p style={{ fontSize: 12, opacity: 0.8 }}>
+              {__('Kalau diisi, badge ini menggantikan Eyebrow biasa di bawah — cocok untuk rating/review.', 'jwtrading')}
+            </p>
+            <TextControl
+              label={__('Teks tebal (mis. Excellent)', 'jwtrading')}
+              value={attributes.ratingText}
+              onChange={(ratingText) => setAttributes({ ratingText })}
+            />
+            <TextControl
+              label={__('Nilai rating (mis. 4.4 out of 5)', 'jwtrading')}
+              value={attributes.ratingValue}
+              onChange={(ratingValue) => setAttributes({ ratingValue })}
+            />
+            <TextControl
+              label={__('Nama brand (mis. Trustpilot)', 'jwtrading')}
+              value={attributes.ratingBrand}
+              onChange={(ratingBrand) => setAttributes({ ratingBrand })}
+            />
+            <TextControl
+              label={__('URL (opsional — link ke halaman review)', 'jwtrading')}
+              value={attributes.ratingUrl}
+              onChange={(ratingUrl) => setAttributes({ ratingUrl })}
+            />
+          </PanelBody>
+
           <PanelBody title={__('Tombol & Opsi', 'jwtrading')}>
             <SelectControl
               label={__('Tag judul', 'jwtrading')}
@@ -168,14 +194,30 @@ registerBlockType('jwt/hero', {
 
         <section {...blockProps}>
           <div className="jwt-container">
-            <RichText
-              tagName="span"
-              className="jwt-eyebrow"
-              allowedFormats={[]}
-              placeholder={__('Eyebrow / promo…', 'jwtrading')}
-              value={attributes.eyebrow}
-              onChange={(eyebrow) => setAttributes({ eyebrow })}
-            />
+            {attributes.ratingText ? (
+              <span className="jwt-hero__rating">
+                <strong>{attributes.ratingText}</strong>
+                {attributes.ratingValue ? <span>{attributes.ratingValue}</span> : null}
+                <svg className="jwt-hero__rating-star" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M10 1.5l2.47 5.53 6.03.58-4.55 4.03 1.33 5.9L10 14.62l-5.28 2.92 1.33-5.9L1.5 7.61l6.03-.58L10 1.5z" />
+                </svg>
+                {attributes.ratingBrand ? (
+                  <>
+                    <span className="jwt-hero__rating-sep">|</span>
+                    <span>{attributes.ratingBrand}</span>
+                  </>
+                ) : null}
+              </span>
+            ) : (
+              <RichText
+                tagName="span"
+                className="jwt-eyebrow"
+                allowedFormats={[]}
+                placeholder={__('Eyebrow / promo…', 'jwtrading')}
+                value={attributes.eyebrow}
+                onChange={(eyebrow) => setAttributes({ eyebrow })}
+              />
+            )}
             <RichText
               tagName={attributes.titleTag || 'h1'}
               className="jwt-hero__title"

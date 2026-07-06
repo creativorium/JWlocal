@@ -16,6 +16,10 @@
 	},
 	"attributes": {
 		"eyebrow": { "type": "string", "default": "" },
+		"ratingText": { "type": "string", "default": "" },
+		"ratingValue": { "type": "string", "default": "" },
+		"ratingBrand": { "type": "string", "default": "" },
+		"ratingUrl": { "type": "string", "default": "" },
 		"title": { "type": "string", "default": "" },
 		"titleTag": { "type": "string", "default": "h1" },
 		"lead": { "type": "string", "default": "" },
