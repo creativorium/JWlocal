@@ -18,6 +18,8 @@
 		"eyebrow": { "type": "string", "default": "" },
 		"title": { "type": "string", "default": "" },
 		"lead": { "type": "string", "default": "" },
-		"center": { "type": "boolean", "default": true }
+		"center": { "type": "boolean", "default": true },
+		"buttonText": { "type": "string", "default": "" },
+		"buttonUrl": { "type": "string", "default": "" }
 	}
 }

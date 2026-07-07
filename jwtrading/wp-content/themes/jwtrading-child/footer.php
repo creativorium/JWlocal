@@ -53,7 +53,7 @@ defined( 'ABSPATH' ) || exit;
 			</div>
 
 			<div class="jwt-footer__bottom">
-				<p>&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php echo esc_html( get_bloginfo( 'name' ) ); ?>. <?php esc_html_e( 'Website by', 'jwtrading' ); ?> Cular Creative</p>
+				<p>&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php echo esc_html( get_bloginfo( 'name' ) ); ?>. <?php esc_html_e( 'All Rights Reserved.', 'jwtrading' ); ?></p>
 				<?php
 				if ( has_nav_menu( 'jwt-legal' ) ) {
 					wp_nav_menu(

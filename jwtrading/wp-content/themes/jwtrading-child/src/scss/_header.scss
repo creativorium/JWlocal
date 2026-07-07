@@ -24,6 +24,19 @@
 	}
 }
 
+// CRITICAL: a `backdrop-filter` turns .jwt-header into the containing block for
+// ANY position:fixed descendant — and the mobile drawer (.jwt-mobile-nav) is
+// nested inside <header> (kept there on purpose for the toggle's z-index). So
+// once the page is scrolled (.is-scrolled adds the blur) the "fixed" drawer
+// anchors to the short header box instead of the viewport and collapses out of
+// sight. While the drawer is open we scroll-lock anyway, so drop the header's
+// backdrop-filter then — the drawer/backdrop cover it — restoring viewport-
+// relative fixed positioning so the menu shows no matter the scroll position.
+body.jwt-nav-open .jwt-header.is-scrolled {
+	-webkit-backdrop-filter: none;
+	backdrop-filter: none;
+}
+
 body.admin-bar .jwt-header {
 	top: 32px;
 
@@ -41,9 +54,11 @@ body.admin-bar .jwt-header {
 	grid-template-columns: 1fr auto 1fr;
 	align-items: center;
 	gap: 1rem;
-	// Taller bar + extra top padding so the bigger logo isn't cramped.
+	// Taller bar + balanced top/bottom padding so the bigger logo has
+	// breathing room on both edges (bottom was visibly slimmer before).
 	min-height: 96px;
 	padding-top: 1rem;
+	padding-bottom: 1rem;
 }
 
 .jwt-brand {

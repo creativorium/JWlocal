@@ -16,5 +16,10 @@ $jwt_wrapper = get_block_wrapper_attributes( array( 'class' => 'jwt-features' ) 
 		<div class="jwt-features__grid">
 			<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput -- pre-rendered inner blocks. ?>
 		</div>
+		<?php if ( '' !== trim( (string) ( $attributes['buttonText'] ?? '' ) ) ) : ?>
+			<div class="jwt-features__cta">
+				<a class="jwt-btn jwt-btn--primary" href="<?php echo esc_url( $attributes['buttonUrl'] ?: '#' ); ?>"><?php echo esc_html( $attributes['buttonText'] ); ?></a>
+			</div>
+		<?php endif; ?>
 	</div>
 </section>

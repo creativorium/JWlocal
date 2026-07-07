@@ -360,6 +360,20 @@ registerBlockType('jwt/features', {
       ['jwt/feature-item', { icon: 'community' }],
       ['jwt/feature-item', { icon: 'live' }],
     ],
+    panelExtras: ({ attributes, setAttributes }) => (
+      <>
+        <TextControl
+          label={__('Teks tombol di bawah (opsional)', 'jwtrading')}
+          value={attributes.buttonText}
+          onChange={(buttonText) => setAttributes({ buttonText })}
+        />
+        <TextControl
+          label={__('URL tombol', 'jwtrading')}
+          value={attributes.buttonUrl}
+          onChange={(buttonUrl) => setAttributes({ buttonUrl })}
+        />
+      </>
+    ),
   }),
   save: saveInner,
 });

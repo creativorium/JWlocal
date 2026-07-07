@@ -16,7 +16,7 @@
 	font-weight: 500;
 	letter-spacing: 0.16em;
 	text-transform: uppercase;
-	color: var(--jwt-muted);
+	color: var(--jwt-text);
 	text-align: center;
 	margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
 }
@@ -33,20 +33,15 @@
 	display: inline-flex;
 	align-items: center;
 	gap: 0.5rem;
-	color: var(--jwt-muted);
+	color: var(--jwt-text);
 	text-decoration: none;
 	font-family: var(--jwt-font-body);
 	font-size: 0.9375rem;
 	font-weight: 600;
 	white-space: nowrap;
-	// Logos read as one calm monochrome row; real color returns on hover.
-	opacity: 0.75;
+	// Full white text + logos (no muting) per brand request.
+	opacity: 1;
 	transition: opacity 0.2s, color 0.2s;
-
-	&:hover {
-		opacity: 1;
-		color: var(--jwt-text);
-	}
 }
 
 .jwt-partner__placeholder svg {
@@ -64,8 +59,8 @@
 	height: auto;
 	max-height: 34px;
 	width: auto;
-	// Logos are already white/monochrome; the muted→full look comes from the
-	// parent's opacity (0.75 → 1 on hover), no filter needed.
+	// Logos are already white PNGs and shown at full opacity — no filter or
+	// muting applied.
 
 	// On mobile the wide (banner) logos would dominate the wrapped row, so
 	// cap their width.
@@ -82,10 +77,12 @@
 // alignment deterministic (was the "member 6 sits lower" bug: nested flex
 // centering with any sub-pixel height variance offset the last card).
 .jwt-proof {
-	// Cards share ONE fixed height; width is auto per image so each testimonial
-	// (portrait screenshots AND landscape ones) shows at its natural ratio with
-	// no cropping. Placeholder cards fall back to a portrait width.
-	--jwt-card-h: clamp(280px, 46vw, 380px);
+	// Every card is a UNIFORM 300px-wide (min(300px,80vw) so it shrinks on
+	// narrow phones) fixed-height box. Images are object-fit:contain inside,
+	// so mixed portrait/landscape testimonials all sit in identical cards
+	// (no crop, letterboxed where the ratio differs).
+	--jwt-card-w: min(300px, 80vw);
+	--jwt-card-h: clamp(300px, 48vw, 420px);
 	--jwt-card-gap: clamp(1rem, 2vw, 1.5rem);
 }
 
@@ -137,9 +134,8 @@
 
 .jwt-proof-card {
 	flex: none;
-	height: var(--jwt-card-h); // fixed; width comes from the image ratio
-	width: auto;
-	max-width: 300px; // cap wide (landscape) testimonials
+	width: var(--jwt-card-w); // uniform 300px for every card
+	height: var(--jwt-card-h);
 	margin: 0;
 	border-radius: var(--jwt-radius);
 	border: 1px solid var(--jwt-line);
@@ -150,17 +146,11 @@
 	justify-content: center;
 }
 
-// Placeholder cards (no image) keep a portrait width so the row looks right
-// before real testimonial images are in.
-.jwt-proof-card--placeholder {
-	width: calc(var(--jwt-card-h) * 0.7);
-}
-
 // Zoom trigger wraps the image; the button is invisible chrome.
 .jwt-proof-card__zoom {
 	display: block;
+	width: 100%;
 	height: 100%;
-	max-width: 100%;
 	padding: 0;
 	border: 0;
 	background: none;
@@ -173,10 +163,9 @@
 // image layout is fully self-contained — no reliance on the shared reset.
 .jwt-proof-card .jwt-proof-card__img {
 	display: block;
+	width: 100%;
 	height: 100%;
-	width: auto; // natural ratio → card width matches the image
-	max-width: 100%; // never exceed the card's 300px cap
-	object-fit: contain; // show the whole testimonial, no crop
+	object-fit: contain; // whole testimonial, no crop; letterbox as needed
 }
 
 .jwt-proof-card__placeholder {
@@ -585,15 +574,16 @@ body.jwt-lightbox-open {
 	padding: 34px;
 }
 
+// Purple glow top-right of each numbered box (per spec: 0.16 + blur 38px).
 .jwt-feature__glow {
 	position: absolute;
 	top: -30px;
 	right: -30px;
-	width: 120px;
-	height: 120px;
-	background: rgb(124 77 255 / 0.18);
+	width: 130px;
+	height: 130px;
+	background: rgb(124 77 255 / 0.16);
 	border-radius: 50%;
-	filter: blur(34px);
+	filter: blur(38px);
 	pointer-events: none;
 }
 
@@ -612,6 +602,11 @@ body.jwt-lightbox-open {
 	font-family: var(--jwt-font-heading);
 	font-size: 1.5rem;
 	margin-bottom: 12px;
+}
+
+.jwt-features__cta {
+	text-align: center;
+	margin-top: clamp(2.25rem, 5vw, 3.25rem);
 }
 
 // ----- Statement panel ------------------------------------------------------------
