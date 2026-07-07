@@ -41,7 +41,9 @@ body.admin-bar .jwt-header {
 	grid-template-columns: 1fr auto 1fr;
 	align-items: center;
 	gap: 1rem;
-	min-height: 88px;
+	// Taller bar + extra top padding so the bigger logo isn't cramped.
+	min-height: 96px;
+	padding-top: 1rem;
 }
 
 .jwt-brand {
@@ -49,7 +51,7 @@ body.admin-bar .jwt-header {
 	align-items: center;
 
 	img {
-		max-height: 44px;
+		max-height: 65px;
 		width: auto;
 		display: block;
 	}
@@ -157,15 +159,15 @@ body.jwt-nav-open {
 }
 
 @media (max-width: 880px) {
-	// Header shrinks to 72px here — keep the hero's viewport-fill calc exact.
+	// Header is min-height 76 + 16 top pad = 92px here — keep the hero calc exact.
 	:root {
-		--jwt-header-h: 72px;
+		--jwt-header-h: 92px;
 	}
 
 	.jwt-header__bar {
 		grid-template-columns: auto auto;
 		justify-content: space-between;
-		min-height: 72px;
+		min-height: 76px;
 	}
 
 	// Desktop pill nav plays no part on mobile — the drawer covers it.

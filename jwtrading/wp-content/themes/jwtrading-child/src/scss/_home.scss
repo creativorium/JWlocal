@@ -55,12 +55,24 @@
 	height: 22px;
 }
 
-.jwt-partner__logo {
+// Scoped (.jwt-partner …) so it beats the generic `[class*=wp-block-jwt-]
+// img` reset (which would set height:auto and blow the logos up to natural
+// size). Partner logos own their sizing entirely here — separate from the
+// testimonial image layout above.
+.jwt-partner .jwt-partner__logo {
 	display: block;
+	height: auto;
 	max-height: 34px;
 	width: auto;
 	// Logos are already white/monochrome; the muted→full look comes from the
 	// parent's opacity (0.75 → 1 on hover), no filter needed.
+
+	// On mobile the wide (banner) logos would dominate the wrapped row, so
+	// cap their width.
+	@media (max-width: 640px) {
+		max-width: 175px;
+		max-height: 28px;
+	}
 }
 
 // ----- Proof marquee (auto-scrolling member results) -------------------------
@@ -127,6 +139,7 @@
 	flex: none;
 	height: var(--jwt-card-h); // fixed; width comes from the image ratio
 	width: auto;
+	max-width: 300px; // cap wide (landscape) testimonials
 	margin: 0;
 	border-radius: var(--jwt-radius);
 	border: 1px solid var(--jwt-line);
@@ -147,17 +160,23 @@
 .jwt-proof-card__zoom {
 	display: block;
 	height: 100%;
+	max-width: 100%;
 	padding: 0;
 	border: 0;
 	background: none;
 	cursor: zoom-in;
 }
 
-.jwt-proof-card__img {
+// Scoped (.jwt-proof-card …) so it OUTRANKS the generic
+// `[class*=wp-block-jwt-] img` reset (0,1,1) that would otherwise force
+// height:auto and render the image at the wrong scale (the "blur"). This
+// image layout is fully self-contained — no reliance on the shared reset.
+.jwt-proof-card .jwt-proof-card__img {
+	display: block;
 	height: 100%;
 	width: auto; // natural ratio → card width matches the image
-	object-fit: contain;
-	display: block;
+	max-width: 100%; // never exceed the card's 300px cap
+	object-fit: contain; // show the whole testimonial, no crop
 }
 
 .jwt-proof-card__placeholder {
@@ -205,8 +224,15 @@ body.jwt-lightbox-open {
 	position: absolute;
 	top: clamp(0.75rem, 3vw, 1.5rem);
 	right: clamp(0.75rem, 3vw, 1.5rem);
+	// Force a perfect circle: fixed box + no theme/UA button padding or
+	// min-width can widen it into an oval.
+	flex: 0 0 auto;
+	box-sizing: border-box;
 	width: 44px;
 	height: 44px;
+	min-width: 0;
+	padding: 0;
+	aspect-ratio: 1;
 	display: flex;
 	align-items: center;
 	justify-content: center;
