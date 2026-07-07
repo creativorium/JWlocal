@@ -273,32 +273,17 @@ body.jwt-nav-open {
 		opacity: 1;
 	}
 
-	// Explicit close (✕) pinned top-right inside the drawer — an unambiguous
-	// affordance instead of relying on the morphed hamburger behind the panel.
-	.jwt-mobile-nav__close {
-		position: absolute;
-		top: 1.25rem;
-		right: 1.5rem;
-		box-sizing: border-box;
-		width: 44px;
-		height: 44px;
-		padding: 0;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 1.75rem;
-		line-height: 1;
-		color: #f5f4f4;
-		background: rgb(255 255 255 / 0.08);
-		border: 1px solid rgb(255 255 255 / 0.18);
-		border-radius: 50%;
-		cursor: pointer;
-		transition: background 0.2s, color 0.2s;
-
-		&:hover {
-			background: rgb(255 255 255 / 0.16);
-			color: var(--jwt-accent-warm);
-		}
+	// When the drawer is open, pin the SAME hamburger toggle (now morphed to an
+	// X) to the top-right corner of the viewport/drawer instead of leaving it in
+	// the header's grid flow — so the close control visually belongs to the open
+	// menu ("follows the menu") rather than floating at its original header spot.
+	// position:fixed works here because the drawer-open state also strips the
+	// header's backdrop-filter (see the is-scrolled override up top), so nothing
+	// traps the fixed positioning to the header box.
+	body.jwt-nav-open .jwt-nav-toggle {
+		position: fixed;
+		top: max(1.25rem, env(safe-area-inset-top, 0px));
+		right: clamp(1.25rem, 5vw, 1.75rem);
 	}
 
 	// The drawer's own list — explicitly reset EVERY property the shared

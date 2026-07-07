@@ -50,6 +50,25 @@ add_action( 'wp_enqueue_scripts', function () {
 } );
 
 /**
+ * Preload the two above-the-fold fonts (Space Grotesk = hero title / LCP,
+ * Manrope = nav + body). They're otherwise only discovered late via the CSS
+ * @font-face, which delays the first text paint on mobile. JetBrains Mono and
+ * Montserrat are not above the fold, so they're intentionally NOT preloaded.
+ * `crossorigin` is required even same-origin — fonts are fetched anonymously.
+ */
+add_action( 'wp_head', function () {
+	if ( is_admin() ) {
+		return;
+	}
+	foreach ( array( 'space-grotesk-var.woff2', 'manrope-var.woff2' ) as $jwt_font ) {
+		printf(
+			'<link rel="preload" as="font" type="font/woff2" href="%s" crossorigin>' . "\n",
+			esc_url( JWT_THEME_URI . '/dist/fonts/' . $jwt_font )
+		);
+	}
+}, 1 );
+
+/**
  * Load Vite entries as ES modules.
  * (Filter name is `script_loader_tag` — `script_tag` does not exist.)
  */

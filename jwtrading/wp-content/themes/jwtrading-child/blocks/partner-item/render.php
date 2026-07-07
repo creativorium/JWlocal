@@ -20,9 +20,13 @@ if ( ! empty( $attributes['imageId'] ) ) {
 		'medium',
 		false,
 		array(
-			'class'   => 'jwt-partner__logo',
-			'loading' => 'lazy',
-			'alt'     => $jwt_name,
+			'class'    => 'jwt-partner__logo',
+			'loading'  => 'lazy',
+			'decoding' => 'async',
+			// Logos render at most ~175px wide — tell the browser so it never
+			// pulls the full 300px `medium` on small screens.
+			'sizes'    => '175px',
+			'alt'      => $jwt_name,
 		)
 	);
 } else {
