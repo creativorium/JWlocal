@@ -178,3 +178,47 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
     });
   });
 })();
+
+// --- TEMPORARY preview guard: block navigation to unpublished pages -----------
+// Homepage-only preview: any link pointing at Bootcamp, Discord, or the
+// Testimonials page should do NOTHING when clicked — the buttons/links and the
+// pages themselves stay in place, they just don't navigate for now. Works no
+// matter where the link lives (hero/offer/faq CTAs, header nav, footer menus).
+// Remove this whole block to restore normal navigation once those pages go live.
+(() => {
+  const blockedPaths = ['/bootcamp', '/discord', '/testimonials'];
+
+  const isBlocked = (href) => {
+    let url;
+    try {
+      url = new URL(href, location.origin);
+    } catch {
+      return false;
+    }
+    // External Discord invites (discord.gg / discord.com) count too.
+    if (/(^|\.)discord\.(gg|com)$/i.test(url.hostname)) return true;
+    if (url.origin !== location.origin) return false;
+    return blockedPaths.some(
+      (p) => url.pathname === p || url.pathname.startsWith(`${p}/`)
+    );
+  };
+
+  // Capture phase so we win before any other click handler navigates/opens.
+  document.addEventListener(
+    'click',
+    (e) => {
+      const link = e.target.closest('a[href]');
+      if (link && isBlocked(link.getAttribute('href'))) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    },
+    true
+  );
+
+  // Mark them for assistive tech (visual appearance is intentionally unchanged
+  // so the homepage preview still looks complete).
+  document.querySelectorAll('a[href]').forEach((a) => {
+    if (isBlocked(a.getAttribute('href'))) a.setAttribute('aria-disabled', 'true');
+  });
+})();
