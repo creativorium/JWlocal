@@ -46,6 +46,12 @@ if (navToggle) {
 
   navBackdrop?.addEventListener('click', closeNav);
 
+  // Explicit ✕ close button inside the drawer.
+  navPanel?.querySelector('[data-jwt-nav-close]')?.addEventListener('click', () => {
+    closeNav();
+    navToggle.focus();
+  });
+
   // Navigating via a drawer link should close it too (same-page anchors etc.).
   navPanel?.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', closeNav);

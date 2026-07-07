@@ -73,6 +73,7 @@ defined( 'ABSPATH' ) || exit;
 	<!-- Mobile slide-in drawer — own menu location (jwt-mobile), independent
 	     of the desktop pill's shorter menu. Only ever visible <=880px. -->
 	<nav class="jwt-mobile-nav" id="jwt-mobile-nav" aria-label="<?php esc_attr_e( 'Menu utama (mobile)', 'jwtrading' ); ?>">
+		<button class="jwt-mobile-nav__close" data-jwt-nav-close aria-label="<?php esc_attr_e( 'Tutup menu', 'jwtrading' ); ?>">&times;</button>
 		<?php
 		wp_nav_menu(
 			array(
