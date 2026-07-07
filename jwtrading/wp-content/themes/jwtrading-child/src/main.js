@@ -127,3 +127,54 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
 
   counters.forEach((el) => io.observe(el));
 }
+
+// --- Lightbox for testimonial images ------------------------------------------
+// Click any [data-jwt-lightbox] (the proof-card zoom buttons) to enlarge its
+// full-size image in a dark overlay. Overlay is built once, on first use.
+(() => {
+  const triggers = document.querySelectorAll('[data-jwt-lightbox]');
+  if (!triggers.length) return;
+
+  let overlay;
+  let lastFocused;
+
+  const build = () => {
+    overlay = document.createElement('div');
+    overlay.className = 'jwt-lightbox';
+    overlay.innerHTML =
+      '<button class="jwt-lightbox__close" aria-label="Tutup">&times;</button>' +
+      '<img class="jwt-lightbox__img" alt="">';
+    document.body.appendChild(overlay);
+
+    const close = () => {
+      overlay.classList.remove('is-open');
+      document.body.classList.remove('jwt-lightbox-open');
+      lastFocused && lastFocused.focus();
+    };
+
+    overlay.addEventListener('click', (e) => {
+      // Close when clicking the backdrop or the close button (not the image).
+      if (e.target === overlay || e.target.closest('.jwt-lightbox__close')) close();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay.classList.contains('is-open')) close();
+    });
+  };
+
+  const open = (src, alt) => {
+    if (!overlay) build();
+    const img = overlay.querySelector('.jwt-lightbox__img');
+    img.src = src;
+    img.alt = alt || '';
+    overlay.classList.add('is-open');
+    document.body.classList.add('jwt-lightbox-open');
+    overlay.querySelector('.jwt-lightbox__close').focus();
+  };
+
+  triggers.forEach((t) => {
+    t.addEventListener('click', () => {
+      lastFocused = t;
+      open(t.dataset.jwtLightbox, t.querySelector('img')?.alt);
+    });
+  });
+})();

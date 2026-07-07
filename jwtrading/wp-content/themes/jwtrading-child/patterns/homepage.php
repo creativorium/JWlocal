@@ -12,12 +12,12 @@ defined( 'ABSPATH' ) || exit;
 <!-- wp:jwt/hero {"align":"full","titleTag":"h1","showTrustBadge":true,"title":"Lolos Prop Firm Challenge<br><mark>Dengan ICT Trading.</mark>","lead":"Belajar membaca market sendiri menggunakan ICT — dan persiapkan diri untuk lolos prop firm evaluation. Tanpa sinyal, tanpa tebak-tebakan.","primaryText":"Lihat Bootcamp →","primaryUrl":"/bootcamp/","secondaryText":"Coba Gratis","secondaryUrl":"/free-content-preview/","note":"+17.000 Member Komunitas"} /-->
 
 <!-- wp:jwt/partners {"align":"full","heading":"Didukung oleh Prop Firm Terpercaya"} -->
-<!-- wp:jwt/partner-item {"name":"TopStep"} /-->
-<!-- wp:jwt/partner-item {"name":"Alpha Futures"} /-->
-<!-- wp:jwt/partner-item {"name":"5%ers"} /-->
-<!-- wp:jwt/partner-item {"name":"Apex"} /-->
-<!-- wp:jwt/partner-item {"name":"WeMasterTrade"} /-->
-<!-- wp:jwt/partner-item {"name":"MyFunded Futures"} /-->
+<!-- wp:jwt/partner-item {"imageId":3119,"name":"The 5%ers"} /-->
+<!-- wp:jwt/partner-item {"imageId":3120,"name":"Alpha Futures"} /-->
+<!-- wp:jwt/partner-item {"imageId":3121,"name":"Apex Trader Funding"} /-->
+<!-- wp:jwt/partner-item {"imageId":3122,"name":"FundedNext"} /-->
+<!-- wp:jwt/partner-item {"imageId":3123,"name":"Funding Pips"} /-->
+<!-- wp:jwt/partner-item {"imageId":3124,"name":"WeMasterTrade"} /-->
 <!-- /wp:jwt/partners -->
 
 <!-- wp:jwt/proof {"align":"full","eyebrow":"Hasil Nyata dari Member Kami","title":"Trader yang sudah buktikan prosesnya"} -->

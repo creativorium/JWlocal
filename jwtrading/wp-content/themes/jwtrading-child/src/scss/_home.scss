@@ -57,15 +57,10 @@
 
 .jwt-partner__logo {
 	display: block;
-	max-height: 30px;
+	max-height: 34px;
 	width: auto;
-	// Uploaded logos: desaturate to match the row, full color on hover.
-	filter: grayscale(1) brightness(1.4);
-	transition: filter 0.2s;
-
-	.jwt-partner:hover & {
-		filter: none;
-	}
+	// Logos are already white/monochrome; the muted→full look comes from the
+	// parent's opacity (0.75 → 1 on hover), no filter needed.
 }
 
 // ----- Proof marquee (auto-scrolling member results) -------------------------
@@ -75,8 +70,10 @@
 // alignment deterministic (was the "member 6 sits lower" bug: nested flex
 // centering with any sub-pixel height variance offset the last card).
 .jwt-proof {
-	--jwt-card-w: clamp(190px, 20vw, 250px);
-	--jwt-card-h: calc(var(--jwt-card-w) * 4 / 3);
+	// Cards share ONE fixed height; width is auto per image so each testimonial
+	// (portrait screenshots AND landscape ones) shows at its natural ratio with
+	// no cropping. Placeholder cards fall back to a portrait width.
+	--jwt-card-h: clamp(280px, 46vw, 380px);
 	--jwt-card-gap: clamp(1rem, 2vw, 1.5rem);
 }
 
@@ -128,8 +125,8 @@
 
 .jwt-proof-card {
 	flex: none;
-	width: var(--jwt-card-w);
-	height: var(--jwt-card-h); // exact same height as its parents — no centering math
+	height: var(--jwt-card-h); // fixed; width comes from the image ratio
+	width: auto;
 	margin: 0;
 	border-radius: var(--jwt-radius);
 	border: 1px solid var(--jwt-line);
@@ -140,10 +137,26 @@
 	justify-content: center;
 }
 
-.jwt-proof-card__img {
-	width: 100%;
+// Placeholder cards (no image) keep a portrait width so the row looks right
+// before real testimonial images are in.
+.jwt-proof-card--placeholder {
+	width: calc(var(--jwt-card-h) * 0.7);
+}
+
+// Zoom trigger wraps the image; the button is invisible chrome.
+.jwt-proof-card__zoom {
+	display: block;
 	height: 100%;
-	object-fit: cover;
+	padding: 0;
+	border: 0;
+	background: none;
+	cursor: zoom-in;
+}
+
+.jwt-proof-card__img {
+	height: 100%;
+	width: auto; // natural ratio → card width matches the image
+	object-fit: contain;
 	display: block;
 }
 
@@ -152,6 +165,63 @@
 	font-size: 0.8125rem;
 	color: var(--jwt-dim);
 	letter-spacing: 0.04em;
+}
+
+// ----- Lightbox (enlarge testimonial images) ---------------------------------
+body.jwt-lightbox-open {
+	overflow: hidden;
+}
+
+.jwt-lightbox {
+	position: fixed;
+	inset: 0;
+	z-index: 9999;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	padding: clamp(1rem, 4vw, 3rem);
+	background: rgb(4 3 8 / 0.9);
+	-webkit-backdrop-filter: blur(6px);
+	backdrop-filter: blur(6px);
+
+	&.is-open {
+		display: flex;
+	}
+}
+
+.jwt-lightbox__img {
+	max-width: 100%;
+	max-height: 100%;
+	width: auto;
+	height: auto;
+	border-radius: var(--jwt-radius-sm);
+	box-shadow: var(--jwt-shadow);
+	// Lightbox images are portrait phone screenshots — cap so they don't
+	// tower over the viewport.
+	object-fit: contain;
+}
+
+.jwt-lightbox__close {
+	position: absolute;
+	top: clamp(0.75rem, 3vw, 1.5rem);
+	right: clamp(0.75rem, 3vw, 1.5rem);
+	width: 44px;
+	height: 44px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.75rem;
+	line-height: 1;
+	color: #fff;
+	background: rgb(255 255 255 / 0.1);
+	border: 1px solid rgb(255 255 255 / 0.18);
+	border-radius: 50%;
+	cursor: pointer;
+	transition: background 0.2s;
+
+	&:hover {
+		background: rgb(255 255 255 / 0.2);
+	}
 }
 
 // ----- Offer section (Pilih Jalur Belajarmu — 2 rich cards) ------------------
