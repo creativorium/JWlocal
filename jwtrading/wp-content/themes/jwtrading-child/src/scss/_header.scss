@@ -34,7 +34,11 @@ body.admin-bar .jwt-header {
 
 .jwt-header__bar {
 	display: grid;
-	grid-template-columns: auto 1fr auto;
+	// Equal 1fr side columns so the center (nav pill) sits on the true page
+	// centre line regardless of the logo/actions widths — otherwise the pill
+	// drifts off-centre and no longer lines up with the page-centred hero
+	// badge/title below it.
+	grid-template-columns: 1fr auto 1fr;
 	align-items: center;
 	gap: 1rem;
 	min-height: 88px;
