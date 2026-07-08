@@ -27,7 +27,7 @@ $jwt_wrapper = get_block_wrapper_attributes( array( 'class' => 'jwt-payments' ) 
 		<div class="jwt-payments__box" data-jwt-reveal>
 			<div class="jwt-payments__left">
 				<?php if ( '' !== trim( (string) ( $attributes['title'] ?? '' ) ) ) : ?>
-					<h2 class="jwt-payments__title"><?php echo esc_html( $attributes['title'] ); ?></h2>
+					<h2 class="jwt-payments__title"><svg class="jwt-payments__lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><?php echo esc_html( $attributes['title'] ); ?></h2>
 				<?php endif; ?>
 				<?php if ( '' !== trim( (string) ( $attributes['lead'] ?? '' ) ) ) : ?>
 					<p class="jwt-payments__lead"><?php echo esc_html( $attributes['lead'] ); ?></p>

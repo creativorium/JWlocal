@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/discord-cta",
+	"title": "JWT Discord CTA",
+	"category": "jwtrading",
+	"icon": "groups",
+	"description": "Discord join banner: logo + heading + button on the left, a screenshot on the right.",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"align": [ "full" ],
+		"html": false,
+		"anchor": true
+	},
+	"attributes": {
+		"title": { "type": "string", "default": "" },
+		"buttonText": { "type": "string", "default": "" },
+		"buttonUrl": { "type": "string", "default": "" },
+		"mediaId": { "type": "number", "default": 0 },
+		"placeholder": { "type": "string", "default": "" }
+	}
+}

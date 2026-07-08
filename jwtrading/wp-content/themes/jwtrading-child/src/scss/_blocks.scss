@@ -380,7 +380,7 @@
 }
 
 .jwt-faq-item {
-	background: var(--jwt-surface);
+	background: linear-gradient(150deg, rgb(124 77 255 / 0.10), var(--jwt-surface) 62%);
 	border: 1px solid var(--jwt-line);
 	border-radius: 14px;
 
@@ -690,23 +690,22 @@
 .jwt-showcase__layout {
 	display: grid;
 	grid-template-columns: 1.05fr 1fr;
-	gap: clamp(1.25rem, 3vw, 2.5rem);
+	grid-template-rows: auto auto; // row 1 = stage + cards (equal height), row 2 = nav
+	column-gap: clamp(1.25rem, 3vw, 2.5rem);
 	align-items: stretch;
 
-	@media (max-width: 860px) {
-		grid-template-columns: 1fr;
-	}
-}
+	.jwt-showcase__stage { grid-column: 1; grid-row: 1; }
+	.jwt-showcase__cards { grid-column: 2; grid-row: 1; }
+	.jwt-showcase__nav   { grid-column: 1; grid-row: 2; }
 
-// Left column = stage on top, carousel nav centered directly beneath it.
-.jwt-showcase__main {
-	display: flex;
-	flex-direction: column;
+	@media (max-width: 860px) {
+		display: flex;
+		flex-direction: column;
+	}
 }
 
 // Left media panel — shows the active card's media, or a labelled placeholder.
 .jwt-showcase__stage {
-	flex: 1 1 auto; // fill the column height above the nav
 	position: relative;
 	border-radius: var(--jwt-radius);
 	border: 1px solid var(--jwt-line);
@@ -1083,4 +1082,138 @@
 		background-position: center;
 		background-size: 0.75rem;
 	}
+}
+
+// ----- Layout tweaks (client feedback) ---------------------------------------
+
+// Numbered feature sections use a fixed 3-up grid (so 6 cards = 3 top / 3 bottom)
+// instead of auto-fit which packed them 4 + 2. Icon-card sections keep auto-fit.
+.jwt-features__grid:has(.jwt-feature--numbered) {
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+
+	@media (max-width: 900px) {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+	@media (max-width: 560px) {
+		grid-template-columns: 1fr;
+	}
+}
+
+// Vertical (pricing) offer cards sit side-by-side; the homepage's wide 2-col
+// cards keep their single-column stack.
+.jwt-offer__grid:has(.jwt-offer-card.is-vertical) {
+	grid-template-columns: 1fr 1fr;
+
+	@media (max-width: 760px) {
+		grid-template-columns: 1fr;
+	}
+}
+
+// "Coming soon" pricing card — intentionally dimmed to tease a future premium.
+.jwt-offer-card.is-muted {
+	opacity: 0.78;
+}
+
+// Lock icon inline with the payments title.
+.jwt-payments__title {
+	display: flex;
+	align-items: center;
+	gap: 0.55rem;
+}
+.jwt-payments__lock {
+	width: 1.15rem;
+	height: 1.15rem;
+	color: #34d399;
+	flex: 0 0 auto;
+}
+
+// ----- Discord CTA banner ----------------------------------------------------
+.jwt-discord {
+	padding-block: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.jwt-discord__panel {
+	display: grid;
+	grid-template-columns: 0.85fr 1.15fr;
+	gap: clamp(1.5rem, 4vw, 3rem);
+	align-items: center;
+	padding: clamp(1.75rem, 4vw, 3rem);
+	border-radius: var(--jwt-radius);
+	border: 1px solid rgb(124 77 255 / 0.25);
+	background:
+		radial-gradient(120% 140% at 0% 0%, rgb(124 77 255 / 0.22), transparent 55%),
+		var(--jwt-surface-2);
+
+	@media (max-width: 800px) {
+		grid-template-columns: 1fr;
+	}
+}
+
+.jwt-discord__left {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.jwt-discord__logo {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 52px;
+	height: 52px;
+	border-radius: 14px;
+	background: rgb(124 77 255 / 0.18);
+	color: #fff;
+
+	svg {
+		width: 28px;
+		height: auto;
+	}
+}
+
+.jwt-discord__title {
+	font-family: var(--jwt-font-heading);
+	font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+	line-height: 1.1;
+	letter-spacing: -0.01em;
+	color: var(--jwt-text);
+	margin: 1.1rem 0 1.6rem;
+}
+
+.jwt-discord__media {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: clamp(200px, 30vw, 320px);
+	border-radius: var(--jwt-radius);
+	overflow: hidden;
+	border: 1px solid var(--jwt-line);
+	background: var(--jwt-surface);
+}
+
+.jwt-discord__img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.jwt-discord__placeholder {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	text-align: center;
+	padding: 1.5rem;
+}
+
+.jwt-discord__ph-label {
+	font-family: var(--jwt-font-mono);
+	font-size: 0.7rem;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--jwt-muted);
+}
+
+.jwt-discord__ph-title {
+	color: var(--jwt-muted);
 }

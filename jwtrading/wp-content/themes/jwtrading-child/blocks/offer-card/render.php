@@ -19,7 +19,7 @@ $jwt_variant   = ( 'dark' === ( $attributes['variant'] ?? '' ) ) ? 'dark' : 'acc
 $jwt_is_accent = 'accent' === $jwt_variant;
 $jwt_vertical  = ! empty( $attributes['vertical'] );
 $jwt_btn_class = $jwt_is_accent ? 'jwt-btn--primary' : 'jwt-btn--ghost';
-$jwt_card_cls  = 'jwt-offer-card is-' . $jwt_variant . ( $jwt_vertical ? ' is-vertical' : '' );
+$jwt_card_cls  = 'jwt-offer-card is-' . $jwt_variant . ( $jwt_vertical ? ' is-vertical' : '' ) . ( ! empty( $attributes['buttonDisabled'] ) ? ' is-muted' : '' );
 
 $jwt_rating   = ! empty( $attributes['rating'] );
 $jwt_price    = trim( (string) ( $attributes['price'] ?? '' ) );

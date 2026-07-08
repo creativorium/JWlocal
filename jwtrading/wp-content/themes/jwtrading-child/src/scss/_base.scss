@@ -220,3 +220,18 @@ body {
 		}
 	}
 }
+
+// Smooth in-page scrolling for anchor CTAs (e.g. "Akses…" -> #harga pricing).
+html {
+	scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+// Offset anchored sections so the sticky header doesn't overlap the target.
+:target,
+[id] {
+	scroll-margin-top: calc(var(--jwt-header-h) + 1rem);
+}

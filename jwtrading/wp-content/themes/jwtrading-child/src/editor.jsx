@@ -1806,3 +1806,63 @@ registerBlockType('jwt/payments', {
   },
   save: saveNull,
 });
+
+// --- Discord CTA banner -------------------------------------------------------
+
+registerBlockType('jwt/discord-cta', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps();
+    const { mediaId } = attributes;
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Konten', 'jwtrading')}>
+            <TextControl
+              label={__('Judul', 'jwtrading')}
+              value={attributes.title}
+              onChange={(title) => setAttributes({ title })}
+            />
+            <TextControl
+              label={__('Teks tombol', 'jwtrading')}
+              value={attributes.buttonText}
+              onChange={(buttonText) => setAttributes({ buttonText })}
+            />
+            <TextControl
+              label={__('URL tombol', 'jwtrading')}
+              value={attributes.buttonUrl}
+              onChange={(buttonUrl) => setAttributes({ buttonUrl })}
+            />
+            <TextControl
+              label={__('Label placeholder media', 'jwtrading')}
+              value={attributes.placeholder}
+              onChange={(placeholder) => setAttributes({ placeholder })}
+            />
+            <MediaUploadCheck>
+              <MediaUpload
+                onSelect={(media) => setAttributes({ mediaId: media.id })}
+                allowedTypes={['image']}
+                value={mediaId}
+                render={({ open }) => (
+                  <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+                    <Button variant="secondary" onClick={open}>
+                      {mediaId ? __('Ganti screenshot', 'jwtrading') : __('Pilih screenshot', 'jwtrading')}
+                    </Button>
+                    {mediaId ? (
+                      <Button variant="link" isDestructive onClick={() => setAttributes({ mediaId: 0 })}>
+                        {__('Hapus', 'jwtrading')}
+                      </Button>
+                    ) : null}
+                  </div>
+                )}
+              />
+            </MediaUploadCheck>
+          </PanelBody>
+        </InspectorControls>
+        <div {...blockProps}>
+          <ServerSideRender block="jwt/discord-cta" attributes={attributes} />
+        </div>
+      </>
+    );
+  },
+  save: saveNull,
+});

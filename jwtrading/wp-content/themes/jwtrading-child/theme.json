@@ -6,32 +6,101 @@
 			"defaultPalette": false,
 			"defaultGradients": false,
 			"palette": [
-				{ "slug": "base", "name": "Base", "color": "#08070e" },
-				{ "slug": "surface", "name": "Surface", "color": "#100d1c" },
-				{ "slug": "surface-2", "name": "Surface 2", "color": "#171232" },
-				{ "slug": "contrast", "name": "Contrast", "color": "#f0eef8" },
-				{ "slug": "muted", "name": "Muted", "color": "#a49bc0" },
-				{ "slug": "accent", "name": "Accent (Purple)", "color": "#7c4dff" },
-				{ "slug": "success", "name": "Success", "color": "#16b364" },
-				{ "slug": "line", "name": "Line", "color": "#241d3d" }
+				{
+					"slug": "base",
+					"name": "Base",
+					"color": "#08070e"
+				},
+				{
+					"slug": "surface",
+					"name": "Surface",
+					"color": "#100d1c"
+				},
+				{
+					"slug": "surface-2",
+					"name": "Surface 2",
+					"color": "#171232"
+				},
+				{
+					"slug": "contrast",
+					"name": "Contrast",
+					"color": "#f0eef8"
+				},
+				{
+					"slug": "muted",
+					"name": "Muted",
+					"color": "#a49bc0"
+				},
+				{
+					"slug": "accent",
+					"name": "Accent (Purple)",
+					"color": "#7c4dff"
+				},
+				{
+					"slug": "success",
+					"name": "Success",
+					"color": "#16b364"
+				},
+				{
+					"slug": "line",
+					"name": "Line",
+					"color": "#241d3d"
+				}
 			]
 		},
 		"typography": {
 			"fluid": true,
 			"fontSizes": [
-				{ "slug": "small", "name": "Small", "size": "0.9375rem" },
-				{ "slug": "medium", "name": "Medium", "size": "1.0625rem" },
-				{ "slug": "large", "name": "Large", "size": "1.375rem", "fluid": { "min": "1.25rem", "max": "1.5rem" } },
-				{ "slug": "x-large", "name": "XL", "size": "2rem", "fluid": { "min": "1.75rem", "max": "2.25rem" } },
-				{ "slug": "xx-large", "name": "2XL", "size": "3rem", "fluid": { "min": "2.25rem", "max": "3.5rem" } }
+				{
+					"slug": "small",
+					"name": "Small",
+					"size": "0.9375rem"
+				},
+				{
+					"slug": "medium",
+					"name": "Medium",
+					"size": "1.0625rem"
+				},
+				{
+					"slug": "large",
+					"name": "Large",
+					"size": "1.375rem",
+					"fluid": {
+						"min": "1.25rem",
+						"max": "1.5rem"
+					}
+				},
+				{
+					"slug": "x-large",
+					"name": "XL",
+					"size": "2rem",
+					"fluid": {
+						"min": "1.75rem",
+						"max": "2.25rem"
+					}
+				},
+				{
+					"slug": "xx-large",
+					"name": "2XL",
+					"size": "3rem",
+					"fluid": {
+						"min": "2.25rem",
+						"max": "3.5rem"
+					}
+				}
 			]
 		},
 		"layout": {
 			"contentSize": "700px",
-			"wideSize": "1200px"
+			"wideSize": "1440px"
 		},
 		"spacing": {
-			"units": [ "px", "rem", "%", "vh" ]
+			"units": [
+				"px",
+				"rem",
+				"%",
+				"vh"
+			]
 		}
 	}
 }
