@@ -698,8 +698,15 @@
 	}
 }
 
+// Left column = stage on top, carousel nav centered directly beneath it.
+.jwt-showcase__main {
+	display: flex;
+	flex-direction: column;
+}
+
 // Left media panel — shows the active card's media, or a labelled placeholder.
 .jwt-showcase__stage {
+	flex: 1 1 auto; // fill the column height above the nav
 	position: relative;
 	border-radius: var(--jwt-radius);
 	border: 1px solid var(--jwt-line);
@@ -786,12 +793,13 @@
 	margin: 0.5rem 0 0;
 }
 
-// Carousel controls (prev · dots · next)
+// Carousel controls (prev · dots · next) — centered under the stage.
 .jwt-showcase__nav {
 	display: flex;
 	align-items: center;
+	justify-content: center;
 	gap: 1rem;
-	margin-top: clamp(1.25rem, 3vw, 2rem);
+	margin-top: clamp(1rem, 2.5vw, 1.5rem);
 }
 
 .jwt-showcase__arrow {
