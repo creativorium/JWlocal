@@ -950,11 +950,10 @@
 
 .jwt-offer-card__price {
 	display: flex;
-	align-items: baseline;
-	justify-content: center;
-	gap: 0.6rem;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.1rem;
 	margin-top: 1rem;
-	flex-wrap: wrap;
 }
 
 .jwt-offer-card__price-now {
@@ -965,9 +964,11 @@
 }
 
 .jwt-offer-card__price-old {
-	color: var(--jwt-muted);
+	order: -1; // small crossed price sits ABOVE the big price
+	color: var(--jwt-accent-light);
 	text-decoration: line-through;
-	font-size: 1rem;
+	font-size: 0.85rem;
+	font-weight: 600;
 }
 
 .jwt-offer-card__footnote {
@@ -1216,4 +1217,51 @@
 
 .jwt-discord__ph-title {
 	color: var(--jwt-muted);
+}
+
+// ----- Pricing badges + subtext (client feedback) ----------------------------
+// Bigger, per-card coloured badges. FULL AKSES = purple with a radar-pulsing
+// dot; COMING SOON = orange. (Homepage's green "Gratis" badge is untouched — it
+// isn't .is-vertical/.is-muted.)
+.jwt-offer-card.is-vertical .jwt-badge-gratis {
+	padding: 7px 16px;
+	font-size: 0.66rem;
+}
+
+.jwt-offer-card.is-vertical.is-accent .jwt-badge-gratis {
+	color: var(--jwt-accent-light);
+	background: rgb(124 77 255 / 0.14);
+	border-color: rgb(124 77 255 / 0.38);
+}
+
+.jwt-offer-card.is-vertical.is-accent .jwt-badge-gratis::before {
+	content: '';
+	display: inline-block;
+	width: 7px;
+	height: 7px;
+	margin-right: 8px;
+	border-radius: 50%;
+	background: var(--jwt-accent);
+	vertical-align: middle;
+
+	@media (prefers-reduced-motion: no-preference) {
+		animation: jwt-radar 1.8s ease-out infinite;
+	}
+}
+
+@keyframes jwt-radar {
+	0%   { box-shadow: 0 0 0 0 rgb(124 77 255 / 0.55); }
+	70%  { box-shadow: 0 0 0 9px rgb(124 77 255 / 0); }
+	100% { box-shadow: 0 0 0 0 rgb(124 77 255 / 0); }
+}
+
+.jwt-offer-card.is-muted .jwt-badge-gratis {
+	color: #ff9d4d;
+	background: rgb(255 138 54 / 0.12);
+	border-color: rgb(255 138 54 / 0.34);
+}
+
+// Subtext centered on both vertical cards.
+.jwt-offer-card.is-vertical .jwt-offer-card__text {
+	text-align: center;
 }
