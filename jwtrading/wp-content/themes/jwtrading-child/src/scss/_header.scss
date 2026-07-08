@@ -70,15 +70,6 @@ body.jwt-nav-open .jwt-header.is-scrolled {
 			background 0.45s ease;
 	}
 
-	// The ::before IS the pill now — drop the nav's own background so there's no
-	// double pill (mobile drawer nav is a different media query, untouched).
-	.jwt-nav {
-		background: transparent;
-		box-shadow: none;
-		-webkit-backdrop-filter: none;
-		backdrop-filter: none;
-	}
-
 	// Desktop uses the pill; no glass on .jwt-header itself (so nothing traps
 	// fixed descendants either).
 	.jwt-header.is-scrolled {
@@ -91,10 +82,9 @@ body.jwt-nav-open .jwt-header.is-scrolled {
 	.jwt-header.is-scrolled .jwt-header__bar::before {
 		top: 0.55rem;
 		bottom: 0.55rem;
-		left: 0;
-		right: 0;
-		border-radius: 20px;
-		background: color-mix(in srgb, var(--jwt-bg) 80%, transparent);
+		left: 10px;
+		right: 10px;
+		border-radius: 999px; // stay a pill, not boxy
 	}
 }
 
@@ -160,12 +150,7 @@ body.admin-bar .jwt-header {
 	list-style: none;
 	margin: 0;
 	padding: 0.875rem 2rem;
-	background: rgb(255 255 255 / 0.05);
-	box-shadow: inset -3px -3px 6.8px rgb(0 0 0 / 0.1);
-	-webkit-backdrop-filter: blur(5px);
-	backdrop-filter: blur(5px);
 	border-radius: 999px;
-	transition: background 0.4s ease, box-shadow 0.4s ease, backdrop-filter 0.4s ease;
 
 	a {
 		color: #f5f4f4;
