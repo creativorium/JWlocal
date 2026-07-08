@@ -206,6 +206,85 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
   });
 })();
 
+// --- Showcase: tab-cards drive a shared media stage ---------------------------
+// Clicking a card (or the arrows/dots) swaps the left stage to that card's
+// media, or a labelled placeholder if it has none yet. No-JS: cards read as a
+// plain list, which is fine.
+(() => {
+  document.querySelectorAll('[data-jwt-showcase]').forEach((root) => {
+    const stage = root.querySelector('[data-jwt-showcase-stage]');
+    const cards = Array.from(root.querySelectorAll('[data-jwt-showcase-card]'));
+    const dotsWrap = root.querySelector('[data-jwt-showcase-dots]');
+    const prev = root.querySelector('[data-jwt-showcase-prev]');
+    const next = root.querySelector('[data-jwt-showcase-next]');
+    if (!stage || !cards.length) return;
+
+    let active = -1;
+
+    // Build one dot per card.
+    const dots = cards.map((_, i) => {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'jwt-showcase__dot';
+      dot.setAttribute('aria-label', `${i + 1}`);
+      dot.addEventListener('click', () => set(i));
+      dotsWrap && dotsWrap.appendChild(dot);
+      return dot;
+    });
+
+    const fillStage = (card) => {
+      stage.textContent = '';
+      const media = card.getAttribute('data-media');
+      if (media) {
+        const img = document.createElement('img');
+        img.className = 'jwt-showcase__media';
+        img.src = media;
+        img.alt = '';
+        img.loading = 'lazy';
+        stage.appendChild(img);
+        return;
+      }
+      // Placeholder (built with textContent — no HTML injection from data-*).
+      const ph = document.createElement('div');
+      ph.className = 'jwt-showcase__placeholder';
+      const label = document.createElement('span');
+      label.className = 'jwt-showcase__ph-label';
+      label.textContent = 'Screenshot';
+      ph.appendChild(label);
+      const title = card.getAttribute('data-placeholder');
+      if (title) {
+        const t = document.createElement('span');
+        t.className = 'jwt-showcase__ph-title';
+        t.textContent = `[ ${title} ]`;
+        ph.appendChild(t);
+      }
+      stage.appendChild(ph);
+    };
+
+    const set = (i) => {
+      const n = cards.length;
+      active = ((i % n) + n) % n;
+      cards.forEach((c, idx) => c.classList.toggle('is-active', idx === active));
+      dots.forEach((d, idx) => d.classList.toggle('is-active', idx === active));
+      fillStage(cards[active]);
+    };
+
+    cards.forEach((card, i) => {
+      card.addEventListener('click', () => set(i));
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          set(i);
+        }
+      });
+    });
+    prev && prev.addEventListener('click', () => set(active - 1));
+    next && next.addEventListener('click', () => set(active + 1));
+
+    set(0);
+  });
+})();
+
 // --- TEMPORARY preview guard: block navigation to unpublished pages -----------
 // Homepage-only preview: any link pointing at Bootcamp, Discord, or the
 // Testimonials page should do NOTHING when clicked — the buttons/links and the

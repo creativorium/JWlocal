@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/showcase-item",
+	"title": "JWT Showcase Card",
+	"category": "jwtrading",
+	"icon": "media-default",
+	"description": "One tab-card in a Showcase; its media/placeholder fills the stage when active.",
+	"textdomain": "jwtrading",
+	"parent": [ "jwt/showcase" ],
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"html": false
+	},
+	"attributes": {
+		"title": { "type": "string", "default": "" },
+		"text": { "type": "string", "default": "" },
+		"placeholder": { "type": "string", "default": "" },
+		"mediaId": { "type": "number", "default": 0 }
+	}
+}

@@ -1636,3 +1636,133 @@ registerBlockType('jwt/vsl', {
   },
   save: saveNull,
 });
+
+// --- Intro (centered eyebrow + heading + body paragraphs + CTA) ---------------
+
+registerBlockType('jwt/intro', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps({ className: 'jwt-intro' });
+
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Tombol', 'jwtrading')}>
+            <TextControl
+              label={__('Teks tombol', 'jwtrading')}
+              value={attributes.buttonText}
+              onChange={(buttonText) => setAttributes({ buttonText })}
+            />
+            <TextControl
+              label={__('URL tombol', 'jwtrading')}
+              value={attributes.buttonUrl}
+              onChange={(buttonUrl) => setAttributes({ buttonUrl })}
+            />
+          </PanelBody>
+        </InspectorControls>
+        <section {...blockProps}>
+          <div className="jwt-container jwt-intro__inner">
+            <RichText
+              tagName="span"
+              className="jwt-eyebrow"
+              allowedFormats={[]}
+              placeholder={__('Eyebrow…', 'jwtrading')}
+              value={attributes.eyebrow}
+              onChange={(eyebrow) => setAttributes({ eyebrow })}
+            />
+            <RichText
+              tagName="h2"
+              className="jwt-intro__title"
+              placeholder={__('Judul…', 'jwtrading')}
+              value={attributes.title}
+              onChange={(title) => setAttributes({ title })}
+            />
+            <RichText
+              tagName="div"
+              multiline="p"
+              className="jwt-intro__body"
+              placeholder={__('Paragraf…', 'jwtrading')}
+              value={attributes.body}
+              onChange={(body) => setAttributes({ body })}
+            />
+          </div>
+        </section>
+      </>
+    );
+  },
+  save: saveNull,
+});
+
+// --- Showcase (media stage + tab-cards) ---------------------------------------
+
+registerBlockType('jwt/showcase', {
+  edit: makeSectionEdit({
+    className: 'jwt-showcase',
+    innerClass: 'jwt-showcase__cards',
+    allowed: ['jwt/showcase-item'],
+    template: [
+      ['jwt/showcase-item', {}],
+      ['jwt/showcase-item', {}],
+      ['jwt/showcase-item', {}],
+    ],
+  }),
+  save: saveInner,
+});
+
+registerBlockType('jwt/showcase-item', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps({ className: 'jwt-showcase-card' });
+    const { mediaId } = attributes;
+
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Media kartu', 'jwtrading')}>
+            <TextControl
+              label={__('Label placeholder', 'jwtrading')}
+              help={__('Tampil di panel kiri kalau belum ada media. Contoh: Platform video course', 'jwtrading')}
+              value={attributes.placeholder}
+              onChange={(placeholder) => setAttributes({ placeholder })}
+            />
+            <MediaUploadCheck>
+              <MediaUpload
+                onSelect={(media) => setAttributes({ mediaId: media.id })}
+                allowedTypes={['image']}
+                value={mediaId}
+                render={({ open }) => (
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <Button variant="secondary" onClick={open}>
+                      {mediaId ? __('Ganti media', 'jwtrading') : __('Pilih media', 'jwtrading')}
+                    </Button>
+                    {mediaId ? (
+                      <Button variant="link" isDestructive onClick={() => setAttributes({ mediaId: 0 })}>
+                        {__('Hapus', 'jwtrading')}
+                      </Button>
+                    ) : null}
+                  </div>
+                )}
+              />
+            </MediaUploadCheck>
+          </PanelBody>
+        </InspectorControls>
+        <div {...blockProps}>
+          <RichText
+            tagName="h3"
+            className="jwt-showcase-card__title"
+            allowedFormats={[]}
+            placeholder={__('Judul kartu…', 'jwtrading')}
+            value={attributes.title}
+            onChange={(title) => setAttributes({ title })}
+          />
+          <RichText
+            tagName="p"
+            className="jwt-showcase-card__text"
+            placeholder={__('Deskripsi…', 'jwtrading')}
+            value={attributes.text}
+            onChange={(text) => setAttributes({ text })}
+          />
+        </div>
+      </>
+    );
+  },
+  save: saveNull,
+});

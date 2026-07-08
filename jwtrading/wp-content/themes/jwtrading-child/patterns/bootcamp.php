@@ -11,20 +11,22 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <!-- wp:jwt/hero {"align":"full","titleTag":"h1","showTrustBadge":true,"title":"Bootcamp ICT Trading &<br><mark>Persiapan Prop Firm.</mark>","lead":"Pelajari ICT dari nol, bangun sistem konsisten, dan lolos prop firm challenge — dalam satu program terstruktur.","primaryText":"Akses Bootcamp Sekarang →","primaryUrl":"/?add-to-cart=684","note":"Bangun skill untuk trading mandiri."} /-->
 
-<!-- wp:jwt/vsl {"align":"full","posterId":1134,"videoId":2359} /-->
+<!-- wp:jwt/vsl {"align":"full","posterId":2328,"videoId":2359} /-->
 
 <!-- wp:jwt/stats {"align":"full"} -->
 <!-- wp:jwt/stat-item {"value":"7","label":"Modul Terstruktur"} /-->
-<!-- wp:jwt/stat-item {"value":"15.000+","label":"Member Komunitas","count":"15000","suffix":"+"} /-->
+<!-- wp:jwt/stat-item {"value":"17.000+","label":"Member Komunitas","count":"17000","suffix":"+"} /-->
 <!-- wp:jwt/stat-item {"value":"100%","label":"Rating Trustpilot","count":"100","suffix":"%"} /-->
 <!-- wp:jwt/stat-item {"value":"Selamanya","label":"Akses & Update Materi"} /-->
 <!-- /wp:jwt/stats -->
 
-<!-- wp:jwt/features {"align":"full","eyebrow":"Apa Itu JW Trading Bootcamp?","title":"Ini Bukan Sekadar Video Course","lead":"Sistem belajar lengkap: materi terstruktur, komunitas aktif, dan review rutin sampai kamu konsisten."} -->
-<!-- wp:jwt/feature-item {"icon":"chart","title":"Terstruktur dari Nol","text":"Tujuh modul berurutan — tiap tahap dibangun di atas tahap sebelumnya, tanpa loncat-loncat."} /-->
-<!-- wp:jwt/feature-item {"icon":"target","title":"Framework ICT & IFVG","text":"Sistem analisis dan entry model yang jelas serta repeatable — bukan sinyal instan."} /-->
-<!-- wp:jwt/feature-item {"icon":"live","title":"Dibimbing Sampai Bisa","text":"Live review mingguan dan komunitas Discord privat untuk evaluasi progresmu."} /-->
-<!-- /wp:jwt/features -->
+<!-- wp:jwt/intro {"align":"full","eyebrow":"Apa Itu JW Bootcamp?","title":"Belajar Membaca Market Sendiri tanpa Sinyal","body":"<p>JW Trading Bootcamp adalah program edukasi trading yang membantu kamu memahami market secara sistematis menggunakan metodologi ICT dan model entry IFVG — bukan hafal pattern, bukan beli sinyal.</p><p>Dirancang untuk pemula yang baru mulai, trader yang belum konsisten, dan trader yang ingin lolos prop firm tapi belum punya sistem yang kuat. Berlaku untuk semua market liquid — futures, forex, gold, dan crypto.</p>","buttonText":"Akses Sekarang →","buttonUrl":"/?add-to-cart=684"} /-->
+
+<!-- wp:jwt/showcase {"align":"full","eyebrow":"Di Dalam Bootcamp","title":"Lebih dari Sekadar Video Course"} -->
+<!-- wp:jwt/showcase-item {"title":"Video Course","text":"Materi ICT terstruktur dari fondasi sampai sistem prop firm. Akses seumur hidup, update gratis di masa depan.","placeholder":"Platform video course"} /-->
+<!-- wp:jwt/showcase-item {"title":"Private Discord Group","text":"17.000+ member aktif, live stream harian, dan koreksi setup langsung dari mentor setiap minggu.","placeholder":"Komunitas Discord"} /-->
+<!-- wp:jwt/showcase-item {"title":"JW Trading Journal","text":"Template tracking dan evaluasi performa khusus student JW. Ukur progresmu secara objektif.","placeholder":"JW Trading Journal"} /-->
+<!-- /wp:jwt/showcase -->
 
 <!-- wp:jwt/curriculum {"align":"full","eyebrow":"Kurikulum","title":"Trader Roadmap — 7 Modul","lead":"Semua yang kamu butuhkan ada di satu tempat, tersusun sebagai roadmap yang jelas."} -->
 <!-- wp:jwt/curriculum-item {"title":"Dasar Trading","text":"Cara market bekerja, istilah penting, dan mindset dasar sebelum masuk chart.","tag":"Fondasi"} /-->
@@ -38,7 +40,7 @@ defined( 'ABSPATH' ) || exit;
 
 <!-- wp:jwt/features {"align":"full","eyebrow":"Apa yang Kamu Dapatkan","title":"Semua Ada di Satu Tempat","lead":"Materi, komunitas, dan pendampingan — sekali bayar, akses selamanya."} -->
 <!-- wp:jwt/feature-item {"icon":"video","title":"Video Course Selamanya","text":"Akses permanen ke seluruh materi, termasuk semua update di masa depan."} /-->
-<!-- wp:jwt/feature-item {"icon":"community","title":"Komunitas Discord Privat","text":"Diskusi harian bareng 15.000+ member dan mentor."} /-->
+<!-- wp:jwt/feature-item {"icon":"community","title":"Komunitas Discord Privat","text":"Diskusi harian bareng 17.000+ member dan mentor."} /-->
 <!-- wp:jwt/feature-item {"icon":"live","title":"Live Review Mingguan","text":"Bedah chart dan evaluasi setup bersama setiap minggu."} /-->
 <!-- wp:jwt/feature-item {"icon":"chart","title":"Framework ICT & IFVG","text":"Sistem analisis yang terstruktur — bukan sinyal instan."} /-->
 <!-- wp:jwt/feature-item {"icon":"target","title":"Persiapan Prop Firm","text":"Strategi lolos challenge sampai pengelolaan akun funded."} /-->

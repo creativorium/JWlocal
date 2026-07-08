@@ -640,3 +640,203 @@
 .jwt-vsl.is-playing .jwt-vsl__play {
 	display: none;
 }
+
+// ----- Intro (centered eyebrow + heading + body + CTA) -----------------------
+.jwt-intro {
+	padding-block: var(--jwt-section-y);
+}
+
+.jwt-intro__inner {
+	max-width: 760px;
+	margin-inline: auto;
+	text-align: center;
+}
+
+.jwt-intro__title {
+	font-family: var(--jwt-font-heading);
+	font-size: clamp(1.75rem, 4vw, 2.75rem);
+	line-height: 1.12;
+	letter-spacing: -0.02em;
+	color: var(--jwt-text);
+	margin: 0.85rem 0 0;
+}
+
+.jwt-intro__body {
+	margin-top: 1.5rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	color: var(--jwt-muted);
+
+	p {
+		margin: 0;
+		line-height: 1.7;
+	}
+}
+
+.jwt-intro__cta {
+	margin-top: 2.25rem;
+}
+
+// ----- Showcase (media stage + tab-cards) ------------------------------------
+.jwt-showcase {
+	padding-block: var(--jwt-section-y);
+}
+
+.jwt-showcase__wrap {
+	margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.jwt-showcase__layout {
+	display: grid;
+	grid-template-columns: 1.05fr 1fr;
+	gap: clamp(1.25rem, 3vw, 2.5rem);
+	align-items: stretch;
+
+	@media (max-width: 860px) {
+		grid-template-columns: 1fr;
+	}
+}
+
+// Left media panel — shows the active card's media, or a labelled placeholder.
+.jwt-showcase__stage {
+	position: relative;
+	border-radius: var(--jwt-radius);
+	border: 1px solid var(--jwt-line);
+	background:
+		radial-gradient(120% 120% at 30% 20%, rgb(124 77 255 / 0.22), transparent 60%),
+		var(--jwt-surface-2);
+	min-height: clamp(240px, 40vw, 420px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+}
+
+.jwt-showcase__media {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.jwt-showcase__placeholder {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	text-align: center;
+	padding: 1.5rem;
+}
+
+.jwt-showcase__ph-label {
+	font-family: var(--jwt-font-mono);
+	font-size: 0.7rem;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--jwt-muted);
+}
+
+.jwt-showcase__ph-title {
+	color: var(--jwt-muted);
+	opacity: 0.85;
+}
+
+.jwt-showcase__cards {
+	display: flex;
+	flex-direction: column;
+	gap: clamp(0.75rem, 1.5vw, 1rem);
+}
+
+.jwt-showcase-card {
+	text-align: center;
+	padding: clamp(1.15rem, 2.5vw, 1.75rem);
+	border-radius: var(--jwt-radius);
+	border: 1px solid var(--jwt-line);
+	background: var(--jwt-surface);
+	cursor: pointer;
+	transition: border-color 0.2s var(--jwt-ease), background 0.2s, transform 0.2s var(--jwt-ease);
+
+	&:hover {
+		border-color: var(--jwt-line-strong);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--jwt-accent);
+		outline-offset: 2px;
+	}
+
+	// Active tab — purple frame + soft glow, matches the stage accent.
+	&.is-active {
+		border-color: rgb(124 77 255 / 0.5);
+		background: linear-gradient(160deg, rgb(124 77 255 / 0.12), var(--jwt-surface));
+		box-shadow: 0 18px 50px -28px rgb(124 77 255 / 0.6);
+	}
+}
+
+.jwt-showcase-card__title {
+	font-family: var(--jwt-font-heading);
+	font-size: 1.15rem;
+	color: var(--jwt-text);
+	margin: 0;
+}
+
+.jwt-showcase-card__text {
+	color: var(--jwt-muted);
+	line-height: 1.6;
+	margin: 0.5rem 0 0;
+}
+
+// Carousel controls (prev · dots · next)
+.jwt-showcase__nav {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	margin-top: clamp(1.25rem, 3vw, 2rem);
+}
+
+.jwt-showcase__arrow {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	padding: 0;
+	color: var(--jwt-text);
+	background: none;
+	border: 1px solid var(--jwt-line-strong);
+	border-radius: 50%;
+	cursor: pointer;
+	transition: border-color 0.2s, color 0.2s, background 0.2s;
+
+	svg {
+		width: 18px;
+		height: 18px;
+	}
+
+	&:hover {
+		border-color: var(--jwt-accent);
+		color: var(--jwt-accent);
+	}
+}
+
+.jwt-showcase__dots {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.jwt-showcase__dot {
+	width: 8px;
+	height: 8px;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: var(--jwt-line-strong);
+	cursor: pointer;
+	transition: background 0.2s, transform 0.2s;
+
+	&.is-active {
+		background: var(--jwt-accent);
+		transform: scale(1.15);
+	}
+}
