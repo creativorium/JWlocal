@@ -43,50 +43,58 @@ body.jwt-nav-open .jwt-header.is-scrolled {
 // out to the logo/actions edges, and the nav's own pill dissolves into it.
 // Desktop only — mobile keeps the plain glass header + slide-in drawer.
 @media (min-width: 881px) {
+	// ONE pill, visible at all times, lives on the bar's ::before. At rest its
+	// insets (set by JS from the nav's measured box — see main.js) make it hug the
+	// nav pill exactly, so it reads as the normal centred pill. On scroll those
+	// insets animate out to the bar edges, so you SEE the pill physically stretch
+	// left + right until it wraps the logo + Discord into one rounded bar.
 	.jwt-header__bar::before {
 		content: '';
 		position: absolute;
 		z-index: -1;
-		top: 0.55rem;
-		bottom: 0.55rem;
-		left: 30%;
-		right: 30%;
+		top: var(--jwt-pill-top, 0.9rem);
+		bottom: var(--jwt-pill-bottom, 0.9rem);
+		left: var(--jwt-pill-left, 32%);
+		right: var(--jwt-pill-right, 32%);
 		border-radius: 999px;
 		background: rgb(255 255 255 / 0.05);
 		box-shadow: inset -3px -3px 6.8px rgb(0 0 0 / 0.1);
 		-webkit-backdrop-filter: blur(10px);
 		backdrop-filter: blur(10px);
-		opacity: 0;
 		transition:
-			left 0.55s var(--jwt-ease),
-			right 0.55s var(--jwt-ease),
-			border-radius 0.55s var(--jwt-ease),
-			opacity 0.4s ease,
-			background 0.4s ease;
+			left 0.5s var(--jwt-ease),
+			right 0.5s var(--jwt-ease),
+			top 0.5s var(--jwt-ease),
+			bottom 0.5s var(--jwt-ease),
+			border-radius 0.5s var(--jwt-ease),
+			background 0.45s ease;
 	}
 
-	// Desktop shows the pill instead of the full-bleed header glass — and with
-	// no backdrop-filter on .jwt-header itself, nothing traps fixed descendants.
+	// The ::before IS the pill now — drop the nav's own background so there's no
+	// double pill (mobile drawer nav is a different media query, untouched).
+	.jwt-nav {
+		background: transparent;
+		box-shadow: none;
+		-webkit-backdrop-filter: none;
+		backdrop-filter: none;
+	}
+
+	// Desktop uses the pill; no glass on .jwt-header itself (so nothing traps
+	// fixed descendants either).
 	.jwt-header.is-scrolled {
 		background: transparent;
 		-webkit-backdrop-filter: none;
 		backdrop-filter: none;
 	}
 
+	// Scrolled: pill stretches to the bar edges and squares off a little.
 	.jwt-header.is-scrolled .jwt-header__bar::before {
+		top: 0.55rem;
+		bottom: 0.55rem;
 		left: 0;
 		right: 0;
 		border-radius: 20px;
-		opacity: 1;
 		background: color-mix(in srgb, var(--jwt-bg) 80%, transparent);
-	}
-
-	// Nav's own pill dissolves into the expanding bar pill.
-	.jwt-header.is-scrolled .jwt-nav {
-		background: transparent;
-		box-shadow: none;
-		-webkit-backdrop-filter: none;
-		backdrop-filter: none;
 	}
 }
 

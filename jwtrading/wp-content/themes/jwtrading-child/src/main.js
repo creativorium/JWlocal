@@ -28,6 +28,27 @@ if (header) {
   window.addEventListener('scroll', onScroll, { passive: true });
 }
 
+// --- Desktop header pill: measure the nav so the pill can hug it at rest, then
+// stretch out to the bar edges on scroll (the growth itself is CSS transition).
+const headerBar = document.querySelector('.jwt-header__bar');
+const headerPillNav = document.querySelector('.jwt-header__nav .jwt-nav');
+
+if (headerBar && headerPillNav) {
+  const setPillInsets = () => {
+    if (window.innerWidth < 881) return; // desktop-only pill
+    const b = headerBar.getBoundingClientRect();
+    const n = headerPillNav.getBoundingClientRect();
+    headerBar.style.setProperty('--jwt-pill-left', `${Math.max(0, n.left - b.left)}px`);
+    headerBar.style.setProperty('--jwt-pill-right', `${Math.max(0, b.right - n.right)}px`);
+    headerBar.style.setProperty('--jwt-pill-top', `${Math.max(0, n.top - b.top)}px`);
+    headerBar.style.setProperty('--jwt-pill-bottom', `${Math.max(0, b.bottom - n.bottom)}px`);
+  };
+  setPillInsets();
+  window.addEventListener('resize', setPillInsets);
+  // Fonts change the nav's width → remeasure once they're ready.
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(setPillInsets);
+}
+
 // --- Mobile nav toggle (slide-in drawer) --------------------------------------
 const navToggle = document.querySelector('.jwt-nav-toggle');
 const navBackdrop = document.querySelector('[data-jwt-nav-backdrop]');
