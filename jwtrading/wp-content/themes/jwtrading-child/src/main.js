@@ -292,7 +292,9 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
 // matter where the link lives (hero/offer/faq CTAs, header nav, footer menus).
 // Remove this whole block to restore normal navigation once those pages go live.
 (() => {
-  const blockedPaths = ['/bootcamp', '/discord', '/testimonials'];
+  // Bootcamp is live now, so it's navigable; Discord + Testimonials stay
+  // blocked until those pages are ready.
+  const blockedPaths = ['/discord', '/testimonials'];
 
   const isBlocked = (href) => {
     let url;
