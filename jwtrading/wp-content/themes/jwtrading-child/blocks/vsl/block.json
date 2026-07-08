@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/vsl",
+	"title": "JWT Video (VSL)",
+	"category": "jwtrading",
+	"icon": "video-alt3",
+	"description": "Framed sales video with a click-to-play thumbnail (poster loads first, video only on click).",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"align": [ "full" ],
+		"html": false,
+		"anchor": true
+	},
+	"attributes": {
+		"posterId": { "type": "number", "default": 0 },
+		"videoId": { "type": "number", "default": 0 }
+	}
+}

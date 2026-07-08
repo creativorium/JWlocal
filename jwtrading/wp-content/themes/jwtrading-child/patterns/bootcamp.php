@@ -9,7 +9,9 @@
 
 defined( 'ABSPATH' ) || exit;
 ?>
-<!-- wp:jwt/hero {"align":"full","titleTag":"h1","eyebrow":"🔥 Promo Bootcamp — 20% OFF · Kode KG29RRJB","title":"JW Trading <mark>Bootcamp</mark>","lead":"Kurikulum lengkap berbasis ICT & IFVG — dari nol sampai siap prop firm. Sekali bayar, akses selamanya.","primaryText":"Join Bootcamp — Rp 1.250.000","primaryUrl":"/?add-to-cart=684","secondaryText":"Coba Preview Gratis","secondaryUrl":"/free-content-preview/","note":"Senilai Rp 3.000.000+ · Termasuk semua update materi","chips":"Fokus • Disiplin • Tenang"} /-->
+<!-- wp:jwt/hero {"align":"full","titleTag":"h1","showTrustBadge":true,"title":"Bootcamp ICT Trading &<br><mark>Persiapan Prop Firm.</mark>","lead":"Pelajari ICT dari nol, bangun sistem konsisten, dan lolos prop firm challenge — dalam satu program terstruktur.","primaryText":"Akses Bootcamp Sekarang →","primaryUrl":"/?add-to-cart=684","note":"Bangun skill untuk trading mandiri."} /-->
+
+<!-- wp:jwt/vsl {"align":"full","posterId":1134,"videoId":2359} /-->
 
 <!-- wp:jwt/stats {"align":"full"} -->
 <!-- wp:jwt/stat-item {"value":"7","label":"Modul Terstruktur"} /-->

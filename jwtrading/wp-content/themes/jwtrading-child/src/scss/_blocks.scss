@@ -567,3 +567,76 @@
 	border: 1px dashed var(--jwt-line);
 	border-radius: var(--jwt-radius);
 }
+
+// ----- VSL (framed sales video) ----------------------------------------------
+// Poster loads first; the play button swaps in a real <video> on click
+// (facade — see [data-jwt-vsl] in main.js). Sits tight under the hero, so the
+// top padding is deliberately smaller than a normal section.
+.jwt-vsl-section {
+	padding-top: clamp(0.5rem, 2vw, 1.5rem);
+	padding-bottom: var(--jwt-section-y);
+}
+
+.jwt-vsl {
+	max-width: 960px;
+	margin-inline: auto;
+	padding: 0;
+}
+
+.jwt-vsl__frame {
+	position: relative;
+	aspect-ratio: 16 / 9;
+	overflow: hidden;
+	border-radius: var(--jwt-radius);
+	border: 1px solid rgb(124 77 255 / 0.5);
+	background: #000;
+	// Soft purple glow to lift the frame off the dark canvas.
+	box-shadow: 0 24px 70px -30px rgb(124 77 255 / 0.55);
+}
+
+.jwt-vsl__poster,
+.jwt-vsl__video {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.jwt-vsl__play {
+	position: absolute;
+	inset: 0;
+	margin: auto;
+	width: clamp(58px, 9vw, 78px);
+	height: clamp(58px, 9vw, 78px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	color: #fff;
+	background: rgb(0 0 0 / 0.35);
+	border: 2px solid rgb(255 255 255 / 0.9);
+	border-radius: 50%;
+	-webkit-backdrop-filter: blur(4px);
+	backdrop-filter: blur(4px);
+	cursor: pointer;
+	transition: background 0.2s var(--jwt-ease), transform 0.2s var(--jwt-ease), border-color 0.2s;
+
+	svg {
+		width: 42%;
+		height: 42%;
+		margin-left: 6%; // optically centre the triangle
+	}
+
+	&:hover,
+	&:focus-visible {
+		background: var(--jwt-accent);
+		border-color: var(--jwt-accent);
+		transform: scale(1.06);
+	}
+}
+
+// Once playing, the facade poster/button are gone (JS replaces the frame's
+// contents with the <video>) — but guard the button just in case.
+.jwt-vsl.is-playing .jwt-vsl__play {
+	display: none;
+}

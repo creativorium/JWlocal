@@ -179,6 +179,33 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
   });
 })();
 
+// --- VSL facade: load + play the video only on click --------------------------
+// The block ships just a poster image (fast); the heavy video file is fetched
+// only when the visitor clicks play, then swapped in and auto-played.
+(() => {
+  document.querySelectorAll('[data-jwt-vsl]').forEach((fig) => {
+    const btn = fig.querySelector('[data-jwt-vsl-play]');
+    const src = fig.getAttribute('data-jwt-vsl-src');
+    if (!btn || !src) return;
+
+    btn.addEventListener('click', () => {
+      const video = document.createElement('video');
+      video.className = 'jwt-vsl__video';
+      video.src = src;
+      video.controls = true;
+      video.autoplay = true;
+      video.playsInline = true;
+      video.setAttribute('playsinline', ''); // iOS Safari attribute form
+
+      const frame = fig.querySelector('.jwt-vsl__frame');
+      frame.innerHTML = '';
+      frame.appendChild(video);
+      fig.classList.add('is-playing');
+      video.play().catch(() => {}); // ignore autoplay rejections; controls remain
+    });
+  });
+})();
+
 // --- TEMPORARY preview guard: block navigation to unpublished pages -----------
 // Homepage-only preview: any link pointing at Bootcamp, Discord, or the
 // Testimonials page should do NOTHING when clicked — the buttons/links and the

@@ -1573,3 +1573,66 @@ registerBlockType('jwt/cta-banner', {
   },
   save: saveNull,
 });
+
+// --- VSL (framed sales video, click-to-play facade) ---------------------------
+
+registerBlockType('jwt/vsl', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps();
+    const { posterId, videoId } = attributes;
+
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Video (VSL)', 'jwtrading')}>
+            <p style={{ fontSize: 12, opacity: 0.8, marginTop: 0 }}>
+              {__('Thumbnail tampil dulu; video baru dimuat saat diklik.', 'jwtrading')}
+            </p>
+            <MediaUploadCheck>
+              <MediaUpload
+                onSelect={(media) => setAttributes({ posterId: media.id })}
+                allowedTypes={['image']}
+                value={posterId}
+                render={({ open }) => (
+                  <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+                    <Button variant="secondary" onClick={open}>
+                      {posterId ? __('Ganti thumbnail', 'jwtrading') : __('Pilih thumbnail', 'jwtrading')}
+                    </Button>
+                    {posterId ? (
+                      <Button variant="link" isDestructive onClick={() => setAttributes({ posterId: 0 })}>
+                        {__('Hapus', 'jwtrading')}
+                      </Button>
+                    ) : null}
+                  </div>
+                )}
+              />
+            </MediaUploadCheck>
+            <MediaUploadCheck>
+              <MediaUpload
+                onSelect={(media) => setAttributes({ videoId: media.id })}
+                allowedTypes={['video']}
+                value={videoId}
+                render={({ open }) => (
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <Button variant="secondary" onClick={open}>
+                      {videoId ? __('Ganti video', 'jwtrading') : __('Pilih video', 'jwtrading')}
+                    </Button>
+                    {videoId ? (
+                      <Button variant="link" isDestructive onClick={() => setAttributes({ videoId: 0 })}>
+                        {__('Hapus', 'jwtrading')}
+                      </Button>
+                    ) : null}
+                  </div>
+                )}
+              />
+            </MediaUploadCheck>
+          </PanelBody>
+        </InspectorControls>
+        <div {...blockProps}>
+          <ServerSideRender block="jwt/vsl" attributes={attributes} />
+        </div>
+      </>
+    );
+  },
+  save: saveNull,
+});

@@ -8,7 +8,12 @@
       "Bash(curl -s -o /dev/null -w \"home: %{http_code}\\\\n\" http://jwtradinglocal.local)",
       "Bash(echo \"=== Testimoni Images template \\(893\\) image URLs ===\")",
       "Bash('C:\\\\Users\\\\Nego/AppData/Roaming/Local/lightning-services/mysql-8.4.0/bin/win64/bin/mysql.exe' -u root -proot -h 127.0.0.1 -P 10017 --batch -N -e 'SELECT meta_value FROM local.wp_postmeta WHERE post_id=893 AND meta_key='\\\\''_elementor_data'\\\\'';')",
-      "Bash(grep -oE 'https:[^\"]*\\\\\\\\?/uploads[^\"]*\\\\.\\(jpg|jpeg|png|webp\\)' /tmp/eldata.txt)"
+      "Bash(grep -oE 'https:[^\"]*\\\\\\\\?/uploads[^\"]*\\\\.\\(jpg|jpeg|png|webp\\)' /tmp/eldata.txt)",
+      "Bash(echo \"=== patterns/bootcamp.php ===\")",
+      "Bash(cat /c/Users/Nego/Documents/Works/JWtrading/Redesign/jwtrading/wp-content/themes/jwtrading-child/patterns/bootcamp.php)",
+      "Bash(echo)",
+      "Bash(echo \"=== hero block.json attributes ===\")",
+      "Bash(cat /c/Users/Nego/Documents/Works/JWtrading/Redesign/jwtrading/wp-content/themes/jwtrading-child/blocks/hero/block.json)"
     ]
   }
 }
