@@ -848,3 +848,239 @@
 		transform: scale(1.15);
 	}
 }
+
+// ----- Bootcamp additions ----------------------------------------------------
+
+// Numbered-feature "tag" pill (e.g. Signature) sitting next to the number.
+.jwt-feature__numrow {
+	display: flex;
+	align-items: center;
+	gap: 0.55rem;
+	margin-bottom: 18px;
+
+	.jwt-feature__num {
+		margin-bottom: 0;
+	}
+}
+
+.jwt-feature__tag {
+	font-family: var(--jwt-font-mono);
+	font-size: 0.6rem;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--jwt-accent-light);
+	background: rgb(124 77 255 / 0.16);
+	border: 1px solid rgb(124 77 255 / 0.3);
+	border-radius: 999px;
+	padding: 0.22rem 0.55rem;
+	line-height: 1;
+}
+
+// Centered numbered cards — opt-in per section (homepage stays left-aligned).
+.jwt-features--center {
+	.jwt-feature--numbered {
+		text-align: center;
+	}
+	.jwt-feature__numrow {
+		justify-content: center;
+	}
+}
+
+// Proof marquee CTA (text link under the results row).
+.jwt-proof__cta {
+	text-align: center;
+	margin-top: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+.jwt-proof__cta-link {
+	color: var(--jwt-accent-light);
+	font-weight: 600;
+	text-decoration: none;
+	transition: color 0.2s;
+
+	&:hover {
+		color: var(--jwt-accent);
+	}
+}
+
+// ----- Offer card: vertical pricing look -------------------------------------
+.jwt-offer-card.is-vertical {
+	grid-template-columns: 1fr;
+	gap: clamp(1.25rem, 3vw, 1.75rem);
+	align-items: stretch;
+	text-align: center;
+
+	.jwt-offer-card__head {
+		justify-content: center;
+	}
+
+	// Divider between the "main" block and the features/CTA "aside".
+	.jwt-offer-card__aside {
+		border-top: 1px solid var(--jwt-line);
+		padding-top: clamp(1.25rem, 3vw, 1.75rem);
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+	}
+
+	.jwt-offer-card__features {
+		text-align: left;
+	}
+}
+
+.jwt-offer-card__rating {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	margin-top: 0.75rem;
+	color: var(--jwt-muted);
+	font-size: 0.9rem;
+
+	svg {
+		width: 16px;
+		height: 16px;
+		color: #ffb020;
+	}
+}
+
+.jwt-offer-card__stars {
+	display: inline-flex;
+	gap: 2px;
+}
+
+.jwt-offer-card__price {
+	display: flex;
+	align-items: baseline;
+	justify-content: center;
+	gap: 0.6rem;
+	margin-top: 1rem;
+	flex-wrap: wrap;
+}
+
+.jwt-offer-card__price-now {
+	font-family: var(--jwt-font-heading);
+	font-size: clamp(1.75rem, 4vw, 2.25rem);
+	font-weight: 700;
+	color: var(--jwt-text);
+}
+
+.jwt-offer-card__price-old {
+	color: var(--jwt-muted);
+	text-decoration: line-through;
+	font-size: 1rem;
+}
+
+.jwt-offer-card__footnote {
+	color: var(--jwt-muted);
+	font-size: 0.8rem;
+	font-style: italic;
+	margin: 0;
+}
+
+// Disabled ("coming soon") button.
+.jwt-btn.is-disabled {
+	opacity: 0.55;
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
+// ----- FAQ static (non-collapsing) -------------------------------------------
+.jwt-faq.is-static {
+	.jwt-faq-item summary {
+		cursor: default;
+		pointer-events: none;
+		justify-content: center;
+		text-align: center;
+
+		&::after {
+			content: none;
+		}
+	}
+
+	.jwt-faq-item__answer {
+		text-align: center;
+	}
+}
+
+// ----- Payments trust panel --------------------------------------------------
+.jwt-payments {
+	padding-block: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.jwt-payments__box {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: clamp(1.5rem, 4vw, 3rem);
+	align-items: center;
+	padding: clamp(1.5rem, 4vw, 2.5rem);
+	border-radius: var(--jwt-radius);
+	border: 1px solid var(--jwt-line);
+	background: var(--jwt-surface);
+
+	@media (max-width: 760px) {
+		grid-template-columns: 1fr;
+		gap: 1.5rem;
+	}
+}
+
+.jwt-payments__title {
+	font-family: var(--jwt-font-heading);
+	font-size: clamp(1.1rem, 2.4vw, 1.4rem);
+	color: var(--jwt-text);
+	margin: 0;
+}
+
+.jwt-payments__lead {
+	color: var(--jwt-muted);
+	line-height: 1.6;
+	margin: 0.6rem 0 1.1rem;
+}
+
+.jwt-payments__methods {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6rem;
+}
+
+.jwt-payments__method {
+	font-size: 0.78rem;
+	font-weight: 600;
+	color: var(--jwt-text);
+	background: var(--jwt-surface-2);
+	border: 1px solid var(--jwt-line-strong);
+	border-radius: 8px;
+	padding: 0.5rem 0.8rem;
+}
+
+.jwt-payments__points {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.85rem;
+}
+
+.jwt-payments__point {
+	position: relative;
+	padding-left: 1.9rem;
+	color: var(--jwt-muted);
+	line-height: 1.5;
+
+	&::before {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 0.05em;
+		width: 1.2rem;
+		height: 1.2rem;
+		border-radius: 50%;
+		background: rgb(52 211 153 / 0.15);
+		// green check
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2334d399' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 0.75rem;
+	}
+}

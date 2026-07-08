@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/payments",
+	"title": "JWT Payments Trust",
+	"category": "jwtrading",
+	"icon": "shield",
+	"description": "Payment-trust panel: heading + method badges on the left, a checklist on the right.",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"align": [ "full" ],
+		"html": false,
+		"anchor": true
+	},
+	"attributes": {
+		"title": { "type": "string", "default": "" },
+		"lead": { "type": "string", "default": "" },
+		"methods": { "type": "string", "default": "" },
+		"points": { "type": "string", "default": "" }
+	}
+}

@@ -10,7 +10,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$jwt_wrapper = get_block_wrapper_attributes( array( 'class' => 'jwt-faq' ) );
+$jwt_static  = ! empty( $attributes['static'] );
+$jwt_wrapper = get_block_wrapper_attributes( array( 'class' => 'jwt-faq' . ( $jwt_static ? ' is-static' : '' ) ) );
 
 $jwt_schema = '';
 if ( ! empty( $attributes['schema'] ) && isset( $block->inner_blocks ) ) {
@@ -50,7 +51,12 @@ if ( ! empty( $attributes['schema'] ) && isset( $block->inner_blocks ) ) {
 	<div class="jwt-container">
 		<?php echo jwt_section_header_html( $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper. ?>
 		<div class="jwt-faq__list" data-jwt-reveal>
-			<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput -- pre-rendered inner blocks. ?>
+			<?php
+			// Static (non-collapsing) mode: force every <details> open.
+			echo $jwt_static // phpcs:ignore WordPress.Security.EscapeOutput -- pre-rendered inner blocks.
+				? str_replace( '<details class="jwt-faq-item"', '<details open class="jwt-faq-item"', $content )
+				: $content;
+			?>
 		</div>
 		<?php if ( '' !== trim( (string) ( $attributes['buttonText'] ?? '' ) ) ) : ?>
 			<div class="jwt-faq__cta">

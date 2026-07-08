@@ -1766,3 +1766,43 @@ registerBlockType('jwt/showcase-item', {
   },
   save: saveNull,
 });
+
+// --- Payments trust panel -----------------------------------------------------
+
+registerBlockType('jwt/payments', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps();
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Konten', 'jwtrading')}>
+            <TextControl
+              label={__('Judul', 'jwtrading')}
+              value={attributes.title}
+              onChange={(title) => setAttributes({ title })}
+            />
+            <TextControl
+              label={__('Deskripsi', 'jwtrading')}
+              value={attributes.lead}
+              onChange={(lead) => setAttributes({ lead })}
+            />
+            <TextControl
+              label={__('Metode pembayaran (pisah dengan |)', 'jwtrading')}
+              value={attributes.methods}
+              onChange={(methods) => setAttributes({ methods })}
+            />
+            <TextControl
+              label={__('Poin checklist (pisah dengan |)', 'jwtrading')}
+              value={attributes.points}
+              onChange={(points) => setAttributes({ points })}
+            />
+          </PanelBody>
+        </InspectorControls>
+        <div {...blockProps}>
+          <ServerSideRender block="jwt/payments" attributes={attributes} />
+        </div>
+      </>
+    );
+  },
+  save: saveNull,
+});

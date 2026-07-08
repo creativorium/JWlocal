@@ -20,6 +20,7 @@
 		"lead": { "type": "string", "default": "" },
 		"center": { "type": "boolean", "default": true },
 		"schema": { "type": "boolean", "default": true },
+		"static": { "type": "boolean", "default": false },
 		"buttonText": { "type": "string", "default": "" },
 		"buttonUrl": { "type": "string", "default": "" }
 	}

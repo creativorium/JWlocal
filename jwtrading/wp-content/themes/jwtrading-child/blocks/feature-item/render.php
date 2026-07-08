@@ -15,7 +15,12 @@ $jwt_number = trim( (string) ( $attributes['number'] ?? '' ) );
 	<?php if ( $jwt_number ) : ?>
 		<div class="jwt-feature__glow" aria-hidden="true"></div>
 		<div class="jwt-feature__inner">
-			<div class="jwt-feature__num"><?php echo esc_html( $jwt_number ); ?></div>
+			<div class="jwt-feature__numrow">
+				<span class="jwt-feature__num"><?php echo esc_html( $jwt_number ); ?></span>
+				<?php if ( '' !== trim( (string) ( $attributes['tag'] ?? '' ) ) ) : ?>
+					<span class="jwt-feature__tag"><?php echo esc_html( $attributes['tag'] ); ?></span>
+				<?php endif; ?>
+			</div>
 			<h3 class="jwt-feature__title"><?php echo esc_html( $attributes['title'] ); ?></h3>
 			<p class="jwt-feature__text"><?php echo wp_kses_post( $attributes['text'] ); ?></p>
 		</div>

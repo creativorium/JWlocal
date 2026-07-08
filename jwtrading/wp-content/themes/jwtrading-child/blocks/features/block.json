@@ -19,6 +19,7 @@
 		"title": { "type": "string", "default": "" },
 		"lead": { "type": "string", "default": "" },
 		"center": { "type": "boolean", "default": true },
+		"centerCards": { "type": "boolean", "default": false },
 		"buttonText": { "type": "string", "default": "" },
 		"buttonUrl": { "type": "string", "default": "" }
 	}

@@ -32,4 +32,11 @@ $jwt_speed   = max( 15, min( 120, (int) ( $attributes['speed'] ?? 45 ) ) );
 			</div>
 		</div>
 	</div>
+	<?php if ( '' !== trim( (string) ( $attributes['buttonText'] ?? '' ) ) ) : ?>
+		<div class="jwt-container">
+			<div class="jwt-proof__cta">
+				<a class="jwt-proof__cta-link" href="<?php echo esc_url( $attributes['buttonUrl'] ?: '#' ); ?>"><?php echo esc_html( $attributes['buttonText'] ); ?></a>
+			</div>
+		</div>
+	<?php endif; ?>
 </section>

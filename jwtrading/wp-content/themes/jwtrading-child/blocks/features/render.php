@@ -8,7 +8,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$jwt_wrapper = get_block_wrapper_attributes( array( 'class' => 'jwt-features' ) );
+$jwt_wrapper = get_block_wrapper_attributes( array( 'class' => 'jwt-features' . ( ! empty( $attributes['centerCards'] ) ? ' jwt-features--center' : '' ) ) );
 ?>
 <section <?php echo $jwt_wrapper; // phpcs:ignore WordPress.Security.EscapeOutput ?>>
 	<div class="jwt-container">
