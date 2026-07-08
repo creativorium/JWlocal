@@ -1264,4 +1264,5 @@
 // Subtext centered on both vertical cards.
 .jwt-offer-card.is-vertical .jwt-offer-card__text {
 	text-align: center;
+	margin-inline: auto; // 42ch box was left-anchored; centre it in the card
 }

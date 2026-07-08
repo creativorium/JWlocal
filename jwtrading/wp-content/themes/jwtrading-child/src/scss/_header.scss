@@ -37,6 +37,59 @@ body.jwt-nav-open .jwt-header.is-scrolled {
 	backdrop-filter: none;
 }
 
+// Desktop nav "pill" that grows into a full-width rounded bar once the header
+// fixes on scroll. At the top the compact .jwt-nav pill is the resting state;
+// on .is-scrolled this bar-wide pill (::before) expands from the nav's centre
+// out to the logo/actions edges, and the nav's own pill dissolves into it.
+// Desktop only — mobile keeps the plain glass header + slide-in drawer.
+@media (min-width: 881px) {
+	.jwt-header__bar::before {
+		content: '';
+		position: absolute;
+		z-index: -1;
+		top: 0.55rem;
+		bottom: 0.55rem;
+		left: 30%;
+		right: 30%;
+		border-radius: 999px;
+		background: rgb(255 255 255 / 0.05);
+		box-shadow: inset -3px -3px 6.8px rgb(0 0 0 / 0.1);
+		-webkit-backdrop-filter: blur(10px);
+		backdrop-filter: blur(10px);
+		opacity: 0;
+		transition:
+			left 0.55s var(--jwt-ease),
+			right 0.55s var(--jwt-ease),
+			border-radius 0.55s var(--jwt-ease),
+			opacity 0.4s ease,
+			background 0.4s ease;
+	}
+
+	// Desktop shows the pill instead of the full-bleed header glass — and with
+	// no backdrop-filter on .jwt-header itself, nothing traps fixed descendants.
+	.jwt-header.is-scrolled {
+		background: transparent;
+		-webkit-backdrop-filter: none;
+		backdrop-filter: none;
+	}
+
+	.jwt-header.is-scrolled .jwt-header__bar::before {
+		left: 0;
+		right: 0;
+		border-radius: 20px;
+		opacity: 1;
+		background: color-mix(in srgb, var(--jwt-bg) 80%, transparent);
+	}
+
+	// Nav's own pill dissolves into the expanding bar pill.
+	.jwt-header.is-scrolled .jwt-nav {
+		background: transparent;
+		box-shadow: none;
+		-webkit-backdrop-filter: none;
+		backdrop-filter: none;
+	}
+}
+
 body.admin-bar .jwt-header {
 	top: 32px;
 
@@ -46,6 +99,7 @@ body.admin-bar .jwt-header {
 }
 
 .jwt-header__bar {
+	position: relative;
 	display: grid;
 	// Equal 1fr side columns so the center (nav pill) sits on the true page
 	// centre line regardless of the logo/actions widths — otherwise the pill
@@ -103,6 +157,7 @@ body.admin-bar .jwt-header {
 	-webkit-backdrop-filter: blur(5px);
 	backdrop-filter: blur(5px);
 	border-radius: 999px;
+	transition: background 0.4s ease, box-shadow 0.4s ease, backdrop-filter 0.4s ease;
 
 	a {
 		color: #f5f4f4;
