@@ -2042,3 +2042,36 @@ registerBlockType('jwt/gallery', {
   },
   save: saveNull,
 });
+
+// --- Pricing card (wide horizontal) -------------------------------------------
+
+registerBlockType('jwt/pricing-card', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps();
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Kiri', 'jwtrading')}>
+            <TextControl label={__('Eyebrow', 'jwtrading')} value={attributes.eyebrow} onChange={(eyebrow) => setAttributes({ eyebrow })} />
+            <TextControl label={__('Judul', 'jwtrading')} value={attributes.title} onChange={(title) => setAttributes({ title })} />
+            <TextControl label={__('Fitur (HTML <li>…</li>)', 'jwtrading')} value={attributes.features} onChange={(features) => setAttributes({ features })} />
+          </PanelBody>
+          <PanelBody title={__('Kanan', 'jwtrading')}>
+            <ToggleControl label={__('Tampilkan rating', 'jwtrading')} checked={!!attributes.rating} onChange={(rating) => setAttributes({ rating })} />
+            <TextControl label={__('Teks rating', 'jwtrading')} value={attributes.ratingText} onChange={(ratingText) => setAttributes({ ratingText })} />
+            <TextControl label={__('Harga', 'jwtrading')} value={attributes.price} onChange={(price) => setAttributes({ price })} />
+            <TextControl label={__('Harga coret', 'jwtrading')} value={attributes.priceOld} onChange={(priceOld) => setAttributes({ priceOld })} />
+            <TextControl label={__('Subteks', 'jwtrading')} value={attributes.text} onChange={(text) => setAttributes({ text })} />
+            <TextControl label={__('Teks tombol', 'jwtrading')} value={attributes.buttonText} onChange={(buttonText) => setAttributes({ buttonText })} />
+            <TextControl label={__('URL tombol', 'jwtrading')} value={attributes.buttonUrl} onChange={(buttonUrl) => setAttributes({ buttonUrl })} />
+            <TextControl label={__('Catatan pembayaran', 'jwtrading')} value={attributes.footnote} onChange={(footnote) => setAttributes({ footnote })} />
+          </PanelBody>
+        </InspectorControls>
+        <div {...blockProps}>
+          <ServerSideRender block="jwt/pricing-card" attributes={attributes} />
+        </div>
+      </>
+    );
+  },
+  save: saveNull,
+});

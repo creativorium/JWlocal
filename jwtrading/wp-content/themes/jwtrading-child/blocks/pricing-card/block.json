@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/pricing-card",
+	"title": "JWT Pricing Card (wide)",
+	"category": "jwtrading",
+	"icon": "money-alt",
+	"description": "Horizontal pricing card: eyebrow, title + feature checklist on the left; rating, price, CTA + payment note on the right.",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": { "align": [ "full" ], "html": false, "anchor": true },
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "" },
+		"features": { "type": "string", "default": "" },
+		"rating": { "type": "boolean", "default": true },
+		"ratingText": { "type": "string", "default": "" },
+		"price": { "type": "string", "default": "" },
+		"priceOld": { "type": "string", "default": "" },
+		"text": { "type": "string", "default": "" },
+		"buttonText": { "type": "string", "default": "" },
+		"buttonUrl": { "type": "string", "default": "" },
+		"footnote": { "type": "string", "default": "" }
+	}
+}

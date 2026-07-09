@@ -1661,3 +1661,156 @@
 	grid-template-columns: min(600px, 100%);
 	justify-content: center;
 }
+
+// Hero eyebrow badge dot: radar-glow (expanding ring) instead of a plain pulse.
+.jwt-hero__badge .jwt-eyebrow__dot {
+	position: relative;
+
+	@media (prefers-reduced-motion: no-preference) {
+		animation: jwt-radar 1.8s ease-out infinite;
+	}
+}
+
+// ----- Pricing card (wide, horizontal) ---------------------------------------
+.jwt-pricing {
+	padding-block: clamp(2rem, 5vw, 3.5rem);
+}
+
+.jwt-pricing__card {
+	position: relative;
+	overflow: hidden;
+	display: grid;
+	grid-template-columns: 1.1fr 0.9fr;
+	gap: clamp(1.5rem, 4vw, 3.5rem);
+	align-items: center;
+	padding: clamp(1.75rem, 4vw, 3.5rem);
+	border-radius: var(--jwt-radius);
+	border: 1px solid rgb(124 77 255 / 0.28);
+	background:
+		linear-gradient(140deg, rgb(124 77 255 / 0.14), rgb(124 77 255 / 0.02)),
+		var(--jwt-surface-2);
+
+	@media (max-width: 800px) {
+		grid-template-columns: 1fr;
+	}
+}
+
+.jwt-pricing__glow {
+	position: absolute;
+	top: -60px;
+	right: -60px;
+	width: 240px;
+	height: 240px;
+	border-radius: 50%;
+	background: rgb(124 77 255 / 0.2);
+	filter: blur(60px);
+	pointer-events: none;
+}
+
+.jwt-pricing__left,
+.jwt-pricing__right {
+	position: relative; // above the glow
+}
+
+.jwt-pricing__title {
+	font-family: var(--jwt-font-heading);
+	font-size: clamp(1.6rem, 3.4vw, 2.2rem);
+	line-height: 1.12;
+	letter-spacing: -0.01em;
+	color: var(--jwt-text);
+	margin: 0.85rem 0 1.5rem;
+}
+
+.jwt-pricing__features {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.9rem;
+
+	li {
+		position: relative;
+		padding-left: 1.9rem;
+		color: var(--jwt-muted);
+		line-height: 1.5;
+
+		&::before {
+			content: '';
+			position: absolute;
+			left: 0;
+			top: 0.05em;
+			width: 1.2rem;
+			height: 1.2rem;
+			border-radius: 50%;
+			background: rgb(52 211 153 / 0.15);
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2334d399' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: 0.75rem;
+		}
+	}
+}
+
+.jwt-pricing__right {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+}
+
+.jwt-pricing__rating {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: var(--jwt-muted);
+	font-size: 0.9rem;
+
+	svg { width: 16px; height: 16px; color: #ffb020; }
+}
+
+.jwt-pricing__stars {
+	display: inline-flex;
+	gap: 2px;
+}
+
+.jwt-pricing__price {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.15rem;
+	margin-top: 1.1rem;
+}
+
+.jwt-pricing__price-now {
+	font-family: var(--jwt-font-heading);
+	font-size: clamp(2rem, 5vw, 2.75rem);
+	font-weight: 700;
+	color: var(--jwt-text);
+}
+
+.jwt-pricing__price-old {
+	color: var(--jwt-accent-light);
+	text-decoration: line-through;
+	font-size: 0.9rem;
+	font-weight: 600;
+}
+
+.jwt-pricing__text {
+	margin: 0.5rem 0 0;
+	color: var(--jwt-muted);
+	font-style: italic;
+	font-size: 0.85rem;
+}
+
+.jwt-pricing__btn {
+	margin-top: 1.6rem;
+	width: 100%;
+	max-width: 360px;
+}
+
+.jwt-pricing__footnote {
+	margin: 1rem 0 0;
+	color: var(--jwt-muted);
+	font-size: 0.8rem;
+}
