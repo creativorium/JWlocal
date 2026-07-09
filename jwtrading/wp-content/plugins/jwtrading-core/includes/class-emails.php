@@ -12,7 +12,6 @@ class JWT_Emails {
 		add_action( 'woocommerce_email_after_order_table', array( __CLASS__, 'admin_customer_table' ), 20, 4 );
 		add_action( 'woocommerce_email_before_order_table', array( __CLASS__, 'remove_default_customer_details' ), 1, 4 );
 		add_action( 'woocommerce_admin_order_data_after_billing_address', array( __CLASS__, 'admin_order_discord' ) );
-		add_filter( 'wp_mail', array( __CLASS__, 'strip_pro_elements_footer' ) );
 	}
 
 	/** Customer details table in the admin "New order" email. */
@@ -81,16 +80,5 @@ class JWT_Emails {
 		}
 
 		echo '<p><strong>' . esc_html__( 'Discord Username:', 'jwtrading' ) . '</strong> ' . esc_html( $discord ) . '</p>';
-	}
-
-	/**
-	 * Strip the PRO Elements promo line from outgoing mail.
-	 * Obsolete once Elementor/PRO Elements is removed — delete then.
-	 */
-	public static function strip_pro_elements_footer( $args ) {
-		if ( ! empty( $args['message'] ) ) {
-			$args['message'] = str_replace( 'Powered by: PRO Elements', '', $args['message'] );
-		}
-		return $args;
 	}
 }

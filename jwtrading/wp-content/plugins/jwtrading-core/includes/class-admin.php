@@ -9,6 +9,13 @@ defined( 'ABSPATH' ) || exit;
 class JWT_Admin {
 
 	public static function init() {
+		// This page only configures Core's own Kit/Sheets sync, which is now handled
+		// by the JW Integrations plugin. Hide it (same filter as the dispatch) so it
+		// doesn't cause confusion. Flip jwt/enable_core_order_sync to true to bring it
+		// back if you ever switch order syncing back to Core.
+		if ( ! apply_filters( 'jwt/enable_core_order_sync', false ) ) {
+			return;
+		}
 		add_action( 'admin_menu', array( __CLASS__, 'menu' ) );
 		add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
 	}
