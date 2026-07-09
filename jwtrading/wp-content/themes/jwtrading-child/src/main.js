@@ -306,6 +306,55 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
   });
 })();
 
+// --- Community card image carousel --------------------------------------------
+// Slides the track, builds dots, wires arrows, and auto-advances (pauses on
+// hover / when the tab is hidden). No JS: the first image just shows statically.
+(() => {
+  document.querySelectorAll('[data-jwt-community]').forEach((track) => {
+    const slides = Array.from(track.children);
+    if (slides.length <= 1) return;
+    const media = track.closest('.jwt-community__media');
+    const dotsWrap = media && media.querySelector('[data-jwt-community-dots]');
+    const prev = media && media.querySelector('[data-jwt-community-prev]');
+    const next = media && media.querySelector('[data-jwt-community-next]');
+
+    let active = 0;
+    const dots = slides.map((_, i) => {
+      const d = document.createElement('button');
+      d.type = 'button';
+      d.className = 'jwt-community__dot';
+      d.setAttribute('aria-label', `${i + 1}`);
+      d.addEventListener('click', () => go(i, true));
+      dotsWrap && dotsWrap.appendChild(d);
+      return d;
+    });
+
+    const render = () => {
+      track.style.transform = `translateX(-${active * 100}%)`;
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === active));
+    };
+    const go = (i, stop) => {
+      active = (i + slides.length) % slides.length;
+      render();
+      if (stop) rearm();
+    };
+
+    let timer = null;
+    const rearm = () => {
+      clearInterval(timer);
+      if (!reducedMotion) timer = setInterval(() => go(active + 1), 4500);
+    };
+
+    prev && prev.addEventListener('click', () => go(active - 1, true));
+    next && next.addEventListener('click', () => go(active + 1, true));
+    media.addEventListener('mouseenter', () => clearInterval(timer));
+    media.addEventListener('mouseleave', rearm);
+
+    render();
+    rearm();
+  });
+})();
+
 // --- TEMPORARY preview guard: block navigation to unpublished pages -----------
 // Homepage-only preview: any link pointing at Bootcamp, Discord, or the
 // Testimonials page should do NOTHING when clicked — the buttons/links and the
@@ -315,7 +364,8 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
 (() => {
   // Bootcamp is live now, so it's navigable; Discord + Testimonials stay
   // blocked until those pages are ready.
-  const blockedPaths = ['/discord', '/testimonials'];
+  // Discord + Bootcamp are live now; Testimonials stays blocked until ready.
+  const blockedPaths = ['/testimonials'];
 
   const isBlocked = (href) => {
     let url;

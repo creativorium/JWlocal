@@ -1866,3 +1866,82 @@ registerBlockType('jwt/discord-cta', {
   },
   save: saveNull,
 });
+
+// --- Community card (image carousel + heading/text/CTA) -----------------------
+
+registerBlockType('jwt/community', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps();
+    const ids = (attributes.imageIds || '')
+      .split('|')
+      .map((n) => parseInt(n, 10))
+      .filter((n) => n > 0);
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Konten', 'jwtrading')}>
+            <TextControl
+              label={__('Eyebrow (opsional)', 'jwtrading')}
+              value={attributes.eyebrow}
+              onChange={(eyebrow) => setAttributes({ eyebrow })}
+            />
+            <TextControl
+              label={__('Judul', 'jwtrading')}
+              value={attributes.title}
+              onChange={(title) => setAttributes({ title })}
+            />
+            <TextControl
+              label={__('Teks', 'jwtrading')}
+              value={attributes.text}
+              onChange={(text) => setAttributes({ text })}
+            />
+            <TextControl
+              label={__('Teks tombol', 'jwtrading')}
+              value={attributes.buttonText}
+              onChange={(buttonText) => setAttributes({ buttonText })}
+            />
+            <TextControl
+              label={__('URL tombol', 'jwtrading')}
+              value={attributes.buttonUrl}
+              onChange={(buttonUrl) => setAttributes({ buttonUrl })}
+            />
+          </PanelBody>
+          <PanelBody title={__('Gambar Carousel', 'jwtrading')}>
+            <MediaUploadCheck>
+              <MediaUpload
+                multiple
+                gallery
+                allowedTypes={['image']}
+                value={ids}
+                onSelect={(media) =>
+                  setAttributes({ imageIds: media.map((m) => m.id).join('|') })
+                }
+                render={({ open }) => (
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <Button variant="secondary" onClick={open}>
+                      {ids.length ? __('Ubah gambar', 'jwtrading') : __('Pilih gambar', 'jwtrading')}
+                    </Button>
+                    {ids.length ? (
+                      <Button variant="link" isDestructive onClick={() => setAttributes({ imageIds: '' })}>
+                        {__('Kosongkan', 'jwtrading')}
+                      </Button>
+                    ) : null}
+                  </div>
+                )}
+              />
+            </MediaUploadCheck>
+            <p style={{ fontSize: 12, opacity: 0.8 }}>
+              {ids.length
+                ? `${ids.length} ${__('gambar dipilih', 'jwtrading')}`
+                : __('Belum ada gambar.', 'jwtrading')}
+            </p>
+          </PanelBody>
+        </InspectorControls>
+        <div {...blockProps}>
+          <ServerSideRender block="jwt/community" attributes={attributes} />
+        </div>
+      </>
+    );
+  },
+  save: saveNull,
+});

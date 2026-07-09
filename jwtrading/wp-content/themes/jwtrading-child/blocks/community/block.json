@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/community",
+	"title": "JWT Community Card",
+	"category": "jwtrading",
+	"icon": "groups",
+	"description": "Card: image carousel on the left, heading + text + CTA on the right.",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"align": [ "full" ],
+		"html": false,
+		"anchor": true
+	},
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "" },
+		"text": { "type": "string", "default": "" },
+		"buttonText": { "type": "string", "default": "" },
+		"buttonUrl": { "type": "string", "default": "" },
+		"imageIds": { "type": "string", "default": "" }
+	}
+}

@@ -74,4 +74,4 @@ defined( 'ABSPATH' ) || exit;
 
 <!-- wp:jwt/cta-banner {"align":"full","title":"Ada pertanyaan? Chat langsung di WhatsApp.","text":"Belum yakin apakah bootcamp ini cocok untukmu? Hubungi kami langsung — kami bantu kamu memutuskan.","buttonText":"Chat di WhatsApp →","buttonUrl":"https://wa.me/628113931505"} /-->
 
-<!-- wp:jwt/discord-cta {"align":"full","title":"Gratis — Komunitas Discord 17.000+ Member!","buttonText":"Gabung Sekarang →","buttonUrl":"/discord/","placeholder":"Discord — #profit-wins"} /-->
+<!-- wp:jwt/discord-cta {"align":"full","title":"Gratis — Komunitas Discord 17.000+ Member!","buttonText":"Gabung Sekarang →","buttonUrl":"/discord/","mediaId":3131} /-->
