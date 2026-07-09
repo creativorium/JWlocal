@@ -1905,6 +1905,16 @@ registerBlockType('jwt/community', {
               value={attributes.buttonUrl}
               onChange={(buttonUrl) => setAttributes({ buttonUrl })}
             />
+            <TextControl
+              label={__('Checklist (pisah dengan |)', 'jwtrading')}
+              value={attributes.points}
+              onChange={(points) => setAttributes({ points })}
+            />
+            <TextControl
+              label={__('Teks fallback link', 'jwtrading')}
+              value={attributes.fallbackNote}
+              onChange={(fallbackNote) => setAttributes({ fallbackNote })}
+            />
           </PanelBody>
           <PanelBody title={__('Gambar Carousel', 'jwtrading')}>
             <MediaUploadCheck>

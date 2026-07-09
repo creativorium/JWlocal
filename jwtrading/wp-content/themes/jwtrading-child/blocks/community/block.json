@@ -20,6 +20,8 @@
 		"text": { "type": "string", "default": "" },
 		"buttonText": { "type": "string", "default": "" },
 		"buttonUrl": { "type": "string", "default": "" },
+		"points": { "type": "string", "default": "" },
+		"fallbackNote": { "type": "string", "default": "" },
 		"imageIds": { "type": "string", "default": "" }
 	}
 }

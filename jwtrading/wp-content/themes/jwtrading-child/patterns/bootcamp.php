@@ -23,9 +23,9 @@ defined( 'ABSPATH' ) || exit;
 <!-- wp:jwt/intro {"align":"full","eyebrow":"Apa Itu JW Bootcamp?","title":"Belajar Membaca Market Sendiri tanpa Sinyal","body":"<p>JW Trading Bootcamp adalah program edukasi trading yang membantu kamu memahami market secara sistematis menggunakan metodologi ICT dan model entry IFVG — bukan hafal pattern, bukan beli sinyal.</p><p>Dirancang untuk pemula yang baru mulai, trader yang belum konsisten, dan trader yang ingin lolos prop firm tapi belum punya sistem yang kuat. Berlaku untuk semua market liquid — futures, forex, gold, dan crypto.</p>","buttonText":"Akses Sekarang →","buttonUrl":"#harga"} /-->
 
 <!-- wp:jwt/showcase {"align":"full","eyebrow":"Di Dalam Bootcamp","title":"Lebih dari Sekadar Video Course"} -->
-<!-- wp:jwt/showcase-item {"title":"Video Course","text":"Materi ICT terstruktur dari fondasi sampai sistem prop firm. Akses seumur hidup, update gratis di masa depan.","placeholder":"Platform video course"} /-->
-<!-- wp:jwt/showcase-item {"title":"Private Discord Group","text":"17.000+ member aktif, live stream harian, dan koreksi setup langsung dari mentor setiap minggu.","placeholder":"Komunitas Discord"} /-->
-<!-- wp:jwt/showcase-item {"title":"JW Trading Journal","text":"Template tracking dan evaluasi performa khusus student JW. Ukur progresmu secara objektif.","placeholder":"JW Trading Journal"} /-->
+<!-- wp:jwt/showcase-item {"title":"Video Course","text":"Materi ICT terstruktur dari fondasi sampai sistem prop firm. Akses seumur hidup, update gratis di masa depan.","placeholder":"Platform video course","mediaId":3128} /-->
+<!-- wp:jwt/showcase-item {"title":"Private Discord Group","text":"17.000+ member aktif, live stream harian, dan koreksi setup langsung dari mentor setiap minggu.","placeholder":"Komunitas Discord","mediaId":3129} /-->
+<!-- wp:jwt/showcase-item {"title":"JW Trading Journal","text":"Template tracking dan evaluasi performa khusus student JW. Ukur progresmu secara objektif.","placeholder":"JW Trading Journal","mediaId":3130} /-->
 <!-- /wp:jwt/showcase -->
 
 <!-- wp:jwt/proof {"align":"full","eyebrow":"Bukti Nyata","title":"Hasil Trader yang Belajar ICT di JW.","lead":"(Dan masih ribuan lagi di channel #profit-wins Discord kami)","buttonText":"Lihat Track Record Lengkap →","buttonUrl":"/testimonials/"} -->
