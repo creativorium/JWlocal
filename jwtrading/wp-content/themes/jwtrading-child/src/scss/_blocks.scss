@@ -1434,7 +1434,7 @@
 	height: 56px;
 	margin-bottom: 1.4rem;
 	border-radius: 14px;
-	background: rgb(124 77 255 / 0.2);
+	background: var(--jwt-accent);
 	color: #fff;
 
 	svg { width: 28px; height: auto; }
