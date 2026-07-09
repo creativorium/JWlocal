@@ -55,14 +55,26 @@ const navBackdrop = document.querySelector('[data-jwt-nav-backdrop]');
 const navPanel = document.getElementById('jwt-mobile-nav');
 
 if (navToggle) {
+  // Scroll-lock keeps the scrollbar visible (html overflow-y:scroll) and pins the
+  // body at its current scroll offset, so opening the menu doesn't jump the page.
+  let savedScrollY = 0;
+  const openNav = () => {
+    savedScrollY = window.scrollY;
+    document.body.style.top = `-${savedScrollY}px`;
+    document.body.classList.add('jwt-nav-open');
+    navToggle.setAttribute('aria-expanded', 'true');
+  };
   const closeNav = () => {
+    if (!document.body.classList.contains('jwt-nav-open')) return;
     document.body.classList.remove('jwt-nav-open');
+    document.body.style.top = '';
+    window.scrollTo(0, savedScrollY);
     navToggle.setAttribute('aria-expanded', 'false');
   };
 
   navToggle.addEventListener('click', () => {
-    const open = document.body.classList.toggle('jwt-nav-open');
-    navToggle.setAttribute('aria-expanded', String(open));
+    if (document.body.classList.contains('jwt-nav-open')) closeNav();
+    else openNav();
   });
 
   navBackdrop?.addEventListener('click', closeNav);

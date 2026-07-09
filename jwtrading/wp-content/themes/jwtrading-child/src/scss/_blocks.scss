@@ -1679,10 +1679,11 @@
 .jwt-pricing__card {
 	position: relative;
 	overflow: hidden;
-	display: grid;
-	grid-template-columns: 1.1fr 0.9fr;
+	display: flex;
 	gap: clamp(1.5rem, 4vw, 3.5rem);
 	align-items: center;
+	max-width: 1000px;
+	margin-inline: auto;
 	padding: clamp(1.75rem, 4vw, 3.5rem);
 	border-radius: var(--jwt-radius);
 	border: 1px solid rgb(124 77 255 / 0.28);
@@ -1691,9 +1692,12 @@
 		var(--jwt-surface-2);
 
 	@media (max-width: 800px) {
-		grid-template-columns: 1fr;
+		flex-direction: column;
 	}
 }
+
+.jwt-pricing__left  { flex: 1.1 1 0; min-width: 0; }
+.jwt-pricing__right { flex: 0.9 1 0; min-width: 0; }
 
 .jwt-pricing__glow {
 	position: absolute;

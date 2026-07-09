@@ -170,6 +170,7 @@ body.admin-bar .jwt-header {
 	.current-menu-item > a,
 	.current_page_item > a {
 		opacity: 1;
+		color: var(--jwt-accent-warm); // show which page you're on
 	}
 }
 
@@ -218,6 +219,12 @@ body.jwt-nav-open .jwt-nav-backdrop {
 }
 
 body.jwt-nav-open {
+	// Scroll-lock without letting the scrollbar disappear: pin the body (JS sets
+	// top:-scrollY and restores on close). Keeps the page from jumping wider when
+	// the menu opens.
+	position: fixed;
+	left: 0;
+	right: 0;
 	overflow: hidden;
 }
 
@@ -390,11 +397,4 @@ body.jwt-nav-open {
 			font-size: 1.25rem;
 		}
 	}
-}
-
-// Keep the logo visible above the open mobile drawer, so the header doesn't look
-// like it disappeared when the menu is open (only the toggle stayed lifted before).
-body.jwt-nav-open .jwt-brand {
-	position: relative;
-	z-index: 110;
 }
