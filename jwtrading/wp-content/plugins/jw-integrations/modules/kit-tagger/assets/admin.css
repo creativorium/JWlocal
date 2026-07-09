@@ -1,0 +1,11 @@
+/**
+ * JW Kit Auto Tagger - Admin styles
+ */
+.jw-kit-success {
+	color: #00a32a;
+	margin-left: 8px;
+}
+.jw-kit-error {
+	color: #d63638;
+	margin-left: 8px;
+}

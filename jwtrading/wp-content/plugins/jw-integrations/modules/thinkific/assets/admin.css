@@ -1,0 +1,217 @@
+/**
+ * Admin Styles
+ *
+ * @package Thinkific_WP
+ */
+
+/* Admin Page Layout */
+.thinkific-admin {
+    max-width: 1200px;
+}
+
+.thinkific-admin-header {
+    background: #fff;
+    padding: 20px;
+    border-left: 4px solid #2271b1;
+    margin: 20px 0;
+}
+
+.thinkific-admin-header p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.thinkific-admin-actions {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.thinkific-admin-actions .button {
+    margin-right: 10px;
+}
+
+/* Settings Sections */
+.form-table th {
+    font-weight: 600;
+}
+
+.form-table .description {
+    color: #646970;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+/* Connection Test Result */
+#thinkific-test-result {
+    max-width: 800px;
+}
+
+#thinkific-test-result .notice {
+    margin: 0;
+}
+
+/* Mappings Page */
+.thinkific-mappings-actions {
+    display: flex;
+    gap: 10px;
+}
+
+#thinkific-mapping-form {
+    border-radius: 4px;
+}
+
+#thinkific-mapping-form h2 {
+    margin-top: 0;
+}
+
+#thinkific-sync-result {
+    margin: 20px 0;
+}
+
+#thinkific-sync-result .notice {
+    margin: 0;
+}
+
+#thinkific-sync-result ul {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Logs Page */
+.thinkific-log-level {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.thinkific-log-level-error {
+    background: #dc3232;
+    color: #fff;
+}
+
+.thinkific-log-level-warning {
+    background: #ffb900;
+    color: #000;
+}
+
+.thinkific-log-level-info {
+    background: #2271b1;
+    color: #fff;
+}
+
+.thinkific-log-level-debug {
+    background: #646970;
+    color: #fff;
+}
+
+.thinkific-log-error {
+    background: #fee;
+}
+
+.thinkific-log-warning {
+    background: #fffbf0;
+}
+
+/* Order Meta Box */
+#thinkific_order_enrollments .widefat {
+    border: 1px solid #ddd;
+}
+
+#thinkific_order_enrollments .widefat th {
+    background: #f5f5f5;
+    font-weight: 600;
+    padding: 8px;
+}
+
+#thinkific_order_enrollments .widefat td {
+    padding: 8px;
+}
+
+#thinkific_order_enrollments .dashicons-yes {
+    color: #46b450;
+}
+
+#thinkific_order_enrollments .dashicons-no {
+    color: #dc3232;
+}
+
+/* Info Boxes */
+.thinkific-admin-info .notice {
+    margin: 20px 0;
+}
+
+.thinkific-admin-info h3 {
+    margin-top: 0;
+    font-size: 14px;
+}
+
+.thinkific-admin-info ul {
+    margin: 10px 0;
+}
+
+.thinkific-shortcode-info {
+    margin-top: 20px !important;
+}
+
+.thinkific-shortcode-info code {
+    user-select: all;
+}
+
+/* Responsive */
+@media screen and (max-width: 782px) {
+    .thinkific-mappings-actions {
+        flex-direction: column;
+    }
+    
+    .thinkific-admin-actions .button {
+        display: block;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+}
+
+/* Loading States */
+.button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Tables */
+.wp-list-table.thinkific-table {
+    border: 1px solid #c3c4c7;
+}
+
+.wp-list-table.thinkific-table td,
+.wp-list-table.thinkific-table th {
+    padding: 12px;
+}
+
+/* Details/Summary styling */
+details {
+    cursor: pointer;
+}
+
+details summary {
+    font-weight: 600;
+    color: #2271b1;
+    cursor: pointer;
+    user-select: none;
+}
+
+details summary:hover {
+    color: #135e96;
+}
+
+details[open] summary {
+    margin-bottom: 10px;
+}
+
+/* Notice overrides */
+.notice.inline {
+    margin: 5px 0 15px;
+    padding: 12px;
+}

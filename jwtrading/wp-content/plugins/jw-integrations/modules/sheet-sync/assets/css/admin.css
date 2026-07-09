@@ -1,0 +1,14 @@
+/**
+ * JW WooCommerce Google Sheet Sync - Admin styles
+ */
+.jw-gsheet-status.jw-gsheet-success {
+	color: #00a32a;
+	font-weight: 600;
+}
+.jw-gsheet-status.jw-gsheet-pending {
+	color: #dba617;
+}
+.jw-gsheet-response {
+	font-size: 12px;
+	word-break: break-word;
+}
