@@ -218,16 +218,6 @@ body.jwt-nav-open .jwt-nav-backdrop {
 	pointer-events: auto;
 }
 
-body.jwt-nav-open {
-	// Scroll-lock without letting the scrollbar disappear: pin the body (JS sets
-	// top:-scrollY and restores on close). Keeps the page from jumping wider when
-	// the menu opens.
-	position: fixed;
-	left: 0;
-	right: 0;
-	overflow: hidden;
-}
-
 @media (max-width: 880px) {
 	// Header is min-height 76 + 16 top pad = 92px here — keep the hero calc exact.
 	:root {

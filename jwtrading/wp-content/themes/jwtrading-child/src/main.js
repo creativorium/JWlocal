@@ -55,20 +55,20 @@ const navBackdrop = document.querySelector('[data-jwt-nav-backdrop]');
 const navPanel = document.getElementById('jwt-mobile-nav');
 
 if (navToggle) {
-  // Scroll-lock keeps the scrollbar visible (html overflow-y:scroll) and pins the
-  // body at its current scroll offset, so opening the menu doesn't jump the page.
-  let savedScrollY = 0;
+  // Scroll-lock: freeze the page by clipping <html> vertical overflow. This keeps
+  // the current scroll position in place (no jump on open OR close) and, paired
+  // with html { scrollbar-gutter: stable }, doesn't shift the layout. No
+  // position:fixed (which was pushing the logo/CTA around) and no scrollTo (which
+  // was animating on close because of scroll-behavior:smooth).
   const openNav = () => {
-    savedScrollY = window.scrollY;
-    document.body.style.top = `-${savedScrollY}px`;
+    document.documentElement.style.overflowY = 'hidden';
     document.body.classList.add('jwt-nav-open');
     navToggle.setAttribute('aria-expanded', 'true');
   };
   const closeNav = () => {
     if (!document.body.classList.contains('jwt-nav-open')) return;
+    document.documentElement.style.overflowY = '';
     document.body.classList.remove('jwt-nav-open');
-    document.body.style.top = '';
-    window.scrollTo(0, savedScrollY);
     navToggle.setAttribute('aria-expanded', 'false');
   };
 

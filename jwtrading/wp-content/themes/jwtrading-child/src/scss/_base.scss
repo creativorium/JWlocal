@@ -29,11 +29,11 @@ body {
 	overflow-x: clip;
 }
 
-// Keep the vertical scrollbar's track ALWAYS present so the mobile scroll-lock
-// (see body.jwt-nav-open below) can't make it vanish and jump the full-width
-// header / alignfull sections wider. Overlay-scrollbar devices ignore it.
+// Reserve the scrollbar's space always so the mobile scroll-lock (JS sets
+// <html> overflow-y:hidden — see main.js) can't make it vanish and jump the
+// full-width header / sections. No-op on overlay-scrollbar devices (real mobile).
 html {
-	overflow-y: scroll;
+	scrollbar-gutter: stable;
 }
 
 // Readability for non-block content (blog posts, Woo pages) on the dark canvas.
