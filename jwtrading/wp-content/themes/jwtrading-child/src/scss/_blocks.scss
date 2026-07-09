@@ -1790,14 +1790,15 @@
 }
 
 .jwt-pricing__price-old {
+	order: -1; // struck price sits ABOVE the real price
 	color: var(--jwt-accent-light);
 	text-decoration: line-through;
 	font-size: 0.9rem;
 	font-weight: 600;
 }
 
-.jwt-pricing__text {
-	margin: 0.5rem 0 0;
+.jwt-pricing .jwt-pricing__text {
+	margin: 20px 0 0; // scoped past the global p-reset
 	color: var(--jwt-muted);
 	font-style: italic;
 	font-size: 0.85rem;
@@ -1809,8 +1810,8 @@
 	max-width: 360px;
 }
 
-.jwt-pricing__footnote {
-	margin: 1rem 0 0;
+.jwt-pricing .jwt-pricing__footnote {
+	margin: 20px 0 0; // scoped past the global p-reset
 	color: var(--jwt-muted);
 	font-size: 0.8rem;
 }
