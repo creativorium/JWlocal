@@ -47,7 +47,7 @@ class JW_GSheet_Sync_Webhook {
 			$url,
 			array(
 				'timeout'     => 30,
-				'redirection' => 0,
+				'redirection' => 0, // Apps Script returns 400 if redirects are followed; a 302 means doPost ran (row appended) and is treated as success below
 				'headers'     => array(
 					'Content-Type' => 'application/json',
 					'Accept'       => 'application/json',
@@ -86,7 +86,10 @@ class JW_GSheet_Sync_Webhook {
 		// Success: HTTP 2xx OR response body has success: true (Google Apps Script may return 400
 		// even when doPost runs successfully due to redirect/Content-Type quirks).
 		$body_success = is_array( $decoded ) && ! empty( $decoded['success'] );
-		$success      = ( $code >= 200 && $code < 300 ) || $body_success;
+		// A 302 from Apps Script /exec means doPost completed and is redirecting to its
+		// output; the row is already appended. So accept 2xx AND 3xx (or an explicit
+		// success:true body) as success.
+		$success      = ( $code >= 200 && $code < 400 ) || $body_success;
 		$summary      = $this->build_response_summary( $code, $body, $decoded, $success );
 
 		return array(

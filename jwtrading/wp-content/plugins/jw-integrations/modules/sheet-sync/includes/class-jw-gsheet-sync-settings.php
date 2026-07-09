@@ -33,6 +33,7 @@ class JW_GSheet_Sync_Settings {
 		add_action( 'admin_menu', array( $this, 'add_menu_page' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_filter( 'plugin_action_links_' . JW_GSHEET_SYNC_PLUGIN_BASENAME, array( $this, 'add_settings_link' ) );
+		add_action( 'wp_ajax_jw_gsheet_test_connection', array( $this, 'ajax_test_connection' ) );
 	}
 
 	/**
@@ -336,6 +337,58 @@ class JW_GSheet_Sync_Settings {
 	/**
 	 * Render the full settings page.
 	 */
+	/**
+	 * AJAX: test the Google Sheet webhook connection (same path as a real sync).
+	 */
+	public function ajax_test_connection() {
+		check_ajax_referer( 'jw_gsheet_test_connection', 'nonce' );
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'jw-gsheet-sync' ) ) );
+		}
+
+		$url    = trim( (string) $this->get( 'webhook_url' ) );
+		$secret = (string) $this->get( 'secret_token' );
+		$label  = (string) $this->get( 'site_label' );
+
+		if ( '' === $url ) {
+			wp_send_json_error( array( 'message' => __( 'Webhook URL is not set. Save it first.', 'jw-gsheet-sync' ) ) );
+		}
+
+		$payload = array(
+			'secret_token' => $secret,
+			'test'         => true,
+			'event'        => 'connection_test',
+			'site_label'   => $label,
+			'timestamp'    => current_time( 'c' ),
+		);
+
+		$response = wp_remote_post( $url, array(
+			'timeout'     => 20,
+			'redirection' => 0,
+			'headers'     => array( 'Content-Type' => 'application/json', 'Accept' => 'application/json' ),
+			'body'        => wp_json_encode( $payload ),
+		) );
+
+		if ( is_wp_error( $response ) ) {
+			wp_send_json_error( array( 'message' => $response->get_error_message() ) );
+		}
+
+		$code    = wp_remote_retrieve_response_code( $response );
+		$body    = wp_remote_retrieve_body( $response );
+		$decoded = json_decode( $body, true );
+		$ok      = ( $code >= 200 && $code < 400 ) || ( is_array( $decoded ) && ! empty( $decoded['success'] ) );
+
+		if ( $ok ) {
+			wp_send_json_success( array(
+				'message' => sprintf( __( 'Connected - webhook responded (HTTP %d). A test row may have been added to your sheet.', 'jw-gsheet-sync' ), $code ),
+			) );
+		}
+
+		wp_send_json_error( array(
+			'message' => sprintf( __( 'Failed - HTTP %1$d: %2$s', 'jw-gsheet-sync' ), $code, sanitize_text_field( substr( (string) $body, 0, 150 ) ) ),
+		) );
+	}
+
 	public function render_settings_page() {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'jw-gsheet-sync' ) );
@@ -351,6 +404,33 @@ class JW_GSheet_Sync_Settings {
 				submit_button( __( 'Save Settings', 'jw-gsheet-sync' ) );
 				?>
 			</form>
+
+			<h2><?php esc_html_e( 'Connection', 'jw-gsheet-sync' ); ?></h2>
+			<p>
+				<button type="button" class="button button-secondary" id="jw-gsheet-test-connection"><?php esc_html_e( 'Test Connection', 'jw-gsheet-sync' ); ?></button>
+				<span id="jw-gsheet-test-result" style="margin-left:10px;font-weight:600;"></span>
+			</p>
+			<script>
+			(function(){
+				var btn = document.getElementById('jw-gsheet-test-connection');
+				if(!btn){return;}
+				var out = document.getElementById('jw-gsheet-test-result');
+				btn.addEventListener('click', function(){
+					btn.disabled = true; out.style.color=''; out.textContent = '<?php echo esc_js( __( 'Testing…', 'jw-gsheet-sync' ) ); ?>';
+					var data = new FormData();
+					data.append('action','jw_gsheet_test_connection');
+					data.append('nonce','<?php echo esc_js( wp_create_nonce( 'jw_gsheet_test_connection' ) ); ?>');
+					fetch(ajaxurl, { method:'POST', credentials:'same-origin', body:data })
+						.then(function(r){return r.json();})
+						.then(function(j){
+							out.textContent = (j.data && j.data.message) ? j.data.message : (j.success ? 'OK' : 'Failed');
+							out.style.color = j.success ? '#1a7f37' : '#b32d2e';
+						})
+						.catch(function(e){ out.textContent = 'Error: ' + e; out.style.color = '#b32d2e'; })
+						.finally(function(){ btn.disabled = false; });
+				});
+			})();
+			</script>
 		</div>
 		<?php
 	}

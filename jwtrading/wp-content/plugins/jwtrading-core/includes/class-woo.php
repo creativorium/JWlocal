@@ -8,6 +8,14 @@ defined( 'ABSPATH' ) || exit;
 class JWT_Woo {
 
 	public static function init() {
+		// Order → Kit + Sheets sync is handled by the JW Integrations plugin now
+		// (consolidated Kit Auto Tagger + Google Sheet Sync). Core's own dispatch is
+		// left OFF to avoid a duplicate/second sync. Flip this filter to true only if
+		// you remove JW Integrations and want Core to take over order syncing again.
+		if ( ! apply_filters( 'jwt/enable_core_order_sync', false ) ) {
+			return;
+		}
+
 		// Duitku confirms payment → order moves to processing. Completed also covered as safety net.
 		add_action( 'woocommerce_order_status_processing', array( __CLASS__, 'dispatch_order_sync' ), 10, 1 );
 		add_action( 'woocommerce_order_status_completed', array( __CLASS__, 'dispatch_order_sync' ), 10, 1 );
