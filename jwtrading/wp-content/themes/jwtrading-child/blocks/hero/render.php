@@ -8,7 +8,7 @@
 defined( 'ABSPATH' ) || exit;
 
 $jwt_tag     = in_array( $attributes['titleTag'], array( 'h1', 'h2', 'p' ), true ) ? $attributes['titleTag'] : 'h1';
-$jwt_wrapper = get_block_wrapper_attributes( array( 'class' => 'jwt-hero' ) );
+$jwt_wrapper = get_block_wrapper_attributes( array( 'class' => 'jwt-hero' . ( ! empty( $attributes['compact'] ) ? ' jwt-hero--compact' : '' ) ) );
 ?>
 <section <?php echo $jwt_wrapper; // phpcs:ignore WordPress.Security.EscapeOutput ?>>
 	<div class="jwt-container" data-jwt-reveal>

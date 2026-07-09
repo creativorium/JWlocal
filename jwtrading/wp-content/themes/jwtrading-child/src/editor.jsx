@@ -1955,3 +1955,90 @@ registerBlockType('jwt/community', {
   },
   save: saveNull,
 });
+
+// --- Case study (featured story: content + image, switchable side) ------------
+
+registerBlockType('jwt/case-study', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps();
+    const { imageId } = attributes;
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Konten', 'jwtrading')}>
+            <TextControl label={__('Eyebrow', 'jwtrading')} value={attributes.eyebrow} onChange={(eyebrow) => setAttributes({ eyebrow })} />
+            <TextControl label={__('Judul', 'jwtrading')} value={attributes.title} onChange={(title) => setAttributes({ title })} />
+            <TextControl label={__('Body (paragraf pisah dengan baris baru)', 'jwtrading')} value={attributes.body} onChange={(body) => setAttributes({ body })} />
+            <TextControl label={__('Kutipan (italic)', 'jwtrading')} value={attributes.quote} onChange={(quote) => setAttributes({ quote })} />
+            <TextControl label={__('Teks tombol', 'jwtrading')} value={attributes.buttonText} onChange={(buttonText) => setAttributes({ buttonText })} />
+            <TextControl label={__('URL tombol', 'jwtrading')} value={attributes.buttonUrl} onChange={(buttonUrl) => setAttributes({ buttonUrl })} />
+            <SelectControl
+              label={__('Sisi gambar', 'jwtrading')}
+              value={attributes.imageSide}
+              options={[{ label: 'Kanan', value: 'right' }, { label: 'Kiri', value: 'left' }]}
+              onChange={(imageSide) => setAttributes({ imageSide })}
+            />
+            <MediaUploadCheck>
+              <MediaUpload
+                onSelect={(m) => setAttributes({ imageId: m.id })}
+                allowedTypes={['image']}
+                value={imageId}
+                render={({ open }) => (
+                  <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+                    <Button variant="secondary" onClick={open}>{imageId ? __('Ganti gambar', 'jwtrading') : __('Pilih gambar', 'jwtrading')}</Button>
+                    {imageId ? <Button variant="link" isDestructive onClick={() => setAttributes({ imageId: 0 })}>{__('Hapus', 'jwtrading')}</Button> : null}
+                  </div>
+                )}
+              />
+            </MediaUploadCheck>
+          </PanelBody>
+        </InspectorControls>
+        <div {...blockProps}>
+          <ServerSideRender block="jwt/case-study" attributes={attributes} />
+        </div>
+      </>
+    );
+  },
+  save: saveNull,
+});
+
+// --- Gallery marquee (payout / feedback screenshots) --------------------------
+
+registerBlockType('jwt/gallery', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps();
+    const ids = (attributes.imageIds || '').split('|').map((n) => parseInt(n, 10)).filter((n) => n > 0);
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Header', 'jwtrading')}>
+            <TextControl label={__('Eyebrow', 'jwtrading')} value={attributes.eyebrow} onChange={(eyebrow) => setAttributes({ eyebrow })} />
+            <TextControl label={__('Judul', 'jwtrading')} value={attributes.title} onChange={(title) => setAttributes({ title })} />
+            <TextControl label={__('Lead', 'jwtrading')} value={attributes.lead} onChange={(lead) => setAttributes({ lead })} />
+          </PanelBody>
+          <PanelBody title={__('Gambar & gerak', 'jwtrading')}>
+            <MediaUploadCheck>
+              <MediaUpload
+                multiple gallery allowedTypes={['image']} value={ids}
+                onSelect={(media) => setAttributes({ imageIds: media.map((m) => m.id).join('|') })}
+                render={({ open }) => (
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <Button variant="secondary" onClick={open}>{ids.length ? __('Ubah gambar', 'jwtrading') : __('Pilih gambar', 'jwtrading')}</Button>
+                    {ids.length ? <Button variant="link" isDestructive onClick={() => setAttributes({ imageIds: '' })}>{__('Kosongkan', 'jwtrading')}</Button> : null}
+                  </div>
+                )}
+              />
+            </MediaUploadCheck>
+            <p style={{ fontSize: 12, opacity: 0.8 }}>{ids.length + ' ' + __('gambar', 'jwtrading')}</p>
+            <RangeControl label={__('Kecepatan (detik)', 'jwtrading')} value={attributes.speed} onChange={(speed) => setAttributes({ speed })} min={20} max={140} />
+            <ToggleControl label={__('Arah balik', 'jwtrading')} checked={!!attributes.reverse} onChange={(reverse) => setAttributes({ reverse })} />
+          </PanelBody>
+        </InspectorControls>
+        <div {...blockProps}>
+          <ServerSideRender block="jwt/gallery" attributes={attributes} />
+        </div>
+      </>
+    );
+  },
+  save: saveNull,
+});

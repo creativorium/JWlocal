@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/gallery",
+	"title": "JWT Gallery Marquee",
+	"category": "jwtrading",
+	"icon": "images-alt",
+	"description": "Auto-scrolling marquee of screenshots (payout / feedback), click to enlarge.",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": { "align": [ "full" ], "html": false, "anchor": true },
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "" },
+		"lead": { "type": "string", "default": "" },
+		"center": { "type": "boolean", "default": true },
+		"imageIds": { "type": "string", "default": "" },
+		"speed": { "type": "number", "default": 55 },
+		"reverse": { "type": "boolean", "default": false }
+	}
+}

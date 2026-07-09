@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/case-study",
+	"title": "JWT Case Study",
+	"category": "jwtrading",
+	"icon": "id-alt",
+	"description": "Featured story card: eyebrow, heading, body, optional quote, CTA on one side; image on the other (side is switchable).",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": { "align": [ "full" ], "html": false, "anchor": true },
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "" },
+		"body": { "type": "string", "default": "" },
+		"quote": { "type": "string", "default": "" },
+		"buttonText": { "type": "string", "default": "" },
+		"buttonUrl": { "type": "string", "default": "" },
+		"imageId": { "type": "number", "default": 0 },
+		"imageSide": { "type": "string", "default": "right" }
+	}
+}

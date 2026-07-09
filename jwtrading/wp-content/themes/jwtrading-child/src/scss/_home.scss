@@ -924,3 +924,9 @@ body.jwt-lightbox-open {
 		color: #b8c0cd;
 	}
 }
+
+// Compact hero (e.g. testimonial page) — not the full-viewport treatment.
+.jwt-hero--compact {
+	min-height: 0;
+	padding-block: clamp(3rem, 7vw, 5rem);
+}

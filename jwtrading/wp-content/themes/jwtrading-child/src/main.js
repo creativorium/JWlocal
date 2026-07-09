@@ -364,8 +364,8 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
 (() => {
   // Bootcamp is live now, so it's navigable; Discord + Testimonials stay
   // blocked until those pages are ready.
-  // Discord + Bootcamp are live now; Testimonials stays blocked until ready.
-  const blockedPaths = ['/testimonials'];
+  // Bootcamp, Discord and Testimonials are all built now.
+  const blockedPaths = [];
 
   const isBlocked = (href) => {
     let url;
