@@ -1827,13 +1827,16 @@
 
 .jwt-contact__grid {
 	display: grid;
-	grid-template-columns: 0.85fr 1.15fr;
-	gap: clamp(1.25rem, 3vw, 2.5rem);
-	align-items: start;
+	grid-template-columns: 1fr 1fr;
+	gap: clamp(1.1rem, 2.5vw, 1.75rem);
+	align-items: stretch;
+	max-width: 940px;
+	margin-inline: auto;
 	margin-top: clamp(2rem, 5vw, 3.5rem);
 
-	@media (max-width: 860px) {
+	@media (max-width: 780px) {
 		grid-template-columns: 1fr;
+		max-width: 520px;
 	}
 }
 
@@ -1928,7 +1931,26 @@
 	display: flex;
 	flex-direction: column;
 	gap: 0.85rem;
-	margin-top: 0.5rem;
+	margin-top: auto; // push to the bottom so the column balances the form height.
+	padding-top: 1.1rem;
+	border-top: 1px solid var(--jwt-line);
+
+	// Match the dark theme (footer socials are white pills — too loud here).
+	.jwt-social a {
+		width: 40px;
+		height: 40px;
+		border-radius: 0.85rem;
+		background: var(--jwt-surface);
+		border: 1px solid var(--jwt-line-strong);
+		color: var(--jwt-text);
+		box-shadow: none;
+
+		&:hover {
+			border-color: var(--jwt-accent);
+			color: var(--jwt-accent-light);
+			transform: translateY(-3px);
+		}
+	}
 }
 
 // Form card
@@ -1962,11 +1984,17 @@
 	}
 }
 
+// Consistent vertical rhythm for the whole form (one gap, no stray margins).
+.jwt-contact__form {
+	display: flex;
+	flex-direction: column;
+	gap: 1.1rem;
+}
+
 .jwt-contact__field {
 	display: flex;
 	flex-direction: column;
 	gap: 0.45rem;
-	margin-bottom: 1rem;
 
 	> span {
 		font-size: 0.85rem;
@@ -1980,9 +2008,9 @@
 		font-size: 0.95rem;
 		color: var(--jwt-text);
 		background: var(--jwt-surface);
-		border: 1px solid var(--jwt-line-strong);
+		border: 1px solid var(--jwt-line);
 		border-radius: var(--jwt-radius-sm);
-		padding: 0.75rem 0.9rem;
+		padding: 0.8rem 0.95rem;
 		transition: border-color 0.2s, box-shadow 0.2s;
 
 		&::placeholder { color: var(--jwt-muted); }
@@ -1994,18 +2022,16 @@
 		}
 	}
 
-	textarea { resize: vertical; min-height: 120px; }
+	textarea { resize: vertical; min-height: 150px; }
 }
-
-.jwt-contact__fields .jwt-contact__field { margin-bottom: 0; }
 
 .jwt-contact__submit {
 	width: 100%;
-	margin-top: 0.5rem;
+	margin-top: 0.25rem;
 }
 
 .jwt-contact .jwt-contact__form-footnote {
-	margin: 1.1rem 0 0;
+	margin: 0;
 	text-align: center;
 	font-size: 0.85rem;
 	color: var(--jwt-muted);

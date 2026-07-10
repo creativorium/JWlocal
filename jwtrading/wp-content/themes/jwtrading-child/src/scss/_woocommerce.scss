@@ -1,60 +1,89 @@
 // ---------------------------------------------------------------------------
 // WooCommerce: slim checkout + thank-you page (markup from jwtrading-core).
-// Ported from the live site's styles, adapted to the token system.
+// Redesigned to the dark/purple theme — two-column card layout.
 // ---------------------------------------------------------------------------
 
-// --- Form fields on dark ------------------------------------------------------
-.woocommerce {
-	form .form-row {
-		label {
-			color: var(--jwt-text);
-			font-size: 0.875rem;
-			font-weight: 600;
-		}
-
-		input.input-text,
-		select,
-		textarea {
-			background: var(--jwt-surface);
-			border: 1px solid var(--jwt-line);
-			border-radius: var(--jwt-radius-sm);
-			color: var(--jwt-text);
-			padding: 0.75rem 0.875rem;
-
-			&:focus {
-				border-color: var(--jwt-accent);
-				outline: none;
-			}
-		}
+// --- Page frame ----------------------------------------------------------------
+.woocommerce-checkout {
+	.woocommerce {
+		max-width: 1120px;
+		margin-inline: auto;
 	}
 
-	button.button,
-	#place_order {
-		background: var(--jwt-accent);
-		color: #fff;
-		font-weight: 700;
-		border: 0;
-		border-radius: var(--jwt-radius-sm);
-		padding: 0.9375rem 1.75rem;
-		box-shadow: 0 8px 24px var(--jwt-accent-soft);
-
-		&:hover {
-			background: var(--jwt-accent-hover);
-			color: #fff;
-		}
+	.woocommerce-notices-wrapper:empty {
+		margin: 0;
 	}
 }
 
-// --- Checkout two-column grid ---------------------------------------------------
+// --- Checkout header (eyebrow + title + trust badges) --------------------------
+.jwt-checkout-head {
+	text-align: center;
+	max-width: 900px;
+	margin: 0 auto clamp(1.5rem, 4vw, 2.5rem);
+
+	&__eyebrow {
+		display: inline-block;
+		font-family: var(--jwt-font-mono);
+		font-size: 0.72rem;
+		letter-spacing: 0.24em;
+		text-transform: uppercase;
+		color: var(--jwt-accent-light);
+		margin-bottom: 0.75rem;
+	}
+
+	&__title {
+		font-family: var(--jwt-font-heading);
+		font-size: clamp(1.9rem, 4.5vw, 2.9rem);
+		line-height: 1.1;
+		color: var(--jwt-text);
+		margin: 0;
+	}
+}
+
+.jwt-checkout-trust {
+	list-style: none;
+	margin: clamp(1.25rem, 3vw, 1.75rem) 0 0;
+	padding: 0.75rem 1rem;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.5rem 1.5rem;
+	border: 1px solid color-mix(in srgb, #3ecf8e 30%, var(--jwt-line));
+	background: color-mix(in srgb, #3ecf8e 7%, transparent);
+	border-radius: var(--jwt-radius);
+
+	li {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.45rem;
+		font-size: 0.8rem;
+		color: var(--jwt-muted);
+	}
+
+	&__ico {
+		color: #3ecf8e;
+		font-size: 0.75rem;
+	}
+}
+
+// --- Two-column grid -----------------------------------------------------------
 .jw-checkout-grid {
 	display: grid;
 	grid-template-columns: 1fr;
-	gap: 2rem;
+	gap: clamp(1.25rem, 3vw, 2rem);
 	align-items: start;
 
 	@media (min-width: 992px) {
-		grid-template-columns: 1.15fr 0.85fr;
+		grid-template-columns: 1.1fr 0.9fr;
 	}
+}
+
+// Left = customer details card; Right = order/summary card.
+.jw-checkout-left {
+	padding: clamp(1.4rem, 3vw, 2rem);
+	border: 1px solid var(--jwt-line);
+	border-radius: var(--jwt-radius);
+	background: var(--jwt-surface);
 }
 
 .jw-checkout-right {
@@ -63,108 +92,459 @@
 		top: 96px;
 	}
 
-	.shop_table,
-	#payment {
-		background: var(--jwt-surface);
+	// The order table + payment box become one summary card.
+	#order_review {
+		padding: clamp(1.4rem, 3vw, 2rem);
 		border: 1px solid var(--jwt-line);
 		border-radius: var(--jwt-radius);
+		background: var(--jwt-surface);
 	}
 }
 
-// --- Checkout payment notice -----------------------------------------------------
-.jwt-checkout-notice {
-	background: color-mix(in srgb, var(--jwt-warn) 12%, var(--jwt-bg));
-	border: 1px solid color-mix(in srgb, var(--jwt-warn) 45%, var(--jwt-line));
+// Section headings (Detail Billing / Pesanan Kamu).
+.woocommerce-billing-fields > h3,
+#order_review_heading {
+	font-family: var(--jwt-font-heading);
+	font-size: clamp(1.15rem, 2.4vw, 1.4rem);
 	color: var(--jwt-text);
-	padding: 0.875rem 1rem;
-	margin-bottom: 1.25rem;
-	border-radius: var(--jwt-radius-sm);
-	font-size: 0.875rem;
-	line-height: 1.6;
+	margin: 0 0 1.25rem;
 }
 
-// --- Manual transfer CTA box ------------------------------------------------------
-#alt-transfer-box {
-	margin-top: 1.25rem;
-	padding: 1.125rem 1.25rem;
-	background: var(--jwt-surface);
-	border: 1px solid var(--jwt-line);
-	border-radius: var(--jwt-radius-sm);
+#order_review_heading {
+	margin-bottom: 1.1rem;
+}
 
-	.alt-text {
-		margin: 0 0 0.75rem;
-		font-size: 0.9375rem;
-		color: var(--jwt-muted);
+// --- Form fields on dark -------------------------------------------------------
+.woocommerce {
+	form .form-row {
+		margin-bottom: 1.1rem;
+
+		label {
+			color: var(--jwt-text);
+			font-size: 0.85rem;
+			font-weight: 600;
+			margin-bottom: 0.4rem;
+		}
+
+		input.input-text,
+		select,
+		textarea {
+			width: 100%;
+			background: var(--jwt-bg);
+			border: 1px solid var(--jwt-line);
+			border-radius: var(--jwt-radius-sm);
+			color: var(--jwt-text);
+			padding: 0.8rem 0.95rem;
+			transition: border-color 0.2s, box-shadow 0.2s;
+
+			&::placeholder { color: var(--jwt-muted); }
+
+			&:focus {
+				border-color: var(--jwt-accent);
+				outline: none;
+				box-shadow: 0 0 0 3px rgb(124 77 255 / 0.18);
+			}
+		}
 	}
 
-	.alt-btn {
-		color: var(--jwt-accent);
+	// Two-up name row on wider screens.
+	#billing_first_name_field,
+	#billing_last_name_field {
+		@media (min-width: 560px) {
+			float: left;
+			width: 48.5%;
+		}
+	}
+
+	#billing_first_name_field { @media (min-width: 560px) { margin-right: 3%; } }
+
+	.woocommerce-billing-fields__field-wrapper {
+		overflow: hidden; // clear the name-row floats.
+	}
+}
+
+// --- Primary buttons -----------------------------------------------------------
+.woocommerce {
+	button.button,
+	#place_order {
+		width: 100%;
+		background: var(--jwt-accent);
+		color: #fff;
+		font-family: var(--jwt-font-heading);
 		font-weight: 700;
-		text-decoration: none;
+		font-size: 1.05rem;
+		border: 0;
+		border-radius: var(--jwt-radius-sm);
+		padding: 1rem 1.75rem;
+		box-shadow: 0 12px 36px rgb(124 77 255 / 0.4);
+		transition: background 0.2s, transform 0.2s;
 
 		&:hover {
-			color: var(--jwt-accent-hover);
+			background: var(--jwt-accent-hover);
+			color: #fff;
+			transform: translateY(-2px);
 		}
 	}
 }
 
-// --- Thank-you page ------------------------------------------------------------
-.woocommerce-order-received .woocommerce-order {
-	max-width: 1100px;
+// --- Order summary table -------------------------------------------------------
+.woocommerce-checkout-review-order-table {
+	width: 100%;
+	border: 0;
+	margin-bottom: 1.25rem;
+
+	thead { display: none; }
+
+	th, td {
+		border: 0;
+		padding: 0.55rem 0;
+		color: var(--jwt-muted);
+		font-size: 0.9rem;
+	}
+
+	.cart_item td {
+		padding-top: 0;
+		padding-bottom: 1rem;
+		border-bottom: 1px solid var(--jwt-line);
+		color: var(--jwt-text);
+	}
+
+	.product-name {
+		color: var(--jwt-text);
+		font-weight: 600;
+	}
+
+	.product-total {
+		text-align: right;
+		color: var(--jwt-text);
+		font-weight: 600;
+		white-space: nowrap;
+	}
+
+	tfoot {
+		th, td { padding: 0.5rem 0; }
+
+		tr:last-child th,
+		tr:last-child td {
+			padding-top: 0.9rem;
+			border-top: 1px solid var(--jwt-line);
+			font-size: 1.25rem;
+			font-weight: 800;
+			color: var(--jwt-text);
+		}
+
+		.amount { color: var(--jwt-text); }
+	}
+}
+
+// --- Coupon --------------------------------------------------------------------
+.woocommerce-form-coupon-toggle {
+	margin-bottom: 1rem;
+
+	.woocommerce-info {
+		background: transparent;
+		border: 0;
+		padding: 0;
+		color: var(--jwt-muted);
+		font-size: 0.9rem;
+
+		&::before { display: none; }
+
+		a { color: var(--jwt-accent-light); }
+	}
+}
+
+form.checkout_coupon {
+	border: 1px solid var(--jwt-line);
+	background: var(--jwt-bg);
+	border-radius: var(--jwt-radius-sm);
+	padding: 1rem;
+	margin-bottom: 1.25rem;
+
+	.button { width: auto; }
+}
+
+// --- Payment methods (Duitku gateways) as cards --------------------------------
+#payment {
+	background: transparent;
+	border: 0;
+	margin-top: 1.25rem;
+
+	.wc_payment_methods {
+		list-style: none;
+		margin: 0 0 1.25rem;
+		padding: 0;
+		border: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+
+	li.wc_payment_method {
+		list-style: none;
+		border: 1px solid var(--jwt-line);
+		background: var(--jwt-bg);
+		border-radius: var(--jwt-radius-sm);
+		padding: 0;
+		transition: border-color 0.2s, background 0.2s;
+
+		> label {
+			display: flex;
+			align-items: center;
+			gap: 0.65rem;
+			padding: 0.95rem 1.1rem;
+			margin: 0;
+			cursor: pointer;
+			color: var(--jwt-text);
+			font-weight: 600;
+
+			img {
+				margin-left: auto;
+				max-height: 24px;
+				width: auto;
+			}
+		}
+
+		input[type="radio"] { accent-color: var(--jwt-accent); }
+
+		&:has(input:checked) {
+			border-color: var(--jwt-accent);
+			background: color-mix(in srgb, var(--jwt-accent) 8%, var(--jwt-bg));
+		}
+	}
+
+	.payment_box {
+		background: transparent;
+		margin: 0;
+		padding: 0 1.1rem 1rem;
+		font-size: 0.85rem;
+		color: var(--jwt-muted);
+
+		&::before { display: none; }
+	}
+
+	.place-order {
+		padding: 0;
+		border: 0;
+	}
+}
+
+// --- Terms checkbox ------------------------------------------------------------
+#jw_accept_terms_field {
+	margin: 0 0 1rem;
+	display: flex;
+	align-items: flex-start;
+	gap: 0.6rem;
+
+	label {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.6rem;
+		font-weight: 500;
+		font-size: 0.85rem;
+		color: var(--jwt-muted);
+		line-height: 1.5;
+		cursor: pointer;
+	}
+
+	input[type="checkbox"] {
+		margin-top: 0.15rem;
+		width: 1.05rem;
+		height: 1.05rem;
+		accent-color: var(--jwt-accent);
+		flex: 0 0 auto;
+	}
+
+	a { color: var(--jwt-accent-light); }
+	.optional { display: none; }
+}
+
+// --- Secure note + "what happens next" -----------------------------------------
+.jwt-checkout-secure {
+	margin: 0.9rem 0 0;
+	text-align: center;
+	font-size: 0.8rem;
+	color: var(--jwt-muted);
+}
+
+.jwt-checkout-next {
+	margin-top: 1.25rem;
+	padding-top: 1.25rem;
+	border-top: 1px solid var(--jwt-line);
+
+	&__label {
+		display: block;
+		font-family: var(--jwt-font-mono);
+		font-size: 0.68rem;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--jwt-muted);
+		margin-bottom: 0.75rem;
+	}
+
+	ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.55rem;
+	}
+
+	li {
+		position: relative;
+		padding-left: 1.6rem;
+		font-size: 0.88rem;
+		color: var(--jwt-text);
+
+		&::before {
+			content: "✓";
+			position: absolute;
+			left: 0;
+			top: 0;
+			color: #3ecf8e;
+			font-weight: 700;
+		}
+	}
+}
+
+// --- Payment notice + manual-transfer CTA (left column) ------------------------
+.jwt-checkout-notice {
+	background: color-mix(in srgb, var(--jwt-warn) 12%, var(--jwt-bg));
+	border: 1px solid color-mix(in srgb, var(--jwt-warn) 45%, var(--jwt-line));
+	color: var(--jwt-muted);
+	padding: 0.875rem 1rem;
+	margin-top: 1.25rem;
+	border-radius: var(--jwt-radius-sm);
+	font-size: 0.82rem;
+	line-height: 1.6;
+}
+
+#alt-transfer-box {
+	margin-top: 1.25rem;
+	padding-top: 1.25rem;
+	border-top: 1px solid var(--jwt-line);
+
+	.alt-text {
+		margin: 0 0 0.75rem;
+		font-size: 0.88rem;
+		color: var(--jwt-muted);
+	}
+
+	// Grey ghost CTA — same treatment as the home-page secondary button.
+	.alt-btn {
+		width: 100%;
+		font-size: 0.95rem;
+	}
+}
+
+// ===========================================================================
+// Thank-you / order-received page
+// ===========================================================================
+.woocommerce-order-received {
+	.woocommerce-order {
+		max-width: 780px;
+		margin-inline: auto;
+	}
+
+	.woocommerce-thankyou-order-received {
+		font-family: var(--jwt-font-heading);
+		font-size: clamp(1.6rem, 4vw, 2.3rem);
+		color: var(--jwt-text);
+		text-align: center;
+		margin-bottom: 0.5rem;
+	}
+
+	// Compact meta row (order number / date / total / payment method).
+	.woocommerce-order-overview {
+		list-style: none;
+		margin: 0 0 1.75rem;
+		padding: 1.1rem 1.25rem;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem 1.5rem;
+		justify-content: center;
+		border: 1px solid var(--jwt-line);
+		border-radius: var(--jwt-radius);
+		background: var(--jwt-surface);
+		text-align: center;
+
+		li {
+			border: 0 !important;
+			font-size: 0.72rem;
+			letter-spacing: 0.14em;
+			text-transform: uppercase;
+			color: var(--jwt-muted);
+
+			strong {
+				display: block;
+				margin-top: 0.3rem;
+				font-size: 1rem;
+				letter-spacing: 0;
+				text-transform: none;
+				color: var(--jwt-text);
+			}
+		}
+	}
 }
 
 .jw-thankyou-card {
-	margin: 28px 0;
-	padding: 22px;
+	margin: 1.5rem 0;
+	padding: clamp(1.4rem, 3vw, 2rem);
 	border-radius: var(--jwt-radius);
 	border: 1px solid var(--jwt-line);
 	background: var(--jwt-surface);
 
 	h3 {
-		margin: 0 0 16px;
-		font-size: 22px;
+		margin: 0 0 1.25rem;
+		font-family: var(--jwt-font-heading);
+		font-size: 1.35rem;
+		color: var(--jwt-text);
 	}
 }
 
 .jw-steps-grid {
 	display: grid;
 	grid-template-columns: 1fr;
-	gap: 16px;
+	gap: 1rem;
 
-	@media (min-width: 992px) {
+	@media (min-width: 720px) {
 		grid-template-columns: 1fr 1fr;
 	}
 }
 
 .jw-step {
-	padding: 16px;
+	padding: 1.25rem;
 	border-radius: var(--jwt-radius-sm);
 	border: 1px solid var(--jwt-line);
 	background: var(--jwt-bg);
 
 	p {
-		margin: 0 0 14px;
+		margin: 0 0 1rem;
 		color: var(--jwt-muted);
-		line-height: 1.5;
+		line-height: 1.55;
+		font-size: 0.9rem;
 	}
 }
 
 .jw-step-title {
 	font-weight: 700;
-	margin-bottom: 8px;
+	color: var(--jwt-text);
+	margin-bottom: 0.5rem;
 }
 
 .jw-btn {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	padding: 10px 14px;
-	border-radius: 10px;
+	padding: 0.7rem 1.1rem;
+	border-radius: var(--jwt-radius-sm);
+	font-family: var(--jwt-font-heading);
 	font-weight: 700;
 	text-decoration: none;
 	background: var(--jwt-accent);
 	color: #fff;
-	box-shadow: 0 8px 24px var(--jwt-accent-soft);
+	box-shadow: 0 10px 28px rgb(124 77 255 / 0.4);
 
 	&:hover {
 		background: var(--jwt-accent-hover);
@@ -173,33 +553,51 @@
 }
 
 .jw-help {
-	margin-top: 16px;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 12px;
-	padding-top: 14px;
+	margin-top: 1.25rem;
+	padding-top: 1.1rem;
 	border-top: 1px solid var(--jwt-line);
 	color: var(--jwt-muted);
+	font-size: 0.9rem;
 
-	a {
-		color: var(--jwt-accent);
-	}
+	a { color: var(--jwt-accent-light); }
 }
 
 .jw-help-text {
 	font-weight: 700;
 	color: var(--jwt-text);
+	margin-bottom: 0.3rem;
+}
+
+.jw-help-wa { margin-bottom: 0.6rem; }
+
+// Order details table on thank-you.
+.woocommerce-order-received .woocommerce-order-details {
+	margin-top: 1.5rem;
+
+	.woocommerce-order-details__title {
+		font-family: var(--jwt-font-heading);
+		font-size: 1.2rem;
+		color: var(--jwt-text);
+		margin-bottom: 1rem;
+	}
 }
 
 .woocommerce-order-received table.shop_table {
-	border-radius: var(--jwt-radius-sm);
+	width: 100%;
+	border: 1px solid var(--jwt-line);
+	border-radius: var(--jwt-radius);
 	overflow: hidden;
+	background: var(--jwt-surface);
+	color: var(--jwt-text);
 
-	th,
-	td {
-		padding: 14px 16px;
+	th, td {
+		padding: 0.9rem 1rem;
+		border-color: var(--jwt-line);
+		color: var(--jwt-text);
 	}
+
+	tfoot tr:last-child { font-size: 1.05rem; font-weight: 800; }
+	a { color: var(--jwt-accent-light); }
 }
 
 // Hide any leftover company/billing block below the order table.

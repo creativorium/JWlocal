@@ -21,7 +21,12 @@ class JWT_Checkout {
 
 		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'discord_field' ), 20 );
 		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'manual_transfer_cta' ), 30 );
+		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'payment_notice' ), 40 );
 		add_action( 'woocommerce_review_order_before_submit', array( __CLASS__, 'terms_checkbox' ), 9 );
+		add_action( 'woocommerce_review_order_after_submit', array( __CLASS__, 'after_submit_extras' ), 10 );
+
+		// Header (eyebrow + title + trust badges) above the form.
+		add_action( 'woocommerce_before_checkout_form', array( __CLASS__, 'checkout_header' ), 1 );
 
 		add_action( 'woocommerce_checkout_create_order', array( __CLASS__, 'save_discord' ) );
 		add_action( 'woocommerce_checkout_process', array( __CLASS__, 'validate_checkout' ), 99999 );
@@ -42,7 +47,6 @@ class JWT_Checkout {
 		add_action( 'woocommerce_checkout_after_order_review', array( __CLASS__, 'grid_close' ), 999 );
 
 		add_filter( 'gettext', array( __CLASS__, 'subtotal_to_total' ), 9999, 3 );
-		add_action( 'woocommerce_before_checkout_form', array( __CLASS__, 'payment_notice' ), 5 );
 
 		// Give Duitku VA/QR payers time to finish (24h before auto-cancel).
 		add_filter( 'woocommerce_cancel_unpaid_orders_interval', array( __CLASS__, 'unpaid_cancel_interval' ) );
@@ -173,8 +177,70 @@ class JWT_Checkout {
 		?>
 		<div id="alt-transfer-box">
 			<p class="alt-text"><?php esc_html_e( 'Ingin menggunakan pembayaran menggunakan bank transfer secara manual?', 'jwtrading' ); ?></p>
-			<a href="<?php echo esc_url( $url ); ?>" class="alt-btn" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Gunakan Transfer Manual →', 'jwtrading' ); ?></a>
+			<a href="<?php echo esc_url( $url ); ?>" class="alt-btn jwt-btn jwt-btn--ghost" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Gunakan Transfer Manual →', 'jwtrading' ); ?></a>
 		</div>
+		<?php
+	}
+
+	/** Checkout header: eyebrow + title + trust badges (matches the redesign). */
+	public static function checkout_header() {
+		if ( is_admin() || self::is_checkout_ajax() ) {
+			return;
+		}
+
+		$eyebrow = apply_filters( 'jwt/checkout_eyebrow', __( 'Langkah Terakhir', 'jwtrading' ) );
+		$title   = apply_filters( 'jwt/checkout_title', __( 'Selesaikan Pembayaran', 'jwtrading' ) );
+		$badges  = apply_filters(
+			'jwt/checkout_trust_badges',
+			array(
+				__( 'Akses langsung setelah konfirmasi', 'jwtrading' ),
+				__( 'Satu kali bayar — akses seumur hidup', 'jwtrading' ),
+				__( '5/5 rating di Trustpilot', 'jwtrading' ),
+				__( 'Pembayaran terenkripsi & aman', 'jwtrading' ),
+			)
+		);
+		?>
+		<header class="jwt-checkout-head">
+			<?php if ( $eyebrow ) : ?><span class="jwt-checkout-head__eyebrow"><?php echo esc_html( $eyebrow ); ?></span><?php endif; ?>
+			<?php if ( $title ) : ?><h1 class="jwt-checkout-head__title"><?php echo esc_html( $title ); ?></h1><?php endif; ?>
+			<?php if ( ! empty( $badges ) ) : ?>
+				<ul class="jwt-checkout-trust">
+					<?php foreach ( $badges as $i => $badge ) : ?>
+						<li><span class="jwt-checkout-trust__ico" aria-hidden="true"><?php echo 3 === (int) $i ? '🔒' : '✓'; ?></span><?php echo esc_html( $badge ); ?></li>
+					<?php endforeach; ?>
+				</ul>
+			<?php endif; ?>
+		</header>
+		<?php
+	}
+
+	/** Under the place-order button: secure note + "what happens next" checklist. */
+	public static function after_submit_extras() {
+		if ( self::is_checkout_ajax() ) {
+			return;
+		}
+
+		$steps = apply_filters(
+			'jwt/checkout_after_steps',
+			array(
+				__( 'Selesaikan pembayaran', 'jwtrading' ),
+				__( 'Akses bootcamp langsung dikirim ke email', 'jwtrading' ),
+				__( 'Akses Discord private otomatis', 'jwtrading' ),
+				__( 'JW Trading Journal dikirim via email', 'jwtrading' ),
+			)
+		);
+		?>
+		<p class="jwt-checkout-secure">🔒 <?php esc_html_e( 'Transaksi aman & terenkripsi', 'jwtrading' ); ?></p>
+		<?php if ( ! empty( $steps ) ) : ?>
+			<div class="jwt-checkout-next">
+				<span class="jwt-checkout-next__label"><?php esc_html_e( 'Yang Terjadi Setelah Checkout', 'jwtrading' ); ?></span>
+				<ul>
+					<?php foreach ( $steps as $step ) : ?>
+						<li><?php echo esc_html( $step ); ?></li>
+					<?php endforeach; ?>
+				</ul>
+			</div>
+		<?php endif; ?>
 		<?php
 	}
 
@@ -334,14 +400,21 @@ class JWT_Checkout {
 		}
 	}
 
-	/** Single-item checkout: the "Subtotal" column reads better as "Total". */
+	/** Localize a few checkout strings to match the redesign copy. */
 	public static function subtotal_to_total( $translated, $text, $domain ) {
 		if ( ! is_checkout() || is_wc_endpoint_url() ) {
 			return $translated;
 		}
 
-		if ( 'woocommerce' === $domain && 'Subtotal' === $text ) {
-			return __( 'Total', 'jwtrading' );
+		if ( 'woocommerce' === $domain ) {
+			switch ( $text ) {
+				case 'Subtotal':
+					return __( 'Total', 'jwtrading' );
+				case 'Your order':
+					return __( 'Pesanan Kamu', 'jwtrading' );
+				case 'Billing details':
+					return __( 'Detail Billing', 'jwtrading' );
+			}
 		}
 
 		return $translated;
