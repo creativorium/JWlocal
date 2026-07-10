@@ -86,6 +86,20 @@
 	@media (min-width: 992px) {
 		grid-template-columns: 1.1fr 0.9fr;
 	}
+
+	// WooCommerce/Kadence float #customer_details (53%) and #order_review (50%)
+	// into their own two-column layout — inside OUR grid cells that collapses the
+	// form + summary. Force them full-width of the cell. (!important beats the
+	// core `.woocommerce-checkout form #order_review_heading` id+element rule.)
+	#customer_details,
+	#order_review,
+	#order_review_heading {
+		width: 100% !important;
+		float: none !important;
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+		clear: none !important;
+	}
 }
 
 // Left = customer details card; Right = order/summary card.

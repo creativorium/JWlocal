@@ -197,8 +197,8 @@ class JWT_Checkout {
 			return;
 		}
 
-		$eyebrow = apply_filters( 'jwt/checkout_eyebrow', __( 'Langkah Terakhir', 'jwtrading' ) );
-		$title   = apply_filters( 'jwt/checkout_title', __( 'Selesaikan Pembayaran', 'jwtrading' ) );
+		$eyebrow = apply_filters( 'jwt/checkout_eyebrow', '' );
+		$title   = apply_filters( 'jwt/checkout_title', __( 'Checkout', 'jwtrading' ) );
 		$badges  = apply_filters(
 			'jwt/checkout_trust_badges',
 			array(
