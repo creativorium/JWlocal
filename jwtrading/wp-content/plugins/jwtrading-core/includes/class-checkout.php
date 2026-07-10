@@ -18,6 +18,7 @@ class JWT_Checkout {
 	public static function init() {
 		add_filter( 'woocommerce_checkout_fields', array( __CLASS__, 'slim_fields' ), 99999 );
 		add_filter( 'woocommerce_default_address_fields', array( __CLASS__, 'strip_address_fields' ), 99999 );
+		add_filter( 'woocommerce_enable_order_notes_field', array( __CLASS__, 'disable_order_notes' ) );
 
 		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'discord_field' ), 20 );
 		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'manual_transfer_cta' ), 30 );
@@ -133,7 +134,14 @@ class JWT_Checkout {
 
 		unset( $fields['shipping'] );
 
+		unset( $fields['order'] );
+
 		return $fields;
+	}
+
+	/** Hide the "Additional information" / order-notes block on virtual sales. */
+	public static function disable_order_notes( $enabled ) {
+		return self::virtual_mode() ? false : $enabled;
 	}
 
 	/** Remove address UI entirely for virtual carts. */
