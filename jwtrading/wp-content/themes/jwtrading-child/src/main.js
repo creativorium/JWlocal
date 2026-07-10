@@ -367,6 +367,28 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
   });
 })();
 
+// --- Contact form: compose a WhatsApp message on submit -----------------------
+// No backend — the form gathers name/email/message and opens wa.me pre-filled.
+(() => {
+  document.querySelectorAll('[data-jwt-contact]').forEach((form) => {
+    const wa = form.getAttribute('data-wa');
+    if (!wa) return;
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const val = (n) => (form.querySelector(`[name="${n}"]`)?.value || '').trim();
+      const nama = val('nama');
+      const email = val('email');
+      const pesan = val('pesan');
+      const lines = [
+        `Halo JW Trading Academy, saya ${nama || '(tanpa nama)'}.`,
+        pesan,
+        email ? `Email: ${email}` : '',
+      ].filter(Boolean);
+      window.open(`https://wa.me/${wa}?text=${encodeURIComponent(lines.join('\n\n'))}`, '_blank', 'noopener');
+    });
+  });
+})();
+
 // --- TEMPORARY preview guard: block navigation to unpublished pages -----------
 // Homepage-only preview: any link pointing at Bootcamp, Discord, or the
 // Testimonials page should do NOTHING when clicked — the buttons/links and the

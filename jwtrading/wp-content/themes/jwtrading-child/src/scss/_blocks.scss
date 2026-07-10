@@ -1819,3 +1819,196 @@
 	color: var(--jwt-muted);
 	font-size: 0.8rem;
 }
+
+// ----- Contact -----------------------------------------------------------------
+.jwt-contact {
+	padding-block: clamp(2rem, 5vw, 3.5rem);
+}
+
+.jwt-contact__grid {
+	display: grid;
+	grid-template-columns: 0.85fr 1.15fr;
+	gap: clamp(1.25rem, 3vw, 2.5rem);
+	align-items: start;
+	margin-top: clamp(2rem, 5vw, 3.5rem);
+
+	@media (max-width: 860px) {
+		grid-template-columns: 1fr;
+	}
+}
+
+.jwt-contact__info {
+	display: flex;
+	flex-direction: column;
+	gap: clamp(0.85rem, 2vw, 1.15rem);
+}
+
+.jwt-contact__card {
+	display: flex;
+	align-items: flex-start;
+	gap: 1rem;
+	padding: clamp(1.1rem, 2.5vw, 1.5rem);
+	border-radius: var(--jwt-radius);
+	border: 1px solid var(--jwt-line);
+	background: var(--jwt-surface);
+	text-decoration: none;
+	transition: border-color 0.2s, background 0.2s;
+
+	&:hover {
+		border-color: var(--jwt-line-strong);
+	}
+
+	div {
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+		min-width: 0;
+	}
+}
+
+// WhatsApp card — green accent frame.
+.jwt-contact__card--wa {
+	border-color: rgb(62 207 142 / 0.35);
+	background: linear-gradient(150deg, rgb(62 207 142 / 0.1), var(--jwt-surface) 60%);
+
+	&:hover {
+		border-color: rgb(62 207 142 / 0.55);
+	}
+}
+
+.jwt-contact__icon {
+	flex: 0 0 auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	border-radius: 12px;
+	background: rgb(124 77 255 / 0.16);
+	color: var(--jwt-accent-light);
+
+	svg { width: 22px; height: 22px; }
+}
+
+.jwt-contact__icon--wa {
+	background: rgb(62 207 142 / 0.16);
+	color: #3ecf8e;
+
+	svg { width: 24px; height: 24px; }
+}
+
+.jwt-contact__label {
+	font-family: var(--jwt-font-mono);
+	font-size: 0.65rem;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--jwt-muted);
+}
+
+.jwt-contact__value {
+	color: var(--jwt-text);
+	font-size: 1.0625rem;
+	word-break: break-word;
+}
+
+.jwt-contact__sub {
+	color: var(--jwt-muted);
+	font-size: 0.85rem;
+	line-height: 1.5;
+}
+
+.jwt-contact__link--wa {
+	color: #3ecf8e;
+	font-weight: 600;
+	font-size: 0.9rem;
+	margin-top: 0.15rem;
+}
+
+.jwt-contact__follow {
+	display: flex;
+	flex-direction: column;
+	gap: 0.85rem;
+	margin-top: 0.5rem;
+}
+
+// Form card
+.jwt-contact__formwrap {
+	padding: clamp(1.5rem, 4vw, 2.5rem);
+	border-radius: var(--jwt-radius);
+	border: 1px solid var(--jwt-line);
+	background: var(--jwt-surface-2);
+}
+
+.jwt-contact__form-title {
+	font-family: var(--jwt-font-heading);
+	font-size: clamp(1.3rem, 2.6vw, 1.6rem);
+	color: var(--jwt-text);
+	margin: 0;
+}
+
+.jwt-contact .jwt-contact__form-note {
+	margin: 0.6rem 0 1.5rem;
+	color: var(--jwt-muted);
+	line-height: 1.6;
+}
+
+.jwt-contact__fields {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1rem;
+
+	@media (max-width: 520px) {
+		grid-template-columns: 1fr;
+	}
+}
+
+.jwt-contact__field {
+	display: flex;
+	flex-direction: column;
+	gap: 0.45rem;
+	margin-bottom: 1rem;
+
+	> span {
+		font-size: 0.85rem;
+		color: var(--jwt-text);
+	}
+
+	input,
+	textarea {
+		width: 100%;
+		font-family: var(--jwt-font-body);
+		font-size: 0.95rem;
+		color: var(--jwt-text);
+		background: var(--jwt-surface);
+		border: 1px solid var(--jwt-line-strong);
+		border-radius: var(--jwt-radius-sm);
+		padding: 0.75rem 0.9rem;
+		transition: border-color 0.2s, box-shadow 0.2s;
+
+		&::placeholder { color: var(--jwt-muted); }
+
+		&:focus {
+			outline: none;
+			border-color: var(--jwt-accent);
+			box-shadow: 0 0 0 3px rgb(124 77 255 / 0.18);
+		}
+	}
+
+	textarea { resize: vertical; min-height: 120px; }
+}
+
+.jwt-contact__fields .jwt-contact__field { margin-bottom: 0; }
+
+.jwt-contact__submit {
+	width: 100%;
+	margin-top: 0.5rem;
+}
+
+.jwt-contact .jwt-contact__form-footnote {
+	margin: 1.1rem 0 0;
+	text-align: center;
+	font-size: 0.85rem;
+	color: var(--jwt-muted);
+
+	a { color: var(--jwt-accent-light); font-weight: 600; }
+}

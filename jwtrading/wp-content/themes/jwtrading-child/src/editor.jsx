@@ -2075,3 +2075,35 @@ registerBlockType('jwt/pricing-card', {
   },
   save: saveNull,
 });
+
+// --- Contact ------------------------------------------------------------------
+
+registerBlockType('jwt/contact', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps();
+    const F = (label, key) => (
+      <TextControl label={__(label, 'jwtrading')} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />
+    );
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Header', 'jwtrading')}>
+            {F('Eyebrow', 'eyebrow')}{F('Judul', 'title')}{F('Lead', 'lead')}
+          </PanelBody>
+          <PanelBody title={__('Info kontak', 'jwtrading')}>
+            {F('WhatsApp nomor', 'waNumber')}{F('WhatsApp tampilan', 'waDisplay')}
+            {F('Email', 'email')}{F('Catatan email', 'emailNote')}
+            {F('Lokasi', 'location')}{F('Catatan lokasi', 'locationNote')}
+          </PanelBody>
+          <PanelBody title={__('Form', 'jwtrading')}>
+            {F('Judul form', 'formTitle')}{F('Catatan form', 'formNote')}{F('Footnote form', 'formFootnote')}
+          </PanelBody>
+        </InspectorControls>
+        <div {...blockProps}>
+          <ServerSideRender block="jwt/contact" attributes={attributes} />
+        </div>
+      </>
+    );
+  },
+  save: saveNull,
+});
