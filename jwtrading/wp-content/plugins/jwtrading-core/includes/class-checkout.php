@@ -37,6 +37,7 @@ class JWT_Checkout {
 		add_filter( 'woocommerce_cart_item_quantity', array( __CLASS__, 'lock_cart_qty' ), 9999, 3 );
 		add_filter( 'woocommerce_add_to_cart_redirect', array( __CLASS__, 'redirect_to_checkout' ) );
 		add_action( 'template_redirect', array( __CLASS__, 'block_cart_page' ) );
+		add_action( 'template_redirect', array( __CLASS__, 'readd_to_checkout' ), 5 );
 		add_filter( 'woocommerce_add_to_cart_validation', array( __CLASS__, 'prevent_duplicate_add' ), 20, 3 );
 		add_filter( 'woocommerce_get_notices', array( __CLASS__, 'strip_duplicate_notice' ), 9999, 2 );
 
@@ -332,6 +333,31 @@ class JWT_Checkout {
 			$has_items = function_exists( 'WC' ) && WC()->cart && ! WC()->cart->is_empty();
 			wp_safe_redirect( $has_items ? wc_get_checkout_url() : home_url( '/bootcamp/' ) );
 			exit;
+		}
+	}
+
+	/**
+	 * Hitting an add-to-cart URL for something already in the cart: WooCommerce
+	 * blocks the (sold-individually) re-add and, because the add "failed", never
+	 * applies the add-to-cart redirect filter — so the buyer is left on the same
+	 * page instead of checkout. Send them to checkout ourselves.
+	 */
+	public static function readd_to_checkout() {
+		if ( is_admin() || wp_doing_ajax() || empty( $_GET['add-to-cart'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			return;
+		}
+
+		$pid = absint( wp_unslash( $_GET['add-to-cart'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ! $pid || ! function_exists( 'WC' ) || ! WC()->cart ) {
+			return;
+		}
+
+		foreach ( WC()->cart->get_cart() as $item ) {
+			if ( (int) $item['product_id'] === $pid ) {
+				wc_clear_notices();
+				wp_safe_redirect( wc_get_checkout_url() );
+				exit;
+			}
 		}
 	}
 

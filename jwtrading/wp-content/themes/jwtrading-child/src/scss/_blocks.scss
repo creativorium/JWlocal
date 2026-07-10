@@ -1936,10 +1936,13 @@
 	border-top: 1px solid var(--jwt-line);
 
 	// Labeled pills, left-aligned (footer socials are white icon-circles).
+	// padding-left/margin reset overrides Kadence's global `.single-content ul`.
 	.jwt-social--labeled {
 		flex-wrap: wrap;
 		justify-content: flex-start;
 		gap: 0.6rem;
+		margin: 0;
+		padding-left: 0;
 	}
 
 	.jwt-social a {
@@ -2013,7 +2016,8 @@
 	gap: 1.1rem;
 }
 
-.jwt-contact__field {
+// `.jwt-contact` prefix keeps these above Kadence's global `.single-content input`.
+.jwt-contact .jwt-contact__field {
 	display: flex;
 	flex-direction: column;
 	gap: 0.45rem;
