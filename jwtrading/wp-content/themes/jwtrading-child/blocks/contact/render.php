@@ -62,7 +62,7 @@ $jwt_wrap    = get_block_wrapper_attributes( array( 'class' => 'jwt-contact' ) )
 				<?php endif; ?>
 
 				<?php
-				$jwt_social = jwt_social_links_html();
+				$jwt_social = jwt_social_links_html( true );
 				if ( '' !== $jwt_social ) :
 					?>
 					<div class="jwt-contact__follow">

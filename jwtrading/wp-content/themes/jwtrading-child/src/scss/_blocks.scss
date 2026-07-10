@@ -1830,13 +1830,13 @@
 	grid-template-columns: 1fr 1fr;
 	gap: clamp(1.1rem, 2.5vw, 1.75rem);
 	align-items: stretch;
-	max-width: 940px;
+	max-width: 1020px;
 	margin-inline: auto;
 	margin-top: clamp(2rem, 5vw, 3.5rem);
 
 	@media (max-width: 780px) {
 		grid-template-columns: 1fr;
-		max-width: 520px;
+		max-width: 540px;
 	}
 }
 
@@ -1935,22 +1935,44 @@
 	padding-top: 1.1rem;
 	border-top: 1px solid var(--jwt-line);
 
-	// Match the dark theme (footer socials are white pills — too loud here).
+	// Labeled pills, left-aligned (footer socials are white icon-circles).
+	.jwt-social--labeled {
+		flex-wrap: wrap;
+		justify-content: flex-start;
+		gap: 0.6rem;
+	}
+
 	.jwt-social a {
-		width: 40px;
-		height: 40px;
-		border-radius: 0.85rem;
+		width: auto;
+		height: auto;
+		gap: 0.5rem;
+		padding: 0.5rem 0.85rem;
+		border-radius: 0.8rem;
 		background: var(--jwt-surface);
 		border: 1px solid var(--jwt-line-strong);
 		color: var(--jwt-text);
 		box-shadow: none;
+		font-size: 0.85rem;
+		font-weight: 600;
 
 		&:hover {
 			border-color: var(--jwt-accent);
-			color: var(--jwt-accent-light);
-			transform: translateY(-3px);
+			transform: translateY(-2px);
 		}
 	}
+
+	.jwt-social__ico {
+		display: inline-flex;
+		align-items: center;
+
+		svg { width: 17px; height: 17px; }
+	}
+
+	// Brand-tinted icons (match the reference).
+	[data-social="instagram"] .jwt-social__ico { color: #e1306c; }
+	[data-social="youtube"]   .jwt-social__ico { color: #ff2b2b; }
+	[data-social="discord"]   .jwt-social__ico { color: #7c8bff; }
+	[data-social="tiktok"]    .jwt-social__ico { color: var(--jwt-text); }
 }
 
 // Form card

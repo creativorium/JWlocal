@@ -61,7 +61,7 @@ function jwt_brand_html(): string {
  * The icon is picked from the link's host, so the client manages socials
  * from Appearance → Menus without touching code.
  */
-function jwt_social_links_html(): string {
+function jwt_social_links_html( bool $show_labels = false ): string {
 	$locations = get_nav_menu_locations();
 
 	if ( empty( $locations['jwt-social'] ) ) {
@@ -83,24 +83,30 @@ function jwt_social_links_html(): string {
 
 	$fallback = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>';
 
-	$html = '<ul class="jwt-social">';
+	$html = '<ul class="jwt-social' . ( $show_labels ? ' jwt-social--labeled' : '' ) . '">';
 
 	foreach ( $items as $item ) {
 		$url  = (string) $item->url;
 		$icon = $fallback;
+		$slug = '';
 
 		foreach ( $icons as $key => $svg ) {
 			if ( false !== stripos( $url, $key ) ) {
 				$icon = $svg;
+				$slug = $key;
 				break;
 			}
 		}
 
+		$label = $show_labels ? '<span class="jwt-social__label">' . esc_html( $item->title ) . '</span>' : '';
+
 		$html .= sprintf(
-			'<li><a href="%s" target="_blank" rel="noopener noreferrer" aria-label="%s">%s</a></li>',
+			'<li><a href="%s" target="_blank" rel="noopener noreferrer" aria-label="%s" data-social="%s"><span class="jwt-social__ico">%s</span>%s</a></li>',
 			esc_url( $url ),
 			esc_attr( $item->title ),
-			$icon
+			esc_attr( $slug ),
+			$icon,
+			$label
 		);
 	}
 
