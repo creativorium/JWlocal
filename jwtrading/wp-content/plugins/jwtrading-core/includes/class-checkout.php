@@ -47,6 +47,9 @@ class JWT_Checkout {
 		add_action( 'template_redirect', array( __CLASS__, 'readd_to_checkout' ), 5 );
 		add_filter( 'woocommerce_add_to_cart_validation', array( __CLASS__, 'prevent_duplicate_add' ), 20, 3 );
 		add_filter( 'woocommerce_get_notices', array( __CLASS__, 'strip_duplicate_notice' ), 9999, 2 );
+		// Buy-now lands on checkout — drop the "added to your cart / Continue
+		// shopping" success notice that carries over from the redirect.
+		add_action( 'template_redirect', array( __CLASS__, 'hide_added_to_cart_notice' ), 20 );
 
 		// Two-column layout wrappers.
 		add_action( 'woocommerce_checkout_before_customer_details', array( __CLASS__, 'grid_open' ), 1 );
@@ -530,6 +533,40 @@ class JWT_Checkout {
 		}
 
 		return $notices;
+	}
+
+	/**
+	 * Remove the "… added to your cart / Continue shopping" success notice on the
+	 * checkout page. The buy-now flow always redirects here, so it's just noise;
+	 * every other notice (errors, coupon messages) is preserved.
+	 */
+	public static function hide_added_to_cart_notice() {
+		if ( is_admin() || ! function_exists( 'is_checkout' ) || ! is_checkout() || is_wc_endpoint_url() ) {
+			return;
+		}
+		if ( ! function_exists( 'wc_get_notices' ) || ! function_exists( 'wc_set_notices' ) || ! WC()->session ) {
+			return;
+		}
+
+		$notices = wc_get_notices();
+		if ( empty( $notices['success'] ) ) {
+			return;
+		}
+
+		$notices['success'] = array_values(
+			array_filter(
+				$notices['success'],
+				function ( $notice ) {
+					$msg = is_array( $notice ) ? ( $notice['notice'] ?? '' ) : (string) $notice;
+					// Add-to-cart messages carry the wc-forward button; drop those.
+					return false === stripos( $msg, 'wc-forward' )
+						&& false === stripos( $msg, 'added to your cart' )
+						&& false === stripos( $msg, 'ditambahkan ke keranjang' );
+				}
+			)
+		);
+
+		wc_set_notices( $notices );
 	}
 
 	// --- Two-column layout wrappers (styles live in the child theme) --------
