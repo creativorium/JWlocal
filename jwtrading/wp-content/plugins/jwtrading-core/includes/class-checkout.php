@@ -22,6 +22,7 @@ class JWT_Checkout {
 
 		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'discord_field' ), 20 );
 		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'coupon_field' ), 25 );
+		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'payment_slot' ), 28 );
 		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'manual_transfer_cta' ), 30 );
 		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'payment_notice' ), 40 );
 
@@ -212,6 +213,21 @@ class JWT_Checkout {
 			<div class="jwt-coupon__msg" role="status" aria-live="polite"></div>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Empty "Metode Pembayaran" slot in the left column, above the manual-transfer
+	 * CTA. main.js moves WooCommerce's payment-methods list (rendered inside
+	 * #payment in the right column) into #jwt-payment-list, re-applying after each
+	 * update_checkout AJAX. The place-order button/terms stay in the summary card.
+	 */
+	public static function payment_slot() {
+		if ( ! self::virtual_mode() ) {
+			return;
+		}
+		echo '<div class="jwt-payment"><span class="jwt-payment__label">'
+			. esc_html__( 'Metode Pembayaran', 'jwtrading' )
+			. '</span><div id="jwt-payment-list" class="jwt-payment__list"></div></div>';
 	}
 
 	/** Manual bank-transfer alternative (Google Form). */

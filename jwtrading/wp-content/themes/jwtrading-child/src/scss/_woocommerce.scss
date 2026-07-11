@@ -391,8 +391,6 @@
 		}
 	}
 
-	// Hide the Duitku method descriptions ("Sistem pembayaran menggunakan Duitku").
-	#payment .payment_box { display: none !important; }
 }
 
 // --- Coupon (always-open field under Discord) ----------------------------------
@@ -475,14 +473,30 @@
 	&.is-loading .jwt-coupon__apply { opacity: 0.55; }
 }
 
+// --- "Metode Pembayaran" slot (left column, holds the relocated methods) -------
+.jwt-payment {
+	margin-top: 1.25rem;
+
+	&__label {
+		display: block;
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: var(--jwt-text);
+		margin-bottom: 0.55rem;
+	}
+}
+
 // --- Payment methods (Duitku gateways) as cards --------------------------------
-// Kadence styles the <label> at (1,2,3) and its stylesheet loads AFTER ours, so
-// we replicate its chain (#payment ul.wc_payment_methods li.wc_payment_method)
-// with an extra `.jw-checkout-right` qualifier to win on specificity outright.
-.jw-checkout-right #payment {
+// Two homes: initially inside #payment (right column), then main.js moves the
+// list into #jwt-payment-list (left column). Both selectors are covered.
+// The .jw-checkout-right #payment branch keeps enough specificity to beat
+// Kadence's (1,2,3) label rules; in #jwt-payment-list Kadence's #payment rules
+// don't apply at all, so ours win freely.
+.jw-checkout-right #payment,
+#jwt-payment-list {
 	background: transparent;
 	border: 0;
-	margin-top: 1.25rem;
+	margin-top: 0;
 
 	ul.wc_payment_methods {
 		list-style: none;
@@ -551,16 +565,8 @@
 		}
 	}
 
-	.payment_box {
-		background: transparent;
-		margin: 0;
-		padding: 0 1.1rem 1rem 2.85rem;
-		font-size: 0.82rem;
-		color: var(--jwt-muted);
-
-		&::before { display: none; }
-		p:last-child { margin-bottom: 0; }
-	}
+	// Hide the Duitku method descriptions ("Sistem pembayaran menggunakan Duitku").
+	.payment_box { display: none !important; }
 
 	.place-order {
 		padding: 0;

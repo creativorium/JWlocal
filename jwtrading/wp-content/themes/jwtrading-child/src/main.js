@@ -431,6 +431,27 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
   });
 })();
 
+// --- Checkout: move the payment-methods list into the left column -------------
+// WooCommerce renders the methods inside #payment (right/summary column). We
+// relocate the .wc_payment_methods list into #jwt-payment-list (left column,
+// above the manual-transfer CTA) on load and after every update_checkout AJAX,
+// which re-creates the list back inside #payment.
+(() => {
+  if (!document.getElementById('jwt-payment-list')) return;
+
+  const relocate = () => {
+    const list = document.getElementById('jwt-payment-list');
+    if (!list) return;
+    const fresh = document.querySelector('#payment .wc_payment_methods');
+    if (!fresh) return; // already relocated, nothing new to move
+    list.querySelectorAll('.wc_payment_methods').forEach((n) => n.remove());
+    list.appendChild(fresh);
+  };
+
+  relocate();
+  if (window.jQuery) window.jQuery(document.body).on('updated_checkout', relocate);
+})();
+
 // --- Checkout: disable "Checkout" until the T&C box is ticked -----------------
 // #place_order + the terms checkbox live inside #payment, which update_checkout
 // re-renders — so sync on change (delegated) AND after every updated_checkout.
