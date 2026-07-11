@@ -78,17 +78,8 @@
 	}
 }
 
-// A couple of logos have tall/padded canvases (Funding Pips 300x200, WeMasterTrade
-// 300x159), so the shared 34px height cap renders them much smaller than the wide
-// banner logos. Give these two more height to even out the row.
-.jwt-partner .jwt-partner__logo[alt="Funding Pips"] {
-	max-height: 82px;
-
-	@media (max-width: 640px) {
-		max-height: 60px;
-	}
-}
-
+// WeMasterTrade has a tall/padded canvas (300x159), so the shared 34px height
+// cap renders it smaller than the wide banner logos — give it a bit more height.
 .jwt-partner .jwt-partner__logo[alt="WeMasterTrade"] {
 	max-height: 60px;
 
