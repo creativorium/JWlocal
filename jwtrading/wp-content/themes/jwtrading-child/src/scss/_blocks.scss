@@ -1837,6 +1837,9 @@
 	@media (max-width: 780px) {
 		grid-template-columns: 1fr;
 		max-width: 540px;
+
+		// Lead with the form on mobile; contact cards/socials follow.
+		.jwt-contact__formwrap { order: -1; }
 	}
 }
 
