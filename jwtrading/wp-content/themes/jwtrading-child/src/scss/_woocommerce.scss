@@ -290,12 +290,15 @@ form.checkout_coupon {
 }
 
 // --- Payment methods (Duitku gateways) as cards --------------------------------
-#payment {
+// Kadence styles the <label> at (1,2,3) and its stylesheet loads AFTER ours, so
+// we replicate its chain (#payment ul.wc_payment_methods li.wc_payment_method)
+// with an extra `.jw-checkout-right` qualifier to win on specificity outright.
+.jw-checkout-right #payment {
 	background: transparent;
 	border: 0;
 	margin-top: 1.25rem;
 
-	.wc_payment_methods {
+	ul.wc_payment_methods {
 		list-style: none;
 		margin: 0 0 1.25rem;
 		padding: 0;
@@ -305,57 +308,71 @@ form.checkout_coupon {
 		gap: 0.75rem;
 	}
 
-	li.wc_payment_method {
+	ul.wc_payment_methods li.wc_payment_method {
 		list-style: none;
 		border: 1px solid var(--jwt-line);
 		background: var(--jwt-bg);
 		border-radius: var(--jwt-radius-sm);
-		padding: 0;
+		overflow: hidden;
 		transition: border-color 0.2s, background 0.2s;
 
-		// Kadence paints a 5px left border on the label (grey, purple when
-		// checked). Kill it — the li card border is our only frame.
+		// The native radio stays hidden (Kadence clips it); the dot is label::before.
 		> label {
 			display: flex;
 			align-items: center;
-			gap: 0.65rem;
-			padding: 0.95rem 1.1rem;
+			gap: 0.55rem;
 			margin: 0;
-			cursor: pointer;
+			padding: 0.95rem 1.1rem;
+			background: transparent;
+			border-left: 0;
 			color: var(--jwt-text);
+			font-family: var(--jwt-font-body);
 			font-weight: 600;
 			line-height: 1.4;
-			border-left: 0 !important;
+			cursor: pointer;
+
+			&::before {
+				content: "";
+				flex: 0 0 auto;
+				width: 16px;
+				height: 16px;
+				margin: 0;
+				border: 2px solid var(--jwt-line-strong);
+				border-radius: 50%;
+				background: transparent;
+			}
 
 			img {
-				margin-left: auto;
+				margin: 0 0 0 auto;
 				max-height: 22px;
 				width: auto;
 			}
 		}
 
-		input[type="radio"] {
-			accent-color: var(--jwt-accent);
-			margin: 0 !important;
+		> input[type="radio"]:first-child:checked + label {
+			background: transparent;
+			border-left: 0;
+
+			&::before {
+				border-color: var(--jwt-accent);
+				background: radial-gradient(var(--jwt-accent) 45%, transparent 50%);
+			}
 		}
 
 		&:has(input:checked) {
 			border-color: var(--jwt-accent);
 			background: color-mix(in srgb, var(--jwt-accent) 8%, var(--jwt-bg));
-
-			> label { border-left: 0 !important; }
 		}
 	}
 
 	.payment_box {
-		background: transparent !important;
-		margin: 0 !important;
-		padding: 0 1.1rem 1rem 2.75rem;
+		background: transparent;
+		margin: 0;
+		padding: 0 1.1rem 1rem 2.85rem;
 		font-size: 0.82rem;
 		color: var(--jwt-muted);
 
-		&::before { display: none !important; }
-
+		&::before { display: none; }
 		p:last-child { margin-bottom: 0; }
 	}
 
