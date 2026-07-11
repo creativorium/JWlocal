@@ -1408,6 +1408,11 @@
 
 	p { margin: 0 0 0.85rem; }
 	p:last-child { margin-bottom: 0; }
+
+	// Keep the body copy left-aligned on mobile even though the block centers.
+	@media (max-width: 820px) {
+		text-align: left;
+	}
 }
 
 .jwt-community__btn {
@@ -1420,10 +1425,6 @@
 	color: var(--jwt-accent-warm); // orange
 	margin-bottom: 1.125rem;
 	margin-left: 20px;
-
-	@media (max-width: 820px) {
-		margin-left: 0;
-	}
 }
 
 .jwt-community__logo {
