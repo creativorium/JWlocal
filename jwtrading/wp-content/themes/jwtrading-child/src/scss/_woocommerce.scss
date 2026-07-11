@@ -25,7 +25,7 @@
 // --- Checkout header (eyebrow + title + trust badges) --------------------------
 .jwt-checkout-head {
 	text-align: center;
-	max-width: 900px;
+	max-width: 1000px;
 	margin: 0 auto clamp(1.5rem, 4vw, 2.5rem);
 
 	&__eyebrow {
@@ -313,6 +313,8 @@ form.checkout_coupon {
 		padding: 0;
 		transition: border-color 0.2s, background 0.2s;
 
+		// Kadence paints a 5px left border on the label (grey, purple when
+		// checked). Kill it — the li card border is our only frame.
 		> label {
 			display: flex;
 			align-items: center;
@@ -322,36 +324,59 @@ form.checkout_coupon {
 			cursor: pointer;
 			color: var(--jwt-text);
 			font-weight: 600;
+			line-height: 1.4;
+			border-left: 0 !important;
 
 			img {
 				margin-left: auto;
-				max-height: 24px;
+				max-height: 22px;
 				width: auto;
 			}
 		}
 
-		input[type="radio"] { accent-color: var(--jwt-accent); }
+		input[type="radio"] {
+			accent-color: var(--jwt-accent);
+			margin: 0 !important;
+		}
 
 		&:has(input:checked) {
 			border-color: var(--jwt-accent);
 			background: color-mix(in srgb, var(--jwt-accent) 8%, var(--jwt-bg));
+
+			> label { border-left: 0 !important; }
 		}
 	}
 
 	.payment_box {
-		background: transparent;
-		margin: 0;
-		padding: 0 1.1rem 1rem;
-		font-size: 0.85rem;
+		background: transparent !important;
+		margin: 0 !important;
+		padding: 0 1.1rem 1rem 2.75rem;
+		font-size: 0.82rem;
 		color: var(--jwt-muted);
 
-		&::before { display: none; }
+		&::before { display: none !important; }
+
+		p:last-child { margin-bottom: 0; }
 	}
 
 	.place-order {
 		padding: 0;
 		border: 0;
 	}
+}
+
+// --- Privacy-policy note (above terms) -----------------------------------------
+.woocommerce-privacy-policy-text {
+	margin-bottom: 0.9rem;
+
+	p {
+		font-size: 0.78rem;
+		line-height: 1.5;
+		color: var(--jwt-muted);
+		margin: 0;
+	}
+
+	a { color: var(--jwt-accent-light); }
 }
 
 // --- Terms checkbox ------------------------------------------------------------
