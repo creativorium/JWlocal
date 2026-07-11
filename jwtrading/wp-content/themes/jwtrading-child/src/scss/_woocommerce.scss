@@ -24,9 +24,8 @@
 
 // --- Checkout header (eyebrow + title + trust badges) --------------------------
 .jwt-checkout-head {
-	text-align: center;
-	max-width: 1000px;
-	margin: 0 auto clamp(1.5rem, 4vw, 2.5rem);
+	text-align: left;
+	margin: 0 0 clamp(1.5rem, 4vw, 2.5rem);
 
 	&__eyebrow {
 		display: inline-block;
@@ -56,7 +55,7 @@
 	padding: 0.75rem 1rem;
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: center;
+	justify-content: flex-start;
 	gap: 0.5rem 1.5rem;
 	border: 1px solid color-mix(in srgb, #3ecf8e 30%, var(--jwt-line));
 	background: color-mix(in srgb, #3ecf8e 7%, transparent);
@@ -547,6 +546,17 @@
 				max-height: 22px;
 				width: auto;
 			}
+		}
+
+		// Hide the native radio (Kadence only clips it inside #payment; our list
+		// lives in the left-column slot). The dot is drawn by label::before.
+		> input[type="radio"] {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			margin: 0;
+			opacity: 0;
+			pointer-events: none;
 		}
 
 		> input[type="radio"]:first-child:checked + label {
