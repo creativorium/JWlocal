@@ -156,7 +156,10 @@ html {
 .jwt-eyebrow + h2,
 .jwt-eyebrow + h3,
 .jwt-eyebrow + .jwt-title {
-	margin-top: 0;
+	// !important beats Kadence's `.single-content h2` top-margin (same specificity,
+	// loaded later) — otherwise the eyebrow→heading gap stays large (e.g. bootcamp
+	// "Apa Itu JW Bootcamp?").
+	margin-top: 0 !important;
 }
 
 .jwt-eyebrow__dot {
