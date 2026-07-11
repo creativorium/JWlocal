@@ -37,8 +37,8 @@
 		margin-bottom: 0.5rem;
 	}
 
-	// Match the site hero heading. !important beats Kadence's .single-content h1
-	// top-margin (the eyebrow's 0.5rem is the only gap we want above the title).
+	// Match the site hero heading. Only the top margin needs forcing off (Kadence's
+	// .single-content h1 adds one); bottom stays 0 as before.
 	&__title {
 		font-family: var(--jwt-font-heading);
 		font-size: var(--jwt-size-2xl);
@@ -46,7 +46,8 @@
 		letter-spacing: -0.02em;
 		line-height: 1.1;
 		color: var(--jwt-text);
-		margin: 0 !important;
+		margin-bottom: 0;
+		margin-top: 0 !important;
 	}
 }
 
