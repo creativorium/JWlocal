@@ -381,15 +381,17 @@ body.jwt-nav-open .jwt-nav-backdrop {
 }
 
 // --- Minimal landing header (logo + one CTA, no nav) -------------------------
-.jwt-header--minimal {
-	// Sticky over the opt-in hero — give it a near-solid glass background (no
-	// mobile drawer here, so backdrop-filter is safe) so content reads cleanly
-	// behind it as the page scrolls.
-	background: color-mix(in srgb, var(--jwt-bg) 95%, transparent);
-	-webkit-backdrop-filter: blur(14px);
-	backdrop-filter: blur(14px);
+// Sticky over the opt-in hero — a near-solid black bar. Both selectors (incl.
+// .is-scrolled) so the scrolled state doesn't override it back to transparent.
+.jwt-header--minimal,
+.jwt-header--minimal.is-scrolled {
+	background: rgba(0, 0, 0, 0.9);
+	-webkit-backdrop-filter: blur(10px);
+	backdrop-filter: blur(10px);
 	border-bottom: 1px solid var(--jwt-line);
+}
 
+.jwt-header--minimal {
 	.jwt-header__bar {
 		grid-template-columns: 1fr auto;
 	}
