@@ -50,6 +50,12 @@ class JWT_Checkout {
 
 		add_filter( 'gettext', array( __CLASS__, 'subtotal_to_total' ), 9999, 3 );
 
+		// Summary redesign: product thumbnail + subtitle, "Nilai Normal" struck
+		// regular-price row, hidden zero-fee row, and a "Checkout →" button.
+		add_filter( 'woocommerce_cart_item_name', array( __CLASS__, 'review_item_name' ), 10, 3 );
+		add_action( 'woocommerce_review_order_before_order_total', array( __CLASS__, 'summary_rows' ) );
+		add_filter( 'woocommerce_order_button_text', array( __CLASS__, 'order_button_text' ) );
+
 		// Give Duitku VA/QR payers time to finish (24h before auto-cancel).
 		add_filter( 'woocommerce_cancel_unpaid_orders_interval', array( __CLASS__, 'unpaid_cancel_interval' ) );
 
@@ -233,6 +239,76 @@ class JWT_Checkout {
 		<?php
 	}
 
+	/**
+	 * Order-review product cell: thumbnail + name + "Akses Seumur Hidup".
+	 * Not gated on is_checkout() so it survives the update_order_review AJAX
+	 * (which re-renders this table with is_checkout() === false).
+	 * cart_item_name is effectively checkout-only here — cart is blocked and
+	 * emails use woocommerce_order_item_name.
+	 */
+	public static function review_item_name( $name, $cart_item, $cart_item_key ) {
+		if ( is_admin() || empty( $cart_item['data'] ) || ! is_a( $cart_item['data'], 'WC_Product' ) ) {
+			return $name;
+		}
+
+		$product = $cart_item['data'];
+		$thumb   = $product->get_image( 'woocommerce_gallery_thumbnail', array( 'class' => 'jwt-review__thumb', 'loading' => 'lazy' ) );
+		$sub     = apply_filters( 'jwt/review_item_subtitle', __( 'Akses Seumur Hidup', 'jwtrading' ), $product );
+
+		return '<span class="jwt-review">'
+			. '<span class="jwt-review__media">' . $thumb . '</span>'
+			. '<span class="jwt-review__text"><span class="jwt-review__name">' . $name . '</span>'
+			. ( $sub ? '<span class="jwt-review__sub">' . esc_html( $sub ) . '</span>' : '' )
+			. '</span></span>';
+	}
+
+	/**
+	 * Extra summary rows before the Total: a struck "Nilai Normal" (sum of
+	 * regular prices, shown only when it beats the subtotal) and a style that
+	 * hides zero-value fee rows (Duitku adds a Rp0 "Surcharge").
+	 */
+	public static function summary_rows() {
+		if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
+			return;
+		}
+
+		$regular = 0.0;
+		foreach ( WC()->cart->get_cart() as $item ) {
+			if ( empty( $item['data'] ) || ! is_a( $item['data'], 'WC_Product' ) ) {
+				continue;
+			}
+			$reg      = (float) $item['data']->get_regular_price();
+			$regular += ( $reg > 0 ? $reg : (float) $item['data']->get_price() ) * (int) $item['quantity'];
+		}
+
+		$subtotal = (float) WC()->cart->get_subtotal();
+
+		if ( $regular > $subtotal + 0.01 ) {
+			echo '<tr class="jwt-nilai-normal"><th>' . esc_html__( 'Nilai Normal', 'jwtrading' )
+				. '</th><td><del>' . wp_kses_post( wc_price( $regular ) ) . '</del></td></tr>';
+		}
+
+		// Hide the row only when every fee is zero (keep real fees visible).
+		$fees = WC()->cart->get_fees();
+		if ( $fees ) {
+			$all_zero = true;
+			foreach ( $fees as $fee ) {
+				if ( abs( (float) $fee->total ) > 0.001 ) {
+					$all_zero = false;
+					break;
+				}
+			}
+			if ( $all_zero ) {
+				echo '<style>.woocommerce-checkout-review-order-table tr.fee{display:none}</style>';
+			}
+		}
+	}
+
+	/** Place-order button reads "Checkout →" to match the design. */
+	public static function order_button_text( $text ) {
+		return __( 'Checkout →', 'jwtrading' );
+	}
+
 	/** Required terms checkbox with link (was hardcoded to the old dev URL). */
 	public static function terms_checkbox() {
 		if ( ! self::virtual_mode() ) {
@@ -246,7 +322,7 @@ class JWT_Checkout {
 			array(
 				'type'     => 'checkbox',
 				'class'    => array( 'form-row-wide' ),
-				'label'    => 'Setuju dengan syarat dan ketentuan, lihat <a href="' . esc_url( $tc_url ) . '" target="_blank" rel="noopener">Syarat &amp; Ketentuan</a>',
+				'label'    => 'Saya setuju dengan <a href="' . esc_url( $tc_url ) . '" target="_blank" rel="noopener">Syarat &amp; Ketentuan</a> JW Trading Academy',
 				'required' => true,
 			),
 			WC()->checkout()->get_value( 'jw_accept_terms' )
@@ -422,8 +498,6 @@ class JWT_Checkout {
 
 		if ( 'woocommerce' === $domain ) {
 			switch ( $text ) {
-				case 'Subtotal':
-					return __( 'Total', 'jwtrading' );
 				case 'Your order':
 					return __( 'Pesanan Kamu', 'jwtrading' );
 				case 'Billing details':

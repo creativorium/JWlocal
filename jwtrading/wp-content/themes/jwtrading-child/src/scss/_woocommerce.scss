@@ -229,21 +229,82 @@
 
 	.cart_item td {
 		padding-top: 0;
-		padding-bottom: 1rem;
+		padding-bottom: 1.1rem;
 		border-bottom: 1px solid var(--jwt-line);
 		color: var(--jwt-text);
+		vertical-align: top;
 	}
 
 	.product-name {
 		color: var(--jwt-text);
 		font-weight: 600;
+
+		// Hide the default "× 1" strong; quantity shown in the subtitle instead.
+		.product-quantity { display: none; }
 	}
 
 	.product-total {
 		text-align: right;
 		color: var(--jwt-text);
-		font-weight: 600;
+		font-weight: 700;
 		white-space: nowrap;
+	}
+
+	// Redesigned product cell: thumbnail + name + "Akses Seumur Hidup".
+	.jwt-review {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+
+		&__media {
+			flex: 0 0 auto;
+			width: 46px;
+			height: 46px;
+			border-radius: 10px;
+			overflow: hidden;
+			background: var(--jwt-bg);
+			border: 1px solid var(--jwt-line);
+		}
+
+		&__thumb {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+		}
+
+		&__text {
+			display: flex;
+			flex-direction: column;
+			gap: 0.15rem;
+			min-width: 0;
+		}
+
+		&__name {
+			color: var(--jwt-text);
+			font-weight: 600;
+			line-height: 1.3;
+		}
+
+		&__sub {
+			font-size: 0.78rem;
+			color: var(--jwt-muted);
+			font-weight: 500;
+		}
+	}
+
+	// "Nilai Normal" struck regular-price row.
+	.jwt-nilai-normal {
+		th { color: var(--jwt-muted); font-weight: 500; }
+
+		td {
+			text-align: right;
+
+			del {
+				color: var(--jwt-muted);
+				text-decoration-color: var(--jwt-accent);
+			}
+		}
 	}
 
 	tfoot {
