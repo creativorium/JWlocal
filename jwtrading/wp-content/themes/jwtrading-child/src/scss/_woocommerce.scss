@@ -96,9 +96,15 @@
 	#order_review_heading {
 		width: 100% !important;
 		float: none !important;
+		clear: none !important;
+	}
+
+	// Zero WooCommerce's float padding on these two only — #order_review keeps
+	// its own card padding (below), otherwise the summary sits edge-to-edge.
+	#customer_details,
+	#order_review_heading {
 		padding-left: 0 !important;
 		padding-right: 0 !important;
-		clear: none !important;
 	}
 }
 
@@ -297,13 +303,15 @@
 	.jwt-nilai-normal {
 		th { color: var(--jwt-muted); font-weight: 500; }
 
-		td {
-			text-align: right;
+		td { text-align: right; }
 
-			del {
-				color: var(--jwt-muted);
-				text-decoration-color: var(--jwt-accent);
-			}
+		del,
+		del .amount,
+		del .woocommerce-Price-amount {
+			color: var(--jwt-muted);
+			text-decoration: line-through;
+			text-decoration-color: var(--jwt-accent);
+			-webkit-text-decoration-color: var(--jwt-accent);
 		}
 	}
 
@@ -468,6 +476,7 @@ form.checkout_coupon {
 	margin-bottom: 0.9rem;
 
 	p {
+		font-family: var(--jwt-font-body);
 		font-size: 0.78rem;
 		line-height: 1.5;
 		color: var(--jwt-muted);
@@ -487,6 +496,7 @@ form.checkout_coupon {
 		display: block;
 		position: relative;
 		padding-left: 1.7rem;
+		font-family: var(--jwt-font-body);
 		font-weight: 500;
 		font-size: 0.85rem;
 		color: var(--jwt-muted);
@@ -507,12 +517,53 @@ form.checkout_coupon {
 	.optional { display: none; }
 }
 
-// --- Secure note ---------------------------------------------------------------
+// --- Secure note + "what happens next" -----------------------------------------
 .jwt-checkout-secure {
 	margin: 0.9rem 0 0;
 	text-align: center;
 	font-size: 0.8rem;
 	color: var(--jwt-muted);
+}
+
+.jwt-checkout-next {
+	margin-top: 1.25rem;
+	padding-top: 1.25rem;
+	border-top: 1px solid var(--jwt-line);
+
+	&__label {
+		display: block;
+		font-family: var(--jwt-font-mono);
+		font-size: 0.68rem;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--jwt-muted);
+		margin-bottom: 0.75rem;
+	}
+
+	ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.55rem;
+	}
+
+	li {
+		position: relative;
+		padding-left: 1.6rem;
+		font-size: 0.88rem;
+		color: var(--jwt-text);
+
+		&::before {
+			content: "✓";
+			position: absolute;
+			left: 0;
+			top: 0;
+			color: #3ecf8e;
+			font-weight: 700;
+		}
+	}
 }
 
 // --- Payment notice + manual-transfer CTA (left column) ------------------------
