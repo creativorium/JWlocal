@@ -223,33 +223,13 @@ class JWT_Checkout {
 		<?php
 	}
 
-	/** Under the place-order button: secure note + "what happens next" checklist. */
+	/** Under the place-order button: secure note. */
 	public static function after_submit_extras() {
 		if ( self::is_checkout_ajax() ) {
 			return;
 		}
-
-		$steps = apply_filters(
-			'jwt/checkout_after_steps',
-			array(
-				__( 'Selesaikan pembayaran', 'jwtrading' ),
-				__( 'Akses bootcamp langsung dikirim ke email', 'jwtrading' ),
-				__( 'Akses Discord private otomatis', 'jwtrading' ),
-				__( 'JW Trading Journal dikirim via email', 'jwtrading' ),
-			)
-		);
 		?>
 		<p class="jwt-checkout-secure">🔒 <?php esc_html_e( 'Transaksi aman & terenkripsi', 'jwtrading' ); ?></p>
-		<?php if ( ! empty( $steps ) ) : ?>
-			<div class="jwt-checkout-next">
-				<span class="jwt-checkout-next__label"><?php esc_html_e( 'Yang Terjadi Setelah Checkout', 'jwtrading' ); ?></span>
-				<ul>
-					<?php foreach ( $steps as $step ) : ?>
-						<li><?php echo esc_html( $step ); ?></li>
-					<?php endforeach; ?>
-				</ul>
-			</div>
-		<?php endif; ?>
 		<?php
 	}
 

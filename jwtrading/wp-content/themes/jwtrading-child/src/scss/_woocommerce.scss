@@ -262,6 +262,26 @@
 	}
 }
 
+// Kadence gives .shop_table a light background (var(--global-palette9)) + row
+// striping, and its stylesheet loads after ours — force the summary table and
+// all its cells transparent/dark. (!important is the pragmatic win here.)
+.jw-checkout-right {
+	.shop_table,
+	.shop_table thead th,
+	.shop_table tbody td,
+	.shop_table tbody th,
+	.shop_table tfoot td,
+	.shop_table tfoot th,
+	.shop_table tr:nth-child(2n) td {
+		background: transparent !important;
+	}
+
+	.shop_table td,
+	.shop_table th {
+		border-color: var(--jwt-line) !important;
+	}
+}
+
 // --- Coupon --------------------------------------------------------------------
 .woocommerce-form-coupon-toggle {
 	margin-bottom: 1rem;
@@ -426,53 +446,12 @@ form.checkout_coupon {
 	.optional { display: none; }
 }
 
-// --- Secure note + "what happens next" -----------------------------------------
+// --- Secure note ---------------------------------------------------------------
 .jwt-checkout-secure {
 	margin: 0.9rem 0 0;
 	text-align: center;
 	font-size: 0.8rem;
 	color: var(--jwt-muted);
-}
-
-.jwt-checkout-next {
-	margin-top: 1.25rem;
-	padding-top: 1.25rem;
-	border-top: 1px solid var(--jwt-line);
-
-	&__label {
-		display: block;
-		font-family: var(--jwt-font-mono);
-		font-size: 0.68rem;
-		letter-spacing: 0.18em;
-		text-transform: uppercase;
-		color: var(--jwt-muted);
-		margin-bottom: 0.75rem;
-	}
-
-	ul {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		display: flex;
-		flex-direction: column;
-		gap: 0.55rem;
-	}
-
-	li {
-		position: relative;
-		padding-left: 1.6rem;
-		font-size: 0.88rem;
-		color: var(--jwt-text);
-
-		&::before {
-			content: "✓";
-			position: absolute;
-			left: 0;
-			top: 0;
-			color: #3ecf8e;
-			font-weight: 700;
-		}
-	}
 }
 
 // --- Payment notice + manual-transfer CTA (left column) ------------------------
