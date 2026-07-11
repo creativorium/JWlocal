@@ -70,6 +70,16 @@
 	}
 }
 
+// Funding Pips ships as a horizontal lockup — at the shared 34px cap it reads
+// much smaller than the square marks, so give this one logo more height.
+.jwt-partner .jwt-partner__logo[alt="Funding Pips"] {
+	max-height: 56px;
+
+	@media (max-width: 640px) {
+		max-height: 42px;
+	}
+}
+
 // ----- Proof marquee (auto-scrolling member results) -------------------------
 // One shared card width/height, declared on the section and used at EVERY
 // level (viewport, track, group, card) so the cross-axis can't drift — the
