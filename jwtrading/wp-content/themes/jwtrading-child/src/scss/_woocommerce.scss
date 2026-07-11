@@ -349,6 +349,34 @@
 	.shop_table th {
 		border-color: var(--jwt-line) !important;
 	}
+
+	// Kadence adds padding:9px 12px + border-top on every cell — strip both so
+	// amounts line up at the card edge and there's no stray top border above the
+	// product row. Keep only our two intentional dividers (below product, above
+	// Total).
+	.woocommerce-checkout-review-order-table {
+		th, td {
+			padding-left: 0 !important;
+			padding-right: 0 !important;
+			border-top: 0 !important;
+		}
+
+		td.product-total,
+		tfoot td {
+			text-align: right !important;
+			vertical-align: middle;
+		}
+
+		.cart_item td { border-bottom: 1px solid var(--jwt-line) !important; }
+
+		tfoot tr.order-total th,
+		tfoot tr.order-total td {
+			border-top: 1px solid var(--jwt-line) !important;
+		}
+	}
+
+	// Hide the Duitku method descriptions ("Sistem pembayaran menggunakan Duitku").
+	#payment .payment_box { display: none !important; }
 }
 
 // --- Coupon --------------------------------------------------------------------
@@ -477,7 +505,7 @@ form.checkout_coupon {
 
 	p {
 		font-family: var(--jwt-font-body);
-		font-size: 0.78rem;
+		font-size: 0.8rem !important;
 		line-height: 1.5;
 		color: var(--jwt-muted);
 		margin: 0;
@@ -498,7 +526,7 @@ form.checkout_coupon {
 		padding-left: 1.7rem;
 		font-family: var(--jwt-font-body);
 		font-weight: 500;
-		font-size: 0.85rem;
+		font-size: 0.8rem !important;
 		color: var(--jwt-muted);
 		line-height: 1.5;
 		cursor: pointer;
@@ -540,10 +568,11 @@ form.checkout_coupon {
 		margin-bottom: 0.75rem;
 	}
 
+	// Override Kadence's global `.single-content ul { padding-left: 2em }`.
 	ul {
 		list-style: none;
-		margin: 0;
-		padding: 0;
+		margin: 0 !important;
+		padding-left: 0 !important;
 		display: flex;
 		flex-direction: column;
 		gap: 0.55rem;
