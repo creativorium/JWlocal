@@ -95,6 +95,15 @@ html {
 	}
 }
 
+// Kadence's global `.single-content ul` adds a 2em left indent. JW card lists
+// use custom bullets, so drop that indent on mobile (higher specificity than
+// `.single-content ul`).
+@media (max-width: 768px) {
+	.single-content [class*='wp-block-jwt-'] ul {
+		padding-left: 0;
+	}
+}
+
 .jwt-container {
 	max-width: var(--jwt-container);
 	margin-inline: auto;
