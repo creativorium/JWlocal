@@ -16,7 +16,7 @@ $jwt_wrapper = get_block_wrapper_attributes( array( 'class' => 'jwt-hero' . ( ! 
 			<!-- Fixed content by design — not meant to be per-page editable text. -->
 			<a class="jwt-hero__rating" href="https://www.trustpilot.com/review/jwtradingacademy.com" target="_blank" rel="noopener noreferrer">
 				<strong>Excellent</strong>
-				<span>4.4 out of 5</span>
+				<span>5/5</span>
 				<svg class="jwt-hero__rating-star" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.5l2.47 5.53 6.03.58-4.55 4.03 1.33 5.9L10 14.62l-5.28 2.92 1.33-5.9L1.5 7.61l6.03-.58L10 1.5z"/></svg>
 				<span class="jwt-hero__rating-sep">|</span>
 				<strong>Trustpilot</strong>

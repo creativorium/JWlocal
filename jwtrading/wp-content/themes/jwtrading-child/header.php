@@ -18,6 +18,33 @@ defined( 'ABSPATH' ) || exit;
 
 <a class="skip-link screen-reader-text" href="#jwt-content"><?php esc_html_e( 'Lompat ke konten', 'jwtrading' ); ?></a>
 
+<?php
+/**
+ * Minimal landing header (logo + one CTA, no nav) — used on focused opt-in
+ * pages like the Trader Roadmap. Toggle per page via the `jwt/minimal_header`
+ * filter.
+ */
+$jwt_minimal_header = apply_filters( 'jwt/minimal_header', function_exists( 'is_page' ) && is_page( 'trader-roadmap' ) );
+
+if ( $jwt_minimal_header ) :
+	$jwt_landing_cta = apply_filters(
+		'jwt/minimal_header_cta',
+		array(
+			'text' => __( 'Akses Bootcamp', 'jwtrading' ),
+			'url'  => home_url( '/bootcamp/' ),
+		)
+	);
+	?>
+	<header class="jwt-header jwt-header--minimal">
+		<div class="jwt-container jwt-header__bar">
+			<div class="jwt-brand"><?php echo jwt_brand_html(); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper. ?></div>
+			<?php if ( ! empty( $jwt_landing_cta['text'] ) ) : ?>
+				<a class="jwt-btn jwt-btn--primary jwt-header__cta" href="<?php echo esc_url( $jwt_landing_cta['url'] ); ?>"><?php echo esc_html( $jwt_landing_cta['text'] ); ?></a>
+			<?php endif; ?>
+		</div>
+	</header>
+<?php else : ?>
+
 <header class="jwt-header">
 	<div class="jwt-container jwt-header__bar">
 		<div class="jwt-brand"><?php echo jwt_brand_html(); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper. ?></div>
@@ -94,5 +121,6 @@ defined( 'ABSPATH' ) || exit;
 		<?php endif; ?>
 	</nav>
 </header>
+<?php endif; ?>
 
 <div id="jwt-content" class="jwt-site-content">

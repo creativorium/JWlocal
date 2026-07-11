@@ -78,3 +78,15 @@ add_filter( 'script_loader_tag', function ( $tag, $handle ) {
 	}
 	return $tag;
 }, 10, 2 );
+
+/**
+ * Mark pages that already have a jwt/hero so we can hide Kadence's duplicate
+ * page-title banner (entry-hero). Cross-environment — no hard-coded page IDs.
+ */
+add_filter( 'body_class', function ( $classes ) {
+	$id = get_queried_object_id();
+	if ( is_singular() && ( has_block( 'jwt/hero', $id ) || has_block( 'jwt/roadmap-hero', $id ) ) ) {
+		$classes[] = 'jwt-has-hero';
+	}
+	return $classes;
+} );

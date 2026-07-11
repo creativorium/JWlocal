@@ -389,6 +389,56 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
   });
 })();
 
+// --- Trader Roadmap opt-in form ----------------------------------------------
+// Posts name/email to the jwt_roadmap_optin AJAX action (tags the lead in Kit),
+// then shows the success message and opens the roadmap PDF if one is set.
+(() => {
+  const ajaxUrl = (window.jwtData && window.jwtData.ajaxUrl) || '/wp-admin/admin-ajax.php';
+  document.querySelectorAll('[data-jwt-roadmap]').forEach((form) => {
+    const btn = form.querySelector('.jwt-roadmap-form__submit');
+    const msg = form.querySelector('.jwt-roadmap-form__msg');
+    const pdf = form.getAttribute('data-pdf') || '';
+    const formId = form.getAttribute('data-form-id') || 'trader_roadmap';
+    const btnLabel = btn ? btn.textContent : '';
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (msg) { msg.textContent = ''; msg.classList.remove('is-error'); }
+      if (btn) { btn.disabled = true; btn.textContent = 'Memproses...'; }
+
+      const get = (n) => (form.querySelector(`[name="${n}"]`)?.value || '').trim();
+      const body = new URLSearchParams({
+        action: 'jwt_roadmap_optin',
+        nonce: get('nonce'),
+        first_name: get('first_name'),
+        email: get('email'),
+        form_id: formId,
+      });
+
+      try {
+        const res = await fetch(ajaxUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+          body,
+        });
+        const data = await res.json();
+        if (!data.success) {
+          if (msg) { msg.textContent = (data && data.data && data.data.message) || 'Terjadi kesalahan. Coba lagi.'; msg.classList.add('is-error'); }
+          if (btn) { btn.disabled = false; btn.textContent = btnLabel; }
+          return;
+        }
+        if (msg) msg.textContent = msg.getAttribute('data-success') || 'Berhasil ✓';
+        form.querySelectorAll('.jwt-roadmap-form__field, .jwt-roadmap-form__submit, .jwt-roadmap-form__footnote').forEach((n) => { n.style.display = 'none'; });
+        const url = (data.data && data.data.pdf) || pdf;
+        if (url) window.open(url, '_blank', 'noopener');
+      } catch (ex) {
+        if (msg) { msg.textContent = 'Koneksi gagal. Coba lagi.'; msg.classList.add('is-error'); }
+        if (btn) { btn.disabled = false; btn.textContent = btnLabel; }
+      }
+    });
+  });
+})();
+
 // --- Always-open checkout coupon field ---------------------------------------
 // Our field replaces WooCommerce's collapsible "Have a coupon?" toggle. It isn't
 // a <form> (it sits inside the checkout form), so Apply calls the same

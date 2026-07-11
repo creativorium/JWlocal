@@ -2107,3 +2107,50 @@ registerBlockType('jwt/contact', {
   },
   save: saveNull,
 });
+
+registerBlockType('jwt/roadmap-hero', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps();
+    const { imageId } = attributes;
+    const F = (label, key) => (
+      <TextControl label={__(label, 'jwtrading')} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />
+    );
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Gambar Roadmap', 'jwtrading')}>
+            <MediaUploadCheck>
+              <MediaUpload
+                onSelect={(m) => setAttributes({ imageId: m.id })}
+                allowedTypes={['image']}
+                value={imageId}
+                render={({ open }) => (
+                  <Button variant="secondary" onClick={open}>
+                    {imageId ? __('Ganti gambar', 'jwtrading') : __('Pilih gambar', 'jwtrading')}
+                  </Button>
+                )}
+              />
+            </MediaUploadCheck>
+            {imageId ? (
+              <Button variant="link" isDestructive onClick={() => setAttributes({ imageId: 0 })}>
+                {__('Hapus gambar', 'jwtrading')}
+              </Button>
+            ) : null}
+          </PanelBody>
+          <PanelBody title={__('Teks', 'jwtrading')}>
+            {F('Eyebrow', 'eyebrow')}{F('Judul', 'title')}{F('Lead', 'lead')}
+          </PanelBody>
+          <PanelBody title={__('Form', 'jwtrading')}>
+            {F('Placeholder nama', 'namePlaceholder')}{F('Placeholder email', 'emailPlaceholder')}
+            {F('Teks tombol', 'submitText')}{F('Footnote', 'footnote')}
+            {F('Pesan sukses', 'successText')}{F('URL PDF', 'pdfUrl')}{F('Kit form_id', 'formId')}
+          </PanelBody>
+        </InspectorControls>
+        <div {...blockProps}>
+          <ServerSideRender block="jwt/roadmap-hero" attributes={attributes} />
+        </div>
+      </>
+    );
+  },
+  save: saveNull,
+});

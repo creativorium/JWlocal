@@ -379,3 +379,15 @@ body.jwt-nav-open .jwt-nav-backdrop {
 		}
 	}
 }
+
+// --- Minimal landing header (logo + one CTA, no nav) -------------------------
+.jwt-header--minimal {
+	.jwt-header__bar {
+		grid-template-columns: 1fr auto;
+	}
+
+	// No nav pill background on the minimal bar.
+	.jwt-header__bar::before {
+		display: none;
+	}
+}

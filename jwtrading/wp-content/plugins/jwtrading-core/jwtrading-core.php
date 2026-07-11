@@ -26,10 +26,12 @@ require_once JWT_CORE_PATH . 'includes/class-emails.php';
 require_once JWT_CORE_PATH . 'includes/class-preview-gate.php';
 require_once JWT_CORE_PATH . 'includes/class-tracking.php';
 require_once JWT_CORE_PATH . 'includes/class-redirects.php';
+require_once JWT_CORE_PATH . 'includes/class-roadmap.php';
 
 // WooCommerce-independent features — boot immediately.
 JWT_Plugin_Guard::init();
 JWT_Preview_Gate::init();
+JWT_Roadmap::init();
 JWT_Tracking::init();
 JWT_Redirects::init();
 

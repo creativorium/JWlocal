@@ -18,6 +18,7 @@
 		"eyebrow": { "type": "string", "default": "" },
 		"title": { "type": "string", "default": "" },
 		"lead": { "type": "string", "default": "" },
+		"showTrustBadge": { "type": "boolean", "default": false },
 		"center": { "type": "boolean", "default": true },
 		"centerCards": { "type": "boolean", "default": false },
 		"buttonText": { "type": "string", "default": "" },

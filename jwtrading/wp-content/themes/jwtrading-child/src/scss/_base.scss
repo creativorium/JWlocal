@@ -242,3 +242,9 @@ html {
 [id] {
 	scroll-margin-top: calc(var(--jwt-header-h) + 1rem);
 }
+
+// Pages that render a jwt/hero don't need Kadence's page-title banner too.
+.jwt-has-hero .entry-hero.page-hero-section,
+.jwt-has-hero .entry-hero-container {
+	display: none;
+}

@@ -24,6 +24,10 @@ $jwt_number = trim( (string) ( $attributes['number'] ?? '' ) );
 			<h3 class="jwt-feature__title"><?php echo esc_html( $attributes['title'] ); ?></h3>
 			<p class="jwt-feature__text"><?php echo wp_kses_post( $attributes['text'] ); ?></p>
 		</div>
+	<?php elseif ( '' !== trim( (string) ( $attributes['tag'] ?? '' ) ) ) : ?>
+		<span class="jwt-feature__tag jwt-feature__tag--solo"><?php echo esc_html( $attributes['tag'] ); ?></span>
+		<h3 class="jwt-feature__title"><?php echo esc_html( $attributes['title'] ); ?></h3>
+		<p class="jwt-feature__text"><?php echo wp_kses_post( $attributes['text'] ); ?></p>
 	<?php else : ?>
 		<span class="jwt-feature__icon" aria-hidden="true"><?php echo jwt_icon( $attributes['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG map. ?></span>
 		<h3 class="jwt-feature__title"><?php echo esc_html( $attributes['title'] ); ?></h3>

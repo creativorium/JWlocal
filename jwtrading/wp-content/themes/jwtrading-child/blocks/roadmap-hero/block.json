@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/roadmap-hero",
+	"title": "JWT Roadmap Hero",
+	"category": "jwtrading",
+	"icon": "images-alt2",
+	"description": "Roadmap opt-in hero: roadmap image on the left, lead form on the right. Submitting tags the lead in Kit and delivers the roadmap PDF.",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": { "align": [ "full" ], "html": false, "anchor": true },
+	"attributes": {
+		"imageId": { "type": "number", "default": 0 },
+		"eyebrow": { "type": "string", "default": "Download Gratis" },
+		"title": { "type": "string", "default": "" },
+		"lead": { "type": "string", "default": "" },
+		"namePlaceholder": { "type": "string", "default": "Nama kamu" },
+		"emailPlaceholder": { "type": "string", "default": "Email aktif kamu" },
+		"submitText": { "type": "string", "default": "Akses Gratis" },
+		"footnote": { "type": "string", "default": "Gratis. Tanpa kartu. Tanpa komitmen." },
+		"successText": { "type": "string", "default": "Your submission was successful." },
+		"pdfUrl": { "type": "string", "default": "" },
+		"formId": { "type": "string", "default": "trader_roadmap" }
+	}
+}
