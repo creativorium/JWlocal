@@ -2123,7 +2123,9 @@
 	line-height: 1.1;
 	letter-spacing: -0.02em;
 	color: var(--jwt-text);
-	margin: 0 0 0.9rem;
+	// !important beats Kadence's .single-content h1 top-margin (otherwise the
+	// eyebrow→title gap blows out, most visible on mobile where it stacks).
+	margin: 0 0 0.9rem !important;
 
 	mark { background: none; color: var(--jwt-accent); }
 }
