@@ -21,7 +21,7 @@ $jwt_wrapper = get_block_wrapper_attributes( array( 'class' => 'jwt-methodology'
 
 		<?php if ( '' !== trim( (string) ( $attributes['buttonText'] ?? '' ) ) ) : ?>
 			<div class="jwt-methodology__cta">
-				<a class="jwt-textlink" href="<?php echo esc_url( $attributes['buttonUrl'] ?: '#' ); ?>"><?php echo esc_html( $attributes['buttonText'] ); ?></a>
+				<a class="jwt-btn jwt-btn--primary" href="<?php echo esc_url( $attributes['buttonUrl'] ?: '#' ); ?>"><?php echo esc_html( $attributes['buttonText'] ); ?></a>
 			</div>
 		<?php endif; ?>
 	</div>

@@ -8,7 +8,11 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 <div class="jwt-methodology-card">
-	<?php if ( '' !== trim( (string) ( $attributes['icon'] ?? '' ) ) ) : ?>
+	<?php if ( ! empty( $attributes['imageId'] ) ) : ?>
+		<span class="jwt-methodology-card__icon jwt-methodology-card__icon--img">
+			<?php echo wp_get_attachment_image( (int) $attributes['imageId'], 'thumbnail', false, array( 'class' => 'jwt-methodology-card__img', 'loading' => 'lazy' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+		</span>
+	<?php elseif ( '' !== trim( (string) ( $attributes['icon'] ?? '' ) ) ) : ?>
 		<span class="jwt-methodology-card__icon"><?php echo esc_html( $attributes['icon'] ); ?></span>
 	<?php endif; ?>
 	<div class="jwt-methodology-card__body">

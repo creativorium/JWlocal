@@ -416,13 +416,18 @@ body.jwt-lightbox-open {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
 	gap: clamp(0.875rem, 2vw, 1.25rem);
+	// Narrower row so the cards waste less empty space on the right.
+	max-width: 1080px;
+	margin-inline: auto;
 
 	@media (max-width: 900px) {
 		grid-template-columns: repeat(2, 1fr);
+		max-width: 620px;
 	}
 
 	@media (max-width: 480px) {
 		grid-template-columns: 1fr;
+		max-width: 360px;
 	}
 }
 
@@ -453,6 +458,18 @@ body.jwt-lightbox-open {
 	background: var(--jwt-surface-2);
 	font-size: 1.375rem;
 	line-height: 1;
+}
+
+// PNG logo variant (Indices / Metals / Forex / Crypto).
+.jwt-methodology-card__icon--img {
+	overflow: hidden;
+}
+
+.jwt-methodology-card__img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
 }
 
 .jwt-methodology-card__title {

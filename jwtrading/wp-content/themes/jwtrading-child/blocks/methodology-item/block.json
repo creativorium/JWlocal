@@ -16,6 +16,7 @@
 	},
 	"attributes": {
 		"icon": { "type": "string", "default": "" },
+		"imageId": { "type": "number", "default": 0 },
 		"title": { "type": "string", "default": "" },
 		"subtitle": { "type": "string", "default": "" }
 	}

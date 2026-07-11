@@ -94,3 +94,18 @@ add_filter( 'body_class', function ( $classes ) {
 	}
 	return $classes;
 } );
+
+/**
+ * Sleek "waterfall" scroll-down cue on key landing/marketing pages.
+ * Rendered once at wp_footer (fixed position); hidden on mobile + after scroll
+ * via main.js / _blocks.scss.
+ */
+add_action( 'wp_footer', function () {
+	$show = is_front_page() || ( function_exists( 'is_page' ) && is_page( array( 'bootcamp', 'testimonials', 'trader-roadmap', 'ifvg-strategy' ) ) );
+	if ( ! apply_filters( 'jwt/show_scrollcue', $show ) ) {
+		return;
+	}
+	echo '<div class="jwt-scrollcue" data-jwt-scrollcue aria-hidden="true">'
+		. '<span class="jwt-scrollcue__label">' . esc_html__( 'Scroll', 'jwtrading' ) . '</span>'
+		. '<span class="jwt-scrollcue__track"><span class="jwt-scrollcue__drop"></span></span></div>';
+}, 20 );

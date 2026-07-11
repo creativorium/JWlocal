@@ -22,7 +22,7 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	padding-block: clamp(2rem, 6vh, 3.5rem) clamp(4rem, 11vw, 7rem);
+	padding-block: clamp(2rem, 6vh, 3.5rem) clamp(2.5rem, 6vw, 4rem);
 
 	// Purple haze per brand spec: radial-gradient(rgba(124,77,255,.3), transparent 65%) + blur(20px)
 	// Slow drift keeps the hero alive without being noisy.
@@ -81,7 +81,7 @@
 	border: 1px solid rgb(255 255 255 / 0.1);
 	padding: 15px 25px;
 	border-radius: 999px;
-	margin-bottom: 20px;
+	margin-bottom: 12px;
 	transition: background 0.2s, border-color 0.2s;
 
 	strong {
@@ -132,7 +132,7 @@
 	color: var(--jwt-muted);
 	line-height: 1.6;
 	max-width: 620px;
-	margin-top: 2rem;
+	margin-top: 1.1rem;
 }
 
 .jwt-hero__actions {
@@ -143,7 +143,7 @@
 }
 
 .jwt-hero .jwt-hero__note {
-	margin-top: 4rem;
+	margin-top: 2.25rem;
 	font-size: 0.875rem;
 	color: #fff;
 }
@@ -1725,6 +1725,12 @@
 	margin: 0.85rem 0 1.5rem;
 }
 
+// `.jwt-pricing__card` prefix beats Kadence's global `.single-content ul`
+// 2em indent (roadmap/ifvg pages put this card inside .single-content).
+.jwt-pricing__card .jwt-pricing__features {
+	padding-left: 0;
+}
+
 .jwt-pricing__features {
 	list-style: none;
 	margin: 0;
@@ -2275,12 +2281,9 @@
 		}
 	}
 
-	@media (max-width: 600px) {
-		right: 50%;
-		transform: translateX(50%);
-		&.is-hidden { transform: translateX(50%) translateY(12px); }
-		&__label { writing-mode: horizontal-tb; }
-		flex-direction: column-reverse;
+	// Not needed on mobile.
+	@media (max-width: 768px) {
+		display: none;
 	}
 }
 
