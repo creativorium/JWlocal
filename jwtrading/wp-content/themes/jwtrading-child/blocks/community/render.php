@@ -70,8 +70,11 @@ $jwt_wrapper = get_block_wrapper_attributes( array( 'class' => 'jwt-community' )
 					<span class="jwt-eyebrow"><?php echo esc_html( $attributes['eyebrow'] ); ?></span>
 				<?php endif; ?>
 
-				<?php if ( '' !== trim( (string) ( $attributes['title'] ?? '' ) ) ) : ?>
-					<h2 class="jwt-community__title"><?php echo wp_kses_post( $attributes['title'] ); ?></h2>
+				<?php
+				if ( '' !== trim( (string) ( $attributes['title'] ?? '' ) ) ) :
+					$jwt_ctag = in_array( $attributes['titleTag'] ?? '', array( 'h1', 'h2', 'h3' ), true ) ? $attributes['titleTag'] : 'h2';
+					?>
+					<<?php echo $jwt_ctag; // phpcs:ignore WordPress.Security.EscapeOutput ?> class="jwt-community__title"><?php echo wp_kses_post( $attributes['title'] ); ?></<?php echo $jwt_ctag; // phpcs:ignore WordPress.Security.EscapeOutput ?>>
 				<?php endif; ?>
 
 				<?php if ( '' !== trim( (string) ( $attributes['text'] ?? '' ) ) ) : ?>

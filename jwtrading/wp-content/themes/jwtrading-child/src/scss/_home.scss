@@ -27,6 +27,14 @@
 	align-items: center;
 	justify-content: center;
 	gap: clamp(1.75rem, 5vw, 3.5rem);
+
+	// Mobile: balanced 3-per-row grid instead of an uneven wrap.
+	@media (max-width: 640px) {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1.75rem 0.75rem;
+		justify-items: center;
+	}
 }
 
 .jwt-partner {
@@ -86,6 +94,17 @@
 
 	@media (max-width: 640px) {
 		max-height: 46px;
+	}
+}
+
+// Mobile 3-col grid: normalise every logo to one size so the row reads balanced
+// (higher specificity than the per-logo [alt=…] bumps above).
+@media (max-width: 640px) {
+	.jwt-partners__row .jwt-partner .jwt-partner__logo {
+		max-width: 100%;
+		max-height: 32px;
+		width: auto;
+		object-fit: contain;
 	}
 }
 

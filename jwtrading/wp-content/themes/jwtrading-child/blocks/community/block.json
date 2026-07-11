@@ -17,6 +17,7 @@
 	"attributes": {
 		"eyebrow": { "type": "string", "default": "" },
 		"title": { "type": "string", "default": "" },
+		"titleTag": { "type": "string", "default": "h1" },
 		"text": { "type": "string", "default": "" },
 		"buttonText": { "type": "string", "default": "" },
 		"buttonUrl": { "type": "string", "default": "" },

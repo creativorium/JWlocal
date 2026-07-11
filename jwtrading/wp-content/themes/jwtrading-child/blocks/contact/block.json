@@ -13,6 +13,7 @@
 	"attributes": {
 		"eyebrow": { "type": "string", "default": "" },
 		"title": { "type": "string", "default": "" },
+		"titleTag": { "type": "string", "default": "h1" },
 		"lead": { "type": "string", "default": "" },
 		"center": { "type": "boolean", "default": true },
 		"waNumber": { "type": "string", "default": "" },

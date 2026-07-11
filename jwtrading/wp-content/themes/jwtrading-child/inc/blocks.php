@@ -103,7 +103,10 @@ function jwt_section_header_html( array $attributes ): string {
 		$html .= '<span class="jwt-eyebrow">' . esc_html( $eyebrow ) . '</span>';
 	}
 	if ( '' !== $title ) {
-		$html .= '<h2 class="jwt-title">' . wp_kses_post( $title ) . '</h2>';
+		// Standalone single-section pages (contact, discord) pass titleTag=h1 so
+		// the page still has exactly one top-level heading for SEO.
+		$tag = in_array( $attributes['titleTag'] ?? '', array( 'h1', 'h2', 'h3' ), true ) ? $attributes['titleTag'] : 'h2';
+		$html .= '<' . $tag . ' class="jwt-title">' . wp_kses_post( $title ) . '</' . $tag . '>';
 	}
 	if ( '' !== $lead ) {
 		$html .= '<p class="jwt-lead">' . wp_kses_post( $lead ) . '</p>';
