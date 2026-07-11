@@ -137,7 +137,17 @@ html {
 	letter-spacing: 0.16em;
 	text-transform: uppercase;
 	color: var(--jwt-accent-light);
-	margin-bottom: 1.125rem;
+	margin-bottom: 0.6rem;
+}
+
+// Keep the eyebrow→heading gap tight: our eyebrow margin above is the only
+// spacing; kill any top-margin the heading inherits (e.g. Kadence's
+// .single-content h1/h2/h3) when it sits directly under an eyebrow.
+.jwt-eyebrow + h1,
+.jwt-eyebrow + h2,
+.jwt-eyebrow + h3,
+.jwt-eyebrow + .jwt-title {
+	margin-top: 0;
 }
 
 .jwt-eyebrow__dot {

@@ -2214,3 +2214,77 @@
 	color: var(--jwt-accent-light);
 	margin: 0 0 0.85rem;
 }
+
+// Landing pages (roadmap / ifvg): kill Kadence's .content-area top margin so the
+// hero sits right under the minimal header.
+.jwt-landing .content-area {
+	margin-top: 0 !important;
+}
+
+// --- Sleek "waterfall" scroll-down cue (landing hero) ------------------------
+.jwt-scrollcue {
+	position: fixed;
+	right: clamp(1rem, 3vw, 2.75rem);
+	bottom: clamp(1.5rem, 4vw, 2.5rem);
+	z-index: 40;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.7rem;
+	pointer-events: none;
+	opacity: 1;
+	transition: opacity 0.45s var(--jwt-ease), transform 0.45s var(--jwt-ease);
+
+	&.is-hidden {
+		opacity: 0;
+		transform: translateY(12px);
+	}
+
+	&__label {
+		font-family: var(--jwt-font-mono);
+		font-size: 0.6rem;
+		letter-spacing: 0.28em;
+		text-transform: uppercase;
+		color: var(--jwt-muted);
+		writing-mode: vertical-rl;
+	}
+
+	&__track {
+		position: relative;
+		width: 2px;
+		height: 64px;
+		border-radius: 2px;
+		overflow: hidden;
+		background: linear-gradient(to bottom, transparent, rgb(124 77 255 / 0.25), transparent);
+	}
+
+	&__drop {
+		position: absolute;
+		left: 50%;
+		top: -16px;
+		width: 6px;
+		height: 16px;
+		translate: -50% 0;
+		border-radius: 3px;
+		background: linear-gradient(to bottom, var(--jwt-accent), transparent);
+		filter: drop-shadow(0 0 6px rgb(124 77 255 / 0.8));
+
+		@media (prefers-reduced-motion: no-preference) {
+			animation: jwt-waterfall 1.8s ease-in-out infinite;
+		}
+	}
+
+	@media (max-width: 600px) {
+		right: 50%;
+		transform: translateX(50%);
+		&.is-hidden { transform: translateX(50%) translateY(12px); }
+		&__label { writing-mode: horizontal-tb; }
+		flex-direction: column-reverse;
+	}
+}
+
+@keyframes jwt-waterfall {
+	0%   { top: -16px; opacity: 0; }
+	25%  { opacity: 1; }
+	100% { top: 64px; opacity: 0; }
+}

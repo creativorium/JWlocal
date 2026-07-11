@@ -65,4 +65,9 @@ $jwt_wrap    = get_block_wrapper_attributes( array( 'class' => 'jwt-roadmap-hero
 			</div>
 		</div>
 	</div>
+
+	<div class="jwt-scrollcue" data-jwt-scrollcue aria-hidden="true">
+		<span class="jwt-scrollcue__label"><?php esc_html_e( 'Scroll', 'jwtrading' ); ?></span>
+		<span class="jwt-scrollcue__track"><span class="jwt-scrollcue__drop"></span></span>
+	</div>
 </section>

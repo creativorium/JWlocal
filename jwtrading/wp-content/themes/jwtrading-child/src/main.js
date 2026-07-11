@@ -389,6 +389,15 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
   });
 })();
 
+// --- Landing scroll cue: fade out once the visitor starts scrolling ----------
+(() => {
+  const cue = document.querySelector('[data-jwt-scrollcue]');
+  if (!cue) return;
+  const onScroll = () => cue.classList.toggle('is-hidden', window.scrollY > 60);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+
 // --- Trader Roadmap opt-in form ----------------------------------------------
 // Posts name/email to the jwt_roadmap_optin AJAX action (tags the lead in Kit),
 // then shows the success message and opens the roadmap PDF if one is set.

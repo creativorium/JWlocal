@@ -18,13 +18,25 @@ class JWT_Roadmap {
 		add_filter( 'jw_kit_custom_form_map', array( __CLASS__, 'kit_form_map' ) );
 	}
 
-	/** Add the roadmap form_id → tags mapping for the Kit tagger. */
+	/** Add lead-magnet form_id → tags mappings for the Kit tagger. */
 	public static function kit_form_map( $map ) {
-		if ( is_array( $map ) && ! isset( $map['trader_roadmap'] ) ) {
-			$map['trader_roadmap'] = array(
+		if ( ! is_array( $map ) ) {
+			return $map;
+		}
+		$defaults = array(
+			'trader_roadmap' => array(
 				'tags'  => array( 'Roadmap_Optin', 'Stage_Warm' ),
 				'stage' => 'Stage_Warm',
-			);
+			),
+			'ifvg_strategy'  => array(
+				'tags'  => array( 'IFVG_Optin', 'Stage_Warm' ),
+				'stage' => 'Stage_Warm',
+			),
+		);
+		foreach ( $defaults as $key => $val ) {
+			if ( ! isset( $map[ $key ] ) ) {
+				$map[ $key ] = $val;
+			}
 		}
 		return $map;
 	}

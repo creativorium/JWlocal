@@ -88,5 +88,9 @@ add_filter( 'body_class', function ( $classes ) {
 	if ( is_singular() && ( has_block( 'jwt/hero', $id ) || has_block( 'jwt/roadmap-hero', $id ) ) ) {
 		$classes[] = 'jwt-has-hero';
 	}
+	// Focused opt-in landing pages (minimal header, no content-area top margin).
+	if ( is_singular() && has_block( 'jwt/roadmap-hero', $id ) ) {
+		$classes[] = 'jwt-landing';
+	}
 	return $classes;
 } );
