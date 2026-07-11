@@ -385,7 +385,7 @@ body.jwt-nav-open .jwt-nav-backdrop {
 // .is-scrolled) so the scrolled state doesn't override it back to transparent.
 .jwt-header--minimal,
 .jwt-header--minimal.is-scrolled {
-	background: rgba(0, 0, 0, 0.3);
+	background: color-mix(in srgb, var(--jwt-bg) 30%, transparent);
 	-webkit-backdrop-filter: blur(10px);
 	backdrop-filter: blur(10px);
 	border-bottom: 1px solid var(--jwt-line);
