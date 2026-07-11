@@ -389,6 +389,69 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
   });
 })();
 
+// --- Always-open checkout coupon field ---------------------------------------
+// Our field replaces WooCommerce's collapsible "Have a coupon?" toggle. It isn't
+// a <form> (it sits inside the checkout form), so Apply calls the same
+// wc-ajax=apply_coupon endpoint WooCommerce's own coupon form uses, then
+// refreshes the order review.
+(() => {
+  const box = document.querySelector('[data-jwt-coupon]');
+  if (!box) return;
+  const $ = window.jQuery;
+  const params = window.wc_checkout_params;
+  if (!$ || !params || !params.wc_ajax_url) return;
+
+  const input = box.querySelector('.jwt-coupon__input');
+  const btn = box.querySelector('[data-jwt-coupon-apply]');
+  const msg = box.querySelector('.jwt-coupon__msg');
+
+  const apply = () => {
+    const code = (input.value || '').trim();
+    if (!code) { input.focus(); return; }
+    btn.disabled = true;
+    box.classList.add('is-loading');
+    $.ajax({
+      type: 'POST',
+      url: params.wc_ajax_url.toString().replace('%%endpoint%%', 'apply_coupon'),
+      data: { security: params.apply_coupon_nonce, coupon_code: code },
+      dataType: 'html',
+      success: (html) => {
+        msg.innerHTML = html || '';
+        $(document.body).trigger('applied_coupon_in_checkout', [code]);
+        $(document.body).trigger('update_checkout', { update_shipping_method: false });
+        input.value = '';
+      },
+      complete: () => { btn.disabled = false; box.classList.remove('is-loading'); },
+    });
+  };
+
+  btn.addEventListener('click', apply);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); apply(); }
+  });
+})();
+
+// --- Checkout: disable "Checkout" until the T&C box is ticked -----------------
+// #place_order + the terms checkbox live inside #payment, which update_checkout
+// re-renders — so sync on change (delegated) AND after every updated_checkout.
+(() => {
+  if (!document.querySelector('form.checkout')) return;
+
+  const sync = () => {
+    const cb = document.getElementById('jw_accept_terms');
+    const btn = document.getElementById('place_order');
+    if (!cb || !btn) return;
+    btn.disabled = !cb.checked;
+  };
+
+  document.addEventListener('change', (e) => {
+    if (e.target && e.target.id === 'jw_accept_terms') sync();
+  });
+
+  if (window.jQuery) window.jQuery(document.body).on('updated_checkout', sync);
+  sync();
+})();
+
 // --- TEMPORARY preview guard: block navigation to unpublished pages -----------
 // Homepage-only preview: any link pointing at Bootcamp, Discord, or the
 // Testimonials page should do NOTHING when clicked — the buttons/links and the

@@ -116,18 +116,23 @@
 	background: var(--jwt-surface);
 }
 
+// Right column IS the card, so the "Pesanan Kamu" heading sits inside it and
+// balances the left "Detail Billing" card.
 .jw-checkout-right {
+	padding: clamp(1.4rem, 3vw, 2rem);
+	border: 1px solid var(--jwt-line);
+	border-radius: var(--jwt-radius);
+	background: var(--jwt-surface);
+
 	@media (min-width: 992px) {
 		position: sticky;
 		top: 96px;
 	}
 
-	// The order table + payment box become one summary card.
 	#order_review {
-		padding: clamp(1.4rem, 3vw, 2rem);
-		border: 1px solid var(--jwt-line);
-		border-radius: var(--jwt-radius);
-		background: var(--jwt-surface);
+		padding: 0;
+		border: 0;
+		background: transparent;
 	}
 }
 
@@ -215,6 +220,17 @@
 			color: #fff;
 			transform: translateY(-2px);
 		}
+	}
+
+	// Disabled until terms are accepted (see main.js).
+	#place_order:disabled,
+	#place_order[disabled] {
+		opacity: 0.45;
+		box-shadow: none;
+		cursor: not-allowed;
+		pointer-events: none;
+
+		&:hover { background: var(--jwt-accent); transform: none; }
 	}
 }
 
@@ -379,31 +395,84 @@
 	#payment .payment_box { display: none !important; }
 }
 
-// --- Coupon --------------------------------------------------------------------
-.woocommerce-form-coupon-toggle {
-	margin-bottom: 1rem;
+// --- Coupon (always-open field under Discord) ----------------------------------
+.jwt-coupon {
+	margin-top: 1.1rem;
 
-	.woocommerce-info {
-		background: transparent;
-		border: 0;
-		padding: 0;
-		color: var(--jwt-muted);
-		font-size: 0.9rem;
-
-		&::before { display: none; }
-
-		a { color: var(--jwt-accent-light); }
+	&__label {
+		display: block;
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: var(--jwt-text);
+		margin-bottom: 0.45rem;
 	}
-}
 
-form.checkout_coupon {
-	border: 1px solid var(--jwt-line);
-	background: var(--jwt-bg);
-	border-radius: var(--jwt-radius-sm);
-	padding: 1rem;
-	margin-bottom: 1.25rem;
+	&__row {
+		display: flex;
+		gap: 0.6rem;
+	}
 
-	.button { width: auto; }
+	&__input {
+		flex: 1 1 auto;
+		min-width: 0;
+		background: var(--jwt-bg) !important;
+		border: 1px solid var(--jwt-line) !important;
+		border-radius: var(--jwt-radius-sm) !important;
+		color: var(--jwt-text) !important;
+		padding: 0.8rem 0.95rem !important;
+		transition: border-color 0.2s, box-shadow 0.2s;
+
+		&::placeholder { color: var(--jwt-muted); }
+
+		&:focus {
+			outline: none;
+			border-color: var(--jwt-accent) !important;
+			box-shadow: 0 0 0 3px rgb(124 77 255 / 0.18);
+		}
+	}
+
+	&__apply {
+		flex: 0 0 auto;
+		padding: 0 1.5rem;
+		border-radius: var(--jwt-radius-sm);
+		border: 1px solid var(--jwt-line-strong);
+		background: rgb(255 255 255 / 0.05);
+		color: var(--jwt-text);
+		font-family: var(--jwt-font-heading);
+		font-weight: 600;
+		cursor: pointer;
+		transition: border-color 0.2s, background 0.2s, opacity 0.2s;
+
+		&:hover { border-color: rgb(255 255 255 / 0.25); }
+		&:disabled { opacity: 0.55; cursor: default; }
+	}
+
+	&__msg {
+		margin-top: 0.55rem;
+		font-size: 0.82rem;
+		color: var(--jwt-muted);
+
+		&:empty { display: none; }
+
+		// Flatten WooCommerce's applied/error notice into a plain line.
+		.woocommerce-message,
+		.woocommerce-error,
+		.woocommerce-info {
+			background: transparent;
+			border: 0;
+			padding: 0;
+			margin: 0;
+			list-style: none;
+			color: var(--jwt-muted);
+
+			&::before { display: none; }
+			a { color: var(--jwt-accent-light); }
+		}
+
+		.woocommerce-error { color: #ff6b6b; }
+	}
+
+	&.is-loading .jwt-coupon__apply { opacity: 0.55; }
 }
 
 // --- Payment methods (Duitku gateways) as cards --------------------------------
@@ -504,7 +573,7 @@ form.checkout_coupon {
 	margin-bottom: 0.9rem;
 
 	p {
-		font-family: var(--jwt-font-body);
+		font-family: var(--jwt-font-body) !important;
 		font-size: 0.8rem !important;
 		line-height: 1.5;
 		color: var(--jwt-muted);
@@ -524,7 +593,7 @@ form.checkout_coupon {
 		display: block;
 		position: relative;
 		padding-left: 1.7rem;
-		font-family: var(--jwt-font-body);
+		font-family: var(--jwt-font-body) !important;
 		font-weight: 500;
 		font-size: 0.8rem !important;
 		color: var(--jwt-muted);

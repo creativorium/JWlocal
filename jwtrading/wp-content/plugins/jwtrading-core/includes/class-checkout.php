@@ -21,8 +21,13 @@ class JWT_Checkout {
 		add_filter( 'woocommerce_enable_order_notes_field', array( __CLASS__, 'disable_order_notes' ) );
 
 		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'discord_field' ), 20 );
+		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'coupon_field' ), 25 );
 		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'manual_transfer_cta' ), 30 );
 		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'payment_notice' ), 40 );
+
+		// Replace the collapsible "Have a coupon?" toggle with an always-open
+		// field under the Discord row (rendered by coupon_field above).
+		add_action( 'woocommerce_before_checkout_form', array( __CLASS__, 'remove_default_coupon' ), 5 );
 		add_action( 'woocommerce_review_order_before_submit', array( __CLASS__, 'terms_checkbox' ), 9 );
 		add_action( 'woocommerce_review_order_after_submit', array( __CLASS__, 'after_submit_extras' ), 10 );
 
@@ -181,6 +186,32 @@ class JWT_Checkout {
 			),
 			$checkout->get_value( 'discord_username' )
 		);
+	}
+
+	/** Drop WooCommerce's collapsible coupon toggle — we render our own. */
+	public static function remove_default_coupon() {
+		remove_action( 'woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10 );
+	}
+
+	/**
+	 * Always-open coupon field under the Discord row. Not a <form> (it lives
+	 * inside the main checkout form — no nesting); the Apply button calls the
+	 * same wc-ajax=apply_coupon endpoint WooCommerce uses. See main.js.
+	 */
+	public static function coupon_field() {
+		if ( ! self::virtual_mode() || ! wc_coupons_enabled() ) {
+			return;
+		}
+		?>
+		<div class="jwt-coupon" data-jwt-coupon>
+			<span class="jwt-coupon__label"><?php esc_html_e( 'Punya kode promo?', 'jwtrading' ); ?></span>
+			<div class="jwt-coupon__row">
+				<input type="text" id="jwt_coupon_code" class="input-text jwt-coupon__input" autocomplete="off" autocapitalize="characters" placeholder="<?php esc_attr_e( 'Masukkan kode promo', 'jwtrading' ); ?>">
+				<button type="button" class="jwt-coupon__apply" data-jwt-coupon-apply><?php esc_html_e( 'Terapkan', 'jwtrading' ); ?></button>
+			</div>
+			<div class="jwt-coupon__msg" role="status" aria-live="polite"></div>
+		</div>
+		<?php
 	}
 
 	/** Manual bank-transfer alternative (Google Form). */
