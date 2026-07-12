@@ -21,6 +21,15 @@
 	font-size: 0.7rem;
 }
 
+// Radar-ring pulse on the dot, same as the hero badge.
+.jwt-blog__eyebrow .jwt-eyebrow__dot {
+	position: relative;
+
+	@media (prefers-reduced-motion: no-preference) {
+		animation: jwt-radar 1.8s ease-out infinite;
+	}
+}
+
 .jwt-blog__title {
 	font-family: var(--jwt-font-heading);
 	font-size: clamp(2rem, 5vw, 3rem);
@@ -70,25 +79,36 @@
 
 .jwt-blog__search-ico {
 	position: absolute;
-	left: 0.9rem;
+	left: 1rem;
+	top: 50%;
+	transform: translateY(-50%);
 	width: 16px;
 	height: 16px;
+	z-index: 1;
 	color: var(--jwt-muted);
 	pointer-events: none;
 }
 
 .jwt-blog__search input {
-	width: 240px;
+	box-sizing: border-box;
+	-webkit-appearance: none;
+	appearance: none;
+	width: 260px;
 	max-width: 100%;
-	padding: 0.6rem 1rem 0.6rem 2.5rem;
+	height: 44px;
+	margin: 0;
+	padding: 0 1rem 0 2.6rem;
 	border-radius: 999px;
-	border: 1px solid var(--jwt-line);
-	background: var(--jwt-surface);
+	border: 1px solid rgb(255 255 255 / 0.18);
+	background: rgb(255 255 255 / 0.03);
 	color: var(--jwt-text);
 	font-size: 0.9rem;
+	line-height: normal;
 	transition: border-color 0.2s;
 
 	&::placeholder { color: var(--jwt-muted); }
+	&::-webkit-search-decoration,
+	&::-webkit-search-cancel-button { -webkit-appearance: none; }
 	&:focus {
 		outline: none;
 		border-color: rgb(124 77 255 / 0.5);
@@ -100,9 +120,9 @@
 .jwt-filter__tab {
 	padding: 0.5rem 1.1rem;
 	border-radius: 999px;
-	border: 1px solid var(--jwt-line);
-	background: transparent;
-	color: var(--jwt-muted);
+	border: 1px solid rgb(255 255 255 / 0.18);
+	background: rgb(255 255 255 / 0.03);
+	color: #fff;
 	font-size: 0.85rem;
 	font-weight: 600;
 	text-decoration: none;
@@ -110,8 +130,8 @@
 	transition: color 0.2s, border-color 0.2s, background 0.2s;
 
 	&:hover {
-		color: var(--jwt-text);
-		border-color: rgb(124 77 255 / 0.5);
+		border-color: rgb(124 77 255 / 0.6);
+		background: rgb(124 77 255 / 0.12);
 	}
 
 	&.is-active {
@@ -235,10 +255,20 @@
 	padding-top: 0.4rem;
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
 	gap: 0.5rem;
 	font-size: 0.8rem;
 	color: var(--jwt-muted);
 }
+
+.jwt-card__by {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	min-width: 0;
+}
+
+.jwt-card__date { white-space: nowrap; }
 
 // Brand avatar (product image) — shared by card + article meta.
 .jwt-avatar {

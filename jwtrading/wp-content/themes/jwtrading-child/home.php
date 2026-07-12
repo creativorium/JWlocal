@@ -15,7 +15,7 @@ get_template_part(
 	'template-parts/blog-archive',
 	null,
 	array(
-		'title'   => $jwt_posts_page ? get_the_title( $jwt_posts_page ) : __( 'Blog', 'jwtrading' ),
+		'title'   => __( 'JW Trading Academy Article', 'jwtrading' ),
 		'lead'    => __( 'Insight, strategi, dan edukasi trading ICT untuk trader Indonesia.', 'jwtrading' ),
 		'current' => '',
 	)

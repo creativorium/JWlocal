@@ -33,9 +33,10 @@ $jwt_cats = jwt_post_category_slugs();
 		<?php endif; ?>
 
 		<div class="jwt-card__meta">
-			<?php echo jwt_blog_author_avatar_html(); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper. ?>
-			<span class="jwt-card__author"><?php echo esc_html( jwt_blog_author_name() ); ?></span>
-			<span class="jwt-card__dot" aria-hidden="true">·</span>
+			<span class="jwt-card__by">
+				<?php echo jwt_blog_author_avatar_html(); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper. ?>
+				<span class="jwt-card__author"><?php echo esc_html( jwt_blog_author_name() ); ?></span>
+			</span>
 			<time class="jwt-card__date" datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( jwt_blog_date() ); ?></time>
 		</div>
 	</div>
