@@ -64,41 +64,10 @@
 	color: #d9d4ec;
 }
 
-// Trustpilot badge under the logo — green star squares + "5/5 · Trustpilot".
+// Trustpilot badge under the logo — reuses the homepage/bootcamp hero rating
+// pill (.jwt-hero__rating) for a consistent "Excellent · 5/5 · ★ · Trustpilot".
 .jwt-footer__trustpilot {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.6rem;
 	margin: 0 0 1.5rem;
-	text-decoration: none;
-	color: #f5f4f4;
-	font-size: 0.9rem;
-
-	&:hover .jwt-tp-text { color: var(--jwt-accent-warm); }
-}
-
-.jwt-tp-stars {
-	display: inline-flex;
-	gap: 3px;
-}
-
-.jwt-tp-star {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 20px;
-	height: 20px;
-	border-radius: 3px;
-	background: #00b67a; // Trustpilot green
-	color: #fff;
-
-	svg { width: 13px; height: 13px; }
-}
-
-.jwt-tp-text {
-	transition: color 0.3s;
-
-	strong { font-weight: 700; }
 }
 
 // Legal disclaimer strip above the copyright bar.
@@ -109,7 +78,7 @@
 	max-width: 820px;
 	font-size: 0.78rem;
 	line-height: 1.65;
-	color: rgb(255 255 255 / 0.5);
+	color: #f5f4f4;
 
 	p { margin: 0 0 0.7rem; }
 	p:last-child { margin-bottom: 0; }

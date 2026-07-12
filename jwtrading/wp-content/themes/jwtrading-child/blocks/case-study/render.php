@@ -36,6 +36,7 @@ $jwt_wrap  = get_block_wrapper_attributes( array( 'class' => 'jwt-casestudy' ) )
 			<div class="jwt-casestudy__media">
 				<?php
 				if ( $jwt_img ) {
+					printf( '<a class="jwt-zoom" href="%s" target="_blank" rel="noopener">', esc_url( (string) wp_get_attachment_image_url( $jwt_img, 'full' ) ) );
 					echo wp_get_attachment_image( // phpcs:ignore WordPress.Security.EscapeOutput
 						$jwt_img,
 						'large',
@@ -47,6 +48,7 @@ $jwt_wrap  = get_block_wrapper_attributes( array( 'class' => 'jwt-casestudy' ) )
 							'alt'      => '',
 						)
 					);
+					echo '</a>';
 				} else {
 					echo '<div class="jwt-casestudy__placeholder"><span>' . esc_html__( 'Screenshot', 'jwtrading' ) . '</span></div>';
 				}

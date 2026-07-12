@@ -1618,6 +1618,37 @@
 	object-position: top center;
 }
 
+// Zoomable images (case-study + community carousel) → lightbox overlay.
+.jwt-zoom {
+	display: block;
+	cursor: zoom-in;
+}
+
+.jwt-lightbox {
+	position: fixed;
+	inset: 0;
+	z-index: 9999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: clamp(1rem, 4vw, 3rem);
+	background: rgb(0 0 0 / 0.86);
+	-webkit-backdrop-filter: blur(4px);
+	backdrop-filter: blur(4px);
+	opacity: 0;
+	transition: opacity 0.2s ease;
+	cursor: zoom-out;
+
+	&.is-open { opacity: 1; }
+
+	img {
+		max-width: 100%;
+		max-height: 100%;
+		border-radius: 10px;
+		box-shadow: 0 24px 70px rgb(0 0 0 / 0.55);
+	}
+}
+
 .jwt-casestudy__placeholder {
 	display: flex;
 	align-items: center;

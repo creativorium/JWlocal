@@ -18,14 +18,15 @@ defined( 'ABSPATH' ) || exit;
 					<?php echo jwt_brand_html(); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper. ?>
 					<p class="jwt-footer__tagline"><?php esc_html_e( 'Fokus. Disiplin. Tenang', 'jwtrading' ); ?></p>
 
-					<a class="jwt-footer__trustpilot" href="https://www.trustpilot.com/review/jwtradingacademy.com" target="_blank" rel="noopener noreferrer" aria-label="<?php esc_attr_e( 'Rating 5 dari 5 di Trustpilot', 'jwtrading' ); ?>">
-						<span class="jwt-tp-stars" aria-hidden="true">
-							<?php for ( $i = 0; $i < 5; $i++ ) : ?>
-								<span class="jwt-tp-star"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.5l2.47 5.53 6.03.58-4.55 4.03 1.33 5.9L10 14.62l-5.28 2.92 1.33-5.9L1.5 7.61l6.03-.58L10 1.5z"/></svg></span>
-							<?php endfor; ?>
-						</span>
-						<span class="jwt-tp-text"><strong>5/5</strong> · Trustpilot</span>
-					</a>
+					<div class="jwt-footer__trustpilot">
+						<a class="jwt-hero__rating" href="https://www.trustpilot.com/review/jwtradingacademy.com" target="_blank" rel="noopener noreferrer" aria-label="<?php esc_attr_e( 'Excellent, 5 dari 5 di Trustpilot', 'jwtrading' ); ?>">
+							<strong>Excellent</strong>
+							<span>5/5</span>
+							<svg class="jwt-hero__rating-star" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.5l2.47 5.53 6.03.58-4.55 4.03 1.33 5.9L10 14.62l-5.28 2.92 1.33-5.9L1.5 7.61l6.03-.58L10 1.5z"/></svg>
+							<span class="jwt-hero__rating-sep">|</span>
+							<strong>Trustpilot</strong>
+						</a>
+					</div>
 
 					<?php echo jwt_social_links_html(); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper. ?>
 				</div>

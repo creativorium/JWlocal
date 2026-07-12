@@ -36,19 +36,21 @@ $jwt_wrapper = get_block_wrapper_attributes( array( 'class' => 'jwt-community' )
 				<div class="jwt-community__track" data-jwt-community>
 					<?php foreach ( $jwt_ids as $jwt_id ) : ?>
 						<div class="jwt-community__slide">
-							<?php
-							echo wp_get_attachment_image( // phpcs:ignore WordPress.Security.EscapeOutput
-								$jwt_id,
-								'large',
-								false,
-								array(
-									'class'    => 'jwt-community__img',
-									'loading'  => 'lazy',
-									'decoding' => 'async',
-									'alt'      => '',
-								)
-							);
-							?>
+							<a class="jwt-zoom" href="<?php echo esc_url( (string) wp_get_attachment_image_url( $jwt_id, 'full' ) ); ?>" target="_blank" rel="noopener">
+								<?php
+								echo wp_get_attachment_image( // phpcs:ignore WordPress.Security.EscapeOutput
+									$jwt_id,
+									'large',
+									false,
+									array(
+										'class'    => 'jwt-community__img',
+										'loading'  => 'lazy',
+										'decoding' => 'async',
+										'alt'      => '',
+									)
+								);
+								?>
+							</a>
 						</div>
 					<?php endforeach; ?>
 				</div>

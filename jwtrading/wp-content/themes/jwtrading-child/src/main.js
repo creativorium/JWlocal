@@ -434,6 +434,43 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
   }, 900);
 })();
 
+// --- Image lightbox ----------------------------------------------------------
+// Any <a class="jwt-zoom" href="<full image>"> opens the image in an overlay
+// instead of navigating. Without JS the link still opens the full image.
+(() => {
+  let overlay = null;
+  const close = () => {
+    if (!overlay) return;
+    overlay.remove();
+    overlay = null;
+    document.body.style.overflow = '';
+  };
+  const open = (src) => {
+    close();
+    overlay = document.createElement('div');
+    overlay.className = 'jwt-lightbox';
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = '';
+    overlay.appendChild(img);
+    document.body.appendChild(overlay);
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => overlay.classList.add('is-open'));
+  };
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a.jwt-zoom');
+    if (a && a.getAttribute('href')) {
+      e.preventDefault();
+      open(a.getAttribute('href'));
+      return;
+    }
+    if (overlay && e.target.closest('.jwt-lightbox')) close();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') close();
+  });
+})();
+
 // --- Landing scroll cue: fade out once the visitor starts scrolling ----------
 (() => {
   const cue = document.querySelector('[data-jwt-scrollcue]');
