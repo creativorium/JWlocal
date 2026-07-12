@@ -157,6 +157,12 @@
 	margin-top: 2.25rem;
 	font-size: 0.875rem;
 	color: #fff;
+
+	a {
+		color: var(--jwt-accent-light);
+		text-decoration: underline;
+		text-underline-offset: 2px;
+	}
 }
 
 .jwt-hero__chips {
