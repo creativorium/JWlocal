@@ -477,27 +477,45 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
   });
 })();
 
-// --- Blog category instant filter -------------------------------------------
-// On the blog index the pills filter the loaded cards in place. On real
-// category-archive pages we leave the pills as normal links (they navigate +
-// paginate server-side), so we only intercept when body.blog is present.
+// --- Blog category filter + search ------------------------------------------
+// Search filters the loaded cards on any blog view. Category pills instant-
+// filter on the blog index (body.blog); on real category-archive pages they
+// stay normal navigation links (server-side filter + pagination).
 (() => {
-  const nav = document.querySelector('[data-jwt-filter]');
   const grid = document.querySelector('[data-jwt-filter-grid]');
-  if (!nav || !grid || !document.body.classList.contains('blog')) return;
+  if (!grid) return;
   const cards = Array.from(grid.querySelectorAll('.jwt-card'));
-  const tabs = Array.from(nav.querySelectorAll('.jwt-filter__tab'));
-  tabs.forEach((tab) => {
-    tab.addEventListener('click', (e) => {
-      e.preventDefault();
-      const f = tab.getAttribute('data-filter');
-      tabs.forEach((t) => t.classList.toggle('is-active', t === tab));
-      cards.forEach((c) => {
-        const cats = (c.getAttribute('data-cats') || '').split(' ');
-        c.classList.toggle('is-hidden', f !== '*' && !cats.includes(f));
+  const tabs = Array.from(document.querySelectorAll('[data-jwt-filter] .jwt-filter__tab'));
+  const search = document.querySelector('[data-jwt-search]');
+  const noResults = document.querySelector('[data-jwt-noresults]');
+  const isIndex = document.body.classList.contains('blog');
+  let activeCat = '*';
+
+  const apply = () => {
+    const q = (search ? search.value : '').trim().toLowerCase();
+    let shown = 0;
+    cards.forEach((c) => {
+      const cats = (c.getAttribute('data-cats') || '').split(' ');
+      const catOk = !isIndex || activeCat === '*' || cats.includes(activeCat);
+      const textOk = !q || (c.getAttribute('data-search') || '').includes(q);
+      const show = catOk && textOk;
+      c.classList.toggle('is-hidden', !show);
+      if (show) shown += 1;
+    });
+    if (noResults) noResults.hidden = shown !== 0;
+  };
+
+  if (isIndex) {
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', (e) => {
+        e.preventDefault();
+        activeCat = tab.getAttribute('data-filter');
+        tabs.forEach((t) => t.classList.toggle('is-active', t === tab));
+        apply();
       });
     });
-  });
+  }
+  if (search) search.addEventListener('input', apply);
 })();
 
 // --- Landing scroll cue: fade out once the visitor starts scrolling ----------

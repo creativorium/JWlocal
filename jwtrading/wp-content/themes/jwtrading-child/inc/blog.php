@@ -105,6 +105,33 @@ function jwt_blog_date( $post = null ) {
 	return sprintf( '%d %s %d', (int) wp_date( 'j', $ts ), $months[ (int) wp_date( 'n', $ts ) ], (int) wp_date( 'Y', $ts ) );
 }
 
+/** Brand name shown as the article author on the front end (not the WP user). */
+function jwt_blog_author_name() {
+	return apply_filters( 'jwt/blog_author_name', 'JW Trading Academy' );
+}
+
+/**
+ * Brand avatar — the featured image of the product set via the
+ * `jwt/blog_author_product` filter (default: the Bootcamp product #684).
+ */
+function jwt_blog_author_avatar_html() {
+	$product_id = (int) apply_filters( 'jwt/blog_author_product', 684 );
+	$img_id     = $product_id ? (int) get_post_thumbnail_id( $product_id ) : 0;
+	if ( $img_id ) {
+		return wp_get_attachment_image(
+			$img_id,
+			'thumbnail',
+			false,
+			array(
+				'class'   => 'jwt-avatar',
+				'alt'     => esc_attr( jwt_blog_author_name() ),
+				'loading' => 'lazy',
+			)
+		);
+	}
+	return '<span class="jwt-avatar jwt-avatar--ph" aria-hidden="true">JW</span>';
+}
+
 /**
  * Slug list of a post's categories (for the JS instant filter's data attribute).
  *

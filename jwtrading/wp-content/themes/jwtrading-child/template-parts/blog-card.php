@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 $jwt_cat  = jwt_post_primary_category();
 $jwt_cats = jwt_post_category_slugs();
 ?>
-<article class="jwt-card" data-cats="<?php echo esc_attr( $jwt_cats ); ?>">
+<article class="jwt-card" data-cats="<?php echo esc_attr( $jwt_cats ); ?>" data-search="<?php echo esc_attr( strtolower( get_the_title() . ' ' . get_the_excerpt() ) ); ?>">
 	<a class="jwt-card__media" href="<?php the_permalink(); ?>">
 		<?php if ( has_post_thumbnail() ) : ?>
 			<?php the_post_thumbnail( 'large', array( 'class' => 'jwt-card__img', 'loading' => 'lazy', 'alt' => '' ) ); ?>
@@ -33,8 +33,8 @@ $jwt_cats = jwt_post_category_slugs();
 		<?php endif; ?>
 
 		<div class="jwt-card__meta">
-			<?php echo get_avatar( get_the_author_meta( 'ID' ), 32, '', '', array( 'class' => 'jwt-card__avatar' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
-			<span class="jwt-card__author"><?php the_author(); ?></span>
+			<?php echo jwt_blog_author_avatar_html(); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper. ?>
+			<span class="jwt-card__author"><?php echo esc_html( jwt_blog_author_name() ); ?></span>
 			<span class="jwt-card__dot" aria-hidden="true">·</span>
 			<time class="jwt-card__date" datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( jwt_blog_date() ); ?></time>
 		</div>

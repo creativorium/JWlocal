@@ -32,8 +32,8 @@ while ( have_posts() ) :
 				<?php endif; ?>
 
 				<div class="jwt-article__meta">
-					<?php echo get_avatar( get_the_author_meta( 'ID' ), 40, '', '', array( 'class' => 'jwt-article__avatar' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
-					<span class="jwt-article__author"><?php the_author(); ?></span>
+					<?php echo jwt_blog_author_avatar_html(); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper. ?>
+					<span class="jwt-article__author"><?php echo esc_html( jwt_blog_author_name() ); ?></span>
 					<span class="jwt-article__dot" aria-hidden="true">·</span>
 					<time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( jwt_blog_date() ); ?></time>
 					<span class="jwt-article__dot" aria-hidden="true">·</span>
