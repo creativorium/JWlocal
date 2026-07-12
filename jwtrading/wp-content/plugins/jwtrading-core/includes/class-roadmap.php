@@ -23,13 +23,16 @@ class JWT_Roadmap {
 		if ( ! is_array( $map ) ) {
 			return $map;
 		}
+		// Use the tag keys the Kit tagger already exposes/configures
+		// (JW_KIT_TAG_KEYS): LM_Roadmap / LM_IFVG — same as the original
+		// "LM Roadmap" / "LM IFVG" opt-in forms.
 		$defaults = array(
 			'trader_roadmap' => array(
-				'tags'  => array( 'Roadmap_Optin', 'Stage_Warm' ),
+				'tags'  => array( 'LM_Roadmap', 'Stage_Warm' ),
 				'stage' => 'Stage_Warm',
 			),
 			'ifvg_strategy'  => array(
-				'tags'  => array( 'IFVG_Optin', 'Stage_Warm' ),
+				'tags'  => array( 'LM_IFVG', 'Stage_Warm' ),
 				'stage' => 'Stage_Warm',
 			),
 		);
