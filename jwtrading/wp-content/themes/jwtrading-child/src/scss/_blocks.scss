@@ -15,10 +15,10 @@
 .jwt-hero {
 	position: relative;
 	text-align: center;
-	// Full-viewport hero: fill exactly the space below the sticky header,
-	// content vertically centered. `min-height` (not height) so it still
-	// grows if the content is ever taller than the viewport.
-	min-height: calc(100vh - var(--jwt-header-h));
+	// Content-height hero (not locked to 100vh) so the next section — e.g. the
+	// bootcamp video — peeks above the fold on load. A comfortable min-height
+	// keeps it substantial without filling the whole viewport.
+	min-height: min(72vh, 640px);
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -70,7 +70,7 @@
 
 // Eyebrow pill → h1 gap (matches the trust badge above).
 .jwt-hero__badge {
-	margin-bottom: 0.9em;
+	margin-bottom: 0.5rem;
 }
 
 // Rating/review badge (e.g. Trustpilot) — deliberately its own look, not
@@ -87,7 +87,7 @@
 	border: 1px solid rgb(255 255 255 / 0.1);
 	padding: 15px 25px;
 	border-radius: 999px;
-	margin-bottom: 0.9em; // gap to the hero h1
+	margin-bottom: 0.5rem; // gap to the hero h1 (rem = consistent)
 	transition: background 0.2s, border-color 0.2s;
 
 	strong {
@@ -265,6 +265,9 @@
 .jwt-feature__title {
 	font-size: 1.125rem;
 	font-weight: 700;
+	// Kadence's .single-content h3 adds a big top-margin; the number/icon row
+	// above already provides the spacing.
+	margin-top: 0 !important;
 }
 
 .jwt-feature__text {

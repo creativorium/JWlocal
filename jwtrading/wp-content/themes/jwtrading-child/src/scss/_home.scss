@@ -977,11 +977,13 @@ body.jwt-lightbox-open {
 	padding-block: clamp(3rem, 7vw, 5rem);
 
 	// Tighter rhythm for the eyebrow pill + title on compact heroes (legal pages).
+	// Content-height (no 100vh) heroes read better with a touch more space above
+	// the title than the tight 100vh/72vh heroes get.
 	.jwt-hero__badge {
-		margin-bottom: 0.9em;
+		margin-bottom: 0;
 	}
 
 	.jwt-hero__title {
-		margin: 0;
+		margin: 0.5em 0 0 !important;
 	}
 }
