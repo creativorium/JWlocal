@@ -119,10 +119,9 @@
 	&:focus { outline: none; }
 }
 
-// `.jwt-filter` prefix + link states beat the theme's `a:link/:visited` colour.
-.jwt-filter .jwt-filter__tab,
-.jwt-filter .jwt-filter__tab:link,
-.jwt-filter .jwt-filter__tab:visited {
+// `#jwt-content` prefix beats the base `#jwt-content a:not(.jwt-btn)` (1,1,1)
+// link colour that was tinting the pills purple.
+#jwt-content .jwt-filter .jwt-filter__tab {
 	color: #fff;
 }
 
@@ -279,12 +278,14 @@
 
 .jwt-card__date { white-space: nowrap; }
 
-// Brand avatar (product image) — shared by card + article meta.
+// Brand avatar (product image) — shared by card + article meta. Use `contain`
+// so the square JW logo shows fully inside the circle instead of being cropped.
 .jwt-avatar {
 	width: 28px;
 	height: 28px;
 	border-radius: 50%;
-	object-fit: cover;
+	object-fit: contain;
+	background: var(--jwt-surface-2, #12101c);
 	flex-shrink: 0;
 }
 
@@ -349,7 +350,7 @@
 	padding-bottom: clamp(3rem, 6vw, 5rem);
 }
 
-// Back button — its own left-aligned row above the centered header.
+// Back button — a pill on its own left-aligned row above the centered header.
 .jwt-article__nav {
 	padding-top: clamp(1.5rem, 3vw, 2.25rem);
 }
@@ -357,14 +358,28 @@
 .jwt-article__back {
 	display: inline-flex;
 	align-items: center;
-	gap: 0.4rem;
-	color: var(--jwt-muted);
+	gap: 0.5rem;
+	padding: 0.5rem 1.1rem 0.5rem 0.95rem;
+	border-radius: 999px;
+	border: 1px solid rgb(255 255 255 / 0.18);
+	background: rgb(255 255 255 / 0.03);
 	font-size: 0.85rem;
 	font-weight: 600;
 	text-decoration: none;
+	transition: color 0.2s, border-color 0.2s, background 0.2s;
 
-	svg { width: 16px; height: 16px; }
-	&:hover { color: var(--jwt-accent-light); }
+	svg { width: 16px; height: 16px; transition: transform 0.2s; }
+	&:hover svg { transform: translateX(-3px); }
+}
+
+// #jwt-content prefix beats the base link colour (1,1,1); colour the pill white.
+#jwt-content .jwt-article__back {
+	color: #fff;
+
+	&:hover {
+		border-color: rgb(124 77 255 / 0.55);
+		background: rgb(124 77 255 / 0.12);
+	}
 }
 
 .jwt-article__head {
@@ -372,7 +387,7 @@
 }
 
 .jwt-article__head-inner {
-	max-width: 920px;
+	max-width: 1000px;
 	margin-inline: auto;
 	text-align: center;
 }
@@ -430,7 +445,7 @@
 .jwt-article__img {
 	display: block;
 	width: 100%;
-	max-width: 920px;
+	max-width: 1000px;
 	max-height: 520px;
 	margin-inline: auto;
 	object-fit: cover;
@@ -439,8 +454,9 @@
 }
 
 .jwt-article__body {
-	max-width: 920px;
-	margin-inline: auto;
+	max-width: 1000px;
+	margin-left: auto !important;
+	margin-right: auto !important;
 
 	pre {
 		background: var(--jwt-surface-2, #12101c);
