@@ -795,6 +795,13 @@
 	}
 }
 
+// WooCommerce's own `.woocommerce ul.woocommerce-order-overview` (0,2,1) sets
+// padding:0 and out-specifies the rule above — win it back with the extra
+// `.woocommerce-thankyou-order-details` class the <ul> also carries.
+.woocommerce ul.woocommerce-order-overview.woocommerce-thankyou-order-details {
+	padding: clamp(1.5rem, 3vw, 2rem) clamp(1.5rem, 3vw, 2.25rem);
+}
+
 .jw-thankyou-card {
 	margin: 0 0 1.5rem;
 	padding: clamp(1.4rem, 3vw, 2rem);
@@ -838,6 +845,14 @@
 	font-weight: 700;
 	color: var(--jwt-text);
 	margin-bottom: 0.5rem;
+}
+
+// `.single-content a` (Kadence, 0,1,1) out-specifies a bare `.jw-btn` and
+// tints the label — scope under .jw-step so #fff wins in both states.
+.jw-step .jw-btn,
+.jw-step .jw-btn:hover,
+.jw-step .jw-btn:focus {
+	color: #fff;
 }
 
 .jw-btn {
