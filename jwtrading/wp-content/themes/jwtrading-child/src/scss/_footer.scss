@@ -68,6 +68,11 @@
 // pill (.jwt-hero__rating) for a consistent "Excellent · 5/5 · ★ · Trustpilot".
 .jwt-footer__trustpilot {
 	margin: 0 0 1.5rem;
+
+	// Match the social buttons' radius (not the hero's full pill) — footer only.
+	.jwt-hero__rating {
+		border-radius: 1rem;
+	}
 }
 
 // Legal disclaimer strip above the copyright bar.
