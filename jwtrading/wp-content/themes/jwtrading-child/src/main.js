@@ -477,6 +477,29 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
   });
 })();
 
+// --- Blog category instant filter -------------------------------------------
+// On the blog index the pills filter the loaded cards in place. On real
+// category-archive pages we leave the pills as normal links (they navigate +
+// paginate server-side), so we only intercept when body.blog is present.
+(() => {
+  const nav = document.querySelector('[data-jwt-filter]');
+  const grid = document.querySelector('[data-jwt-filter-grid]');
+  if (!nav || !grid || !document.body.classList.contains('blog')) return;
+  const cards = Array.from(grid.querySelectorAll('.jwt-card'));
+  const tabs = Array.from(nav.querySelectorAll('.jwt-filter__tab'));
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', (e) => {
+      e.preventDefault();
+      const f = tab.getAttribute('data-filter');
+      tabs.forEach((t) => t.classList.toggle('is-active', t === tab));
+      cards.forEach((c) => {
+        const cats = (c.getAttribute('data-cats') || '').split(' ');
+        c.classList.toggle('is-hidden', f !== '*' && !cats.includes(f));
+      });
+    });
+  });
+})();
+
 // --- Landing scroll cue: fade out once the visitor starts scrolling ----------
 (() => {
   const cue = document.querySelector('[data-jwt-scrollcue]');
