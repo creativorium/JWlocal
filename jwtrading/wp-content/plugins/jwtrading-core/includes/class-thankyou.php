@@ -14,10 +14,32 @@ class JWT_Thankyou {
 		add_action( 'woocommerce_thankyou', array( __CLASS__, 'next_steps' ), 5 );
 		add_filter( 'woocommerce_order_details_show_customer_details', array( __CLASS__, 'hide_customer_details' ), 9999 );
 		add_filter( 'woocommerce_get_order_item_totals', array( __CLASS__, 'tidy_totals' ), 9999, 2 );
+		add_action( 'template_redirect', array( __CLASS__, 'localize_strings' ) );
+	}
+
+	/** Localize WooCommerce's order-details strings on the thank-you page only. */
+	public static function localize_strings() {
+		if ( function_exists( 'is_order_received_page' ) && is_order_received_page() ) {
+			add_filter( 'gettext', array( __CLASS__, 'translate' ), 20, 3 );
+		}
+	}
+
+	public static function translate( $translated, $text, $domain ) {
+		if ( 'woocommerce' !== $domain ) {
+			return $translated;
+		}
+		$map = array(
+			'Order details'    => 'Detail Pesanan',
+			'Product'          => 'Produk',
+			'Subtotal:'        => 'Subtotal:',
+			'Payment method:'  => 'Metode Pembayaran:',
+			'Total:'           => 'Total:',
+		);
+		return $map[ $text ] ?? $translated;
 	}
 
 	public static function received_text( $text, $order ) {
-		return '<span class="jw-ty-eyebrow">' . esc_html__( 'Pembayaran Berhasil', 'jwtrading' ) . '</span>'
+		return '<span class="jwt-badge jw-ty-eyebrow"><span class="jwt-eyebrow__dot"></span>' . esc_html__( 'Pembayaran Berhasil', 'jwtrading' ) . '</span>'
 			. '<span class="jw-ty-title">' . esc_html__( 'Terima kasih. Pesanan Anda telah berhasil kami terima.', 'jwtrading' ) . '</span>';
 	}
 

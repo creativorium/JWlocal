@@ -725,44 +725,26 @@
 	}
 
 	.woocommerce-order {
-		max-width: 820px;
+		max-width: 840px;
 		margin-inline: auto;
-		padding-inline: 1rem;
+		padding-inline: clamp(1rem, 4vw, 1.5rem);
 	}
 
-	// Hero heading — eyebrow + title emitted by the received_text filter.
+	// Hero heading — pill eyebrow + title emitted by the received_text filter.
 	.woocommerce-thankyou-order-received {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		text-align: center;
-		gap: 0.75rem;
+		gap: 1rem;
 		margin: 0 0 2rem;
 		padding: clamp(1.5rem, 4vw, 3rem) 0 0;
 
-		.jw-ty-eyebrow {
-			display: inline-flex;
-			align-items: center;
-			gap: 0.45rem;
-			font-family: var(--jwt-font-heading);
-			font-size: 0.72rem;
-			font-weight: 700;
-			letter-spacing: 0.18em;
-			text-transform: uppercase;
-			color: var(--jwt-accent-light);
-
-			&::before {
-				content: "✓";
-				display: inline-flex;
-				align-items: center;
-				justify-content: center;
-				width: 1.35em;
-				height: 1.35em;
-				border-radius: 50%;
-				font-size: 0.85em;
-				background: var(--jwt-accent);
-				color: #fff;
-			}
+		// The pill styling comes from .jwt-badge (site hero eyebrow) — only the
+		// smaller size/margin needs nudging here.
+		.jw-ty-eyebrow.jwt-badge {
+			padding: 10px 20px;
+			font-size: 0.7rem;
 		}
 
 		.jw-ty-title {
@@ -890,9 +872,14 @@
 
 .jw-help-wa { margin-bottom: 0.6rem; }
 
-// Order details table on thank-you.
+// Order details on thank-you — wrapped in the same card treatment as
+// "Langkah Selanjutnya" so it doesn't read as a bare default-WooCommerce block.
 .woocommerce-order-received .woocommerce-order-details {
-	margin-top: 0;
+	margin: 0 0 1.5rem;
+	padding: clamp(1.4rem, 3vw, 2rem);
+	border-radius: var(--jwt-radius);
+	border: 1px solid var(--jwt-line);
+	background: var(--jwt-surface);
 
 	.woocommerce-order-details__title {
 		font-family: var(--jwt-font-heading);
@@ -902,18 +889,17 @@
 	}
 }
 
+// The table sits inside the card, so it's borderless with just row dividers and
+// zero side padding — its columns line up with the card's own padding edge.
 .woocommerce-order-received table.shop_table {
 	width: 100%;
-	border: 1px solid var(--jwt-line);
-	border-radius: var(--jwt-radius);
-	border-collapse: separate;
-	border-spacing: 0;
-	overflow: hidden;
-	background: var(--jwt-surface);
+	border: 0;
+	border-collapse: collapse;
+	background: transparent;
 	color: var(--jwt-text);
 
 	th, td {
-		padding: 0.95rem 1.25rem;
+		padding: 0.9rem 0;
 		border: 0;
 		border-bottom: 1px solid var(--jwt-line);
 		color: var(--jwt-text);
@@ -922,22 +908,24 @@
 	}
 
 	thead th {
+		padding-top: 0;
 		font-family: var(--jwt-font-heading);
 		font-size: 0.72rem;
 		letter-spacing: 0.12em;
 		text-transform: uppercase;
 		color: var(--jwt-muted);
-		background: var(--jwt-bg);
+		background: transparent;
 	}
-
-	tbody tr:last-child td { border-bottom: 1px solid var(--jwt-line); }
-	tfoot tr:last-child th,
-	tfoot tr:last-child td { border-bottom: 0; }
 
 	tfoot th { font-weight: 700; color: var(--jwt-muted); }
 	tfoot tr:last-child { font-size: 1.05rem; }
 	tfoot tr:last-child th,
-	tfoot tr:last-child td { font-weight: 800; color: var(--jwt-text); }
+	tfoot tr:last-child td {
+		border-bottom: 0;
+		padding-bottom: 0;
+		font-weight: 800;
+		color: var(--jwt-text);
+	}
 
 	a { color: var(--jwt-accent-light); }
 }
