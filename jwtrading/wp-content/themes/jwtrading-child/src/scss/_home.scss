@@ -977,8 +977,11 @@ body.jwt-lightbox-open {
 	padding-block: clamp(3rem, 7vw, 5rem);
 
 	// Tighter rhythm for the eyebrow pill + title on compact heroes (legal pages).
-	.jwt-hero__badge,
+	.jwt-hero__badge {
+		margin-bottom: 0.9em;
+	}
+
 	.jwt-hero__title {
-		margin: 0.5em 0 0.5em;
+		margin: 0;
 	}
 }

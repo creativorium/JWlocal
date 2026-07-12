@@ -60,11 +60,17 @@
 	font-weight: 800;
 	letter-spacing: -0.02em;
 	max-width: 880px;
+	margin-top: 0;
 
 	mark {
 		background: none;
 		color: var(--jwt-accent);
 	}
+}
+
+// Eyebrow pill → h1 gap (matches the trust badge above).
+.jwt-hero__badge {
+	margin-bottom: 0.9em;
 }
 
 // Rating/review badge (e.g. Trustpilot) — deliberately its own look, not
@@ -81,7 +87,7 @@
 	border: 1px solid rgb(255 255 255 / 0.1);
 	padding: 15px 25px;
 	border-radius: 999px;
-	margin-bottom: 12px;
+	margin-bottom: 0.9em; // gap to the hero h1
 	transition: background 0.2s, border-color 0.2s;
 
 	strong {
