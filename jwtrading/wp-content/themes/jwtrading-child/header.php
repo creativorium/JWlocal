@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
  * pages like the Trader Roadmap. Toggle per page via the `jwt/minimal_header`
  * filter.
  */
-$jwt_minimal_header = apply_filters( 'jwt/minimal_header', function_exists( 'is_page' ) && is_page( array( 'trader-roadmap', 'ifvg-strategy' ) ) );
+$jwt_minimal_header = apply_filters( 'jwt/minimal_header', function_exists( 'is_page' ) && is_page( array( 'trader-roadmap', 'ifvg-strategy', 'thank-you-page-trader-road-map', 'thank-you-page-lead-magnet-strategi-ifvg' ) ) );
 
 if ( $jwt_minimal_header ) :
 	$jwt_landing_cta = apply_filters(

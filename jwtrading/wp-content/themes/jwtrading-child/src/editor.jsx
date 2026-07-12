@@ -2143,7 +2143,8 @@ registerBlockType('jwt/roadmap-hero', {
           <PanelBody title={__('Form', 'jwtrading')}>
             {F('Placeholder nama', 'namePlaceholder')}{F('Placeholder email', 'emailPlaceholder')}
             {F('Teks tombol', 'submitText')}{F('Footnote', 'footnote')}
-            {F('Pesan sukses', 'successText')}{F('URL PDF', 'pdfUrl')}{F('Kit form_id', 'formId')}
+            {F('Pesan sukses', 'successText')}{F('URL PDF', 'pdfUrl')}
+            {F('URL Redirect (thank-you)', 'redirectUrl')}{F('Kit form_id', 'formId')}
           </PanelBody>
         </InspectorControls>
         <div {...blockProps}>

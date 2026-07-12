@@ -21,6 +21,7 @@
 		"footnote": { "type": "string", "default": "Gratis. Tanpa kartu. Tanpa komitmen." },
 		"successText": { "type": "string", "default": "Your submission was successful." },
 		"pdfUrl": { "type": "string", "default": "" },
+		"redirectUrl": { "type": "string", "default": "" },
 		"formId": { "type": "string", "default": "trader_roadmap" }
 	}
 }

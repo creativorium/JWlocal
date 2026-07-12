@@ -407,6 +407,7 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
     const btn = form.querySelector('.jwt-roadmap-form__submit');
     const msg = form.querySelector('.jwt-roadmap-form__msg');
     const pdf = form.getAttribute('data-pdf') || '';
+    const redirect = form.getAttribute('data-redirect') || '';
     const formId = form.getAttribute('data-form-id') || 'trader_roadmap';
     const btnLabel = btn ? btn.textContent : '';
 
@@ -436,6 +437,10 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
           if (btn) { btn.disabled = false; btn.textContent = btnLabel; }
           return;
         }
+        // Preferred: redirect to the thank-you page (lets the ads team track the
+        // opt-in via that URL). The PDF is delivered by the Kit email automation.
+        if (redirect) { window.location.href = redirect; return; }
+
         if (msg) msg.textContent = msg.getAttribute('data-success') || 'Berhasil ✓';
         form.querySelectorAll('.jwt-roadmap-form__field, .jwt-roadmap-form__submit, .jwt-roadmap-form__footnote').forEach((n) => { n.style.display = 'none'; });
         const url = (data.data && data.data.pdf) || pdf;

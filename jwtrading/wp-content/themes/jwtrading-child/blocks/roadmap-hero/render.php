@@ -42,7 +42,7 @@ $jwt_wrap    = get_block_wrapper_attributes( array( 'class' => 'jwt-roadmap-hero
 					<p class="jwt-roadmap-hero__lead"><?php echo wp_kses_post( $attributes['lead'] ); ?></p>
 				<?php endif; ?>
 
-				<form class="jwt-roadmap-form" data-jwt-roadmap data-form-id="<?php echo esc_attr( $jwt_form_id ); ?>" data-pdf="<?php echo esc_url( $jwt_pdf ); ?>">
+				<form class="jwt-roadmap-form" data-jwt-roadmap data-form-id="<?php echo esc_attr( $jwt_form_id ); ?>" data-pdf="<?php echo esc_url( $jwt_pdf ); ?>" data-redirect="<?php echo esc_url( (string) ( $attributes['redirectUrl'] ?? '' ) ); ?>">
 					<input type="hidden" name="nonce" value="<?php echo esc_attr( $jwt_nonce ); ?>">
 
 					<label class="jwt-roadmap-form__field">
