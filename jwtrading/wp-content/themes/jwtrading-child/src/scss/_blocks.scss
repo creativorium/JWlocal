@@ -60,12 +60,17 @@
 	font-weight: 800;
 	letter-spacing: -0.02em;
 	max-width: 880px;
-	margin-top: 0;
 
 	mark {
 		background: none;
 		color: var(--jwt-accent);
 	}
+}
+
+// `.jwt-hero` prefix beats Kadence's `.single-content h1` 1.5em top-margin —
+// scoped to the hero title only. (Compact heroes override this to 0.5em below.)
+.jwt-hero .jwt-hero__title {
+	margin-top: 1em;
 }
 
 // Eyebrow pill → h1 gap (matches the trust badge above).
