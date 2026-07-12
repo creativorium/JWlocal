@@ -15,12 +15,17 @@ while ( have_posts() ) :
 	$jwt_posts_page = (int) get_option( 'page_for_posts' );
 	?>
 	<main class="jwt-article">
+		<?php if ( $jwt_posts_page ) : ?>
+			<div class="jwt-container jwt-article__nav">
+				<a class="jwt-article__back" href="<?php echo esc_url( get_permalink( $jwt_posts_page ) ); ?>">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+					<?php esc_html_e( 'Semua Artikel', 'jwtrading' ); ?>
+				</a>
+			</div>
+		<?php endif; ?>
+
 		<header class="jwt-article__head">
 			<div class="jwt-container jwt-article__head-inner">
-				<?php if ( $jwt_posts_page ) : ?>
-					<a class="jwt-article__back" href="<?php echo esc_url( get_permalink( $jwt_posts_page ) ); ?>">&larr; <?php esc_html_e( 'Semua Artikel', 'jwtrading' ); ?></a>
-				<?php endif; ?>
-
 				<?php if ( $jwt_cat ) : ?>
 					<a class="jwt-article__chip" href="<?php echo esc_url( get_category_link( $jwt_cat ) ); ?>"><?php echo esc_html( $jwt_cat->name ); ?></a>
 				<?php endif; ?>

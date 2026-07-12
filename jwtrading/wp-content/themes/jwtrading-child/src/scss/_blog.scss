@@ -70,51 +70,60 @@
 	@media (max-width: 620px) { justify-content: center; }
 }
 
+// Search = one bordered flex pill holding the icon + a borderless input, so the
+// icon can never overlap the text (no absolute-position padding tricks).
 .jwt-blog__search {
-	position: relative;
 	display: flex;
 	align-items: center;
+	gap: 0.55rem;
 	flex-shrink: 0;
+	width: 260px;
+	max-width: 100%;
+	height: 44px;
+	padding: 0 1.1rem;
+	border-radius: 999px;
+	border: 1px solid rgb(255 255 255 / 0.18);
+	background: rgb(255 255 255 / 0.03);
+	transition: border-color 0.2s;
+
+	&:focus-within { border-color: rgb(124 77 255 / 0.5); }
+
+	@media (max-width: 620px) { width: 100%; }
 }
 
 .jwt-blog__search-ico {
-	position: absolute;
-	left: 1rem;
-	top: 50%;
-	transform: translateY(-50%);
+	flex-shrink: 0;
 	width: 16px;
 	height: 16px;
-	z-index: 1;
 	color: var(--jwt-muted);
 	pointer-events: none;
 }
 
 .jwt-blog__search input {
-	box-sizing: border-box;
-	-webkit-appearance: none;
-	appearance: none;
-	width: 260px;
-	max-width: 100%;
-	height: 44px;
+	flex: 1;
+	min-width: 0;
+	height: 100%;
 	margin: 0;
-	padding: 0 1rem 0 2.6rem;
-	border-radius: 999px;
-	border: 1px solid rgb(255 255 255 / 0.18);
-	background: rgb(255 255 255 / 0.03);
+	padding: 0;
+	border: 0 !important;
+	background: transparent !important;
+	box-shadow: none !important;
 	color: var(--jwt-text);
 	font-size: 0.9rem;
-	line-height: normal;
-	transition: border-color 0.2s;
+	-webkit-appearance: none;
+	appearance: none;
 
 	&::placeholder { color: var(--jwt-muted); }
 	&::-webkit-search-decoration,
 	&::-webkit-search-cancel-button { -webkit-appearance: none; }
-	&:focus {
-		outline: none;
-		border-color: rgb(124 77 255 / 0.5);
-	}
+	&:focus { outline: none; }
+}
 
-	@media (max-width: 620px) { width: 100%; }
+// `.jwt-filter` prefix + link states beat the theme's `a:link/:visited` colour.
+.jwt-filter .jwt-filter__tab,
+.jwt-filter .jwt-filter__tab:link,
+.jwt-filter .jwt-filter__tab:visited {
+	color: #fff;
 }
 
 .jwt-filter__tab {
@@ -340,24 +349,32 @@
 	padding-bottom: clamp(3rem, 6vw, 5rem);
 }
 
-.jwt-article__head {
-	padding-block: clamp(2rem, 5vw, 3.5rem) clamp(1.25rem, 3vw, 2rem);
-}
-
-.jwt-article__head-inner {
-	max-width: 820px;
-	margin-inline: auto;
-	text-align: center;
+// Back button — its own left-aligned row above the centered header.
+.jwt-article__nav {
+	padding-top: clamp(1.5rem, 3vw, 2.25rem);
 }
 
 .jwt-article__back {
-	display: inline-block;
-	margin-bottom: 1.25rem;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
 	color: var(--jwt-muted);
 	font-size: 0.85rem;
+	font-weight: 600;
 	text-decoration: none;
 
+	svg { width: 16px; height: 16px; }
 	&:hover { color: var(--jwt-accent-light); }
+}
+
+.jwt-article__head {
+	padding-block: clamp(1rem, 2.5vw, 1.75rem) clamp(1.25rem, 3vw, 2rem);
+}
+
+.jwt-article__head-inner {
+	max-width: 920px;
+	margin-inline: auto;
+	text-align: center;
 }
 
 .jwt-article__chip {
@@ -413,14 +430,16 @@
 .jwt-article__img {
 	display: block;
 	width: 100%;
+	max-width: 920px;
 	max-height: 520px;
+	margin-inline: auto;
 	object-fit: cover;
 	border-radius: var(--jwt-radius);
 	border: 1px solid var(--jwt-line);
 }
 
 .jwt-article__body {
-	max-width: 760px;
+	max-width: 920px;
 	margin-inline: auto;
 
 	pre {
