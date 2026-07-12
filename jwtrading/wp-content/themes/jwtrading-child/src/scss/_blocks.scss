@@ -818,13 +818,14 @@
 
 .jwt-showcase-card__title::before {
 	content: counter(jwt-showcase, decimal-leading-zero);
-	display: block;
+	display: inline-block;
+	margin-right: 0.5rem;
 	font-family: var(--jwt-font-mono);
-	font-size: 0.8rem;
+	font-size: 0.85em;
 	font-weight: 700;
 	letter-spacing: 0.08em;
 	color: var(--jwt-accent-light);
-	margin-bottom: 0.5rem;
+	vertical-align: baseline;
 }
 
 .jwt-showcase-card__text {
