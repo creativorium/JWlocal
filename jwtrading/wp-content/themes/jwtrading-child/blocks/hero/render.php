@@ -7,8 +7,17 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$jwt_tag     = in_array( $attributes['titleTag'], array( 'h1', 'h2', 'p' ), true ) ? $attributes['titleTag'] : 'h1';
-$jwt_wrapper = get_block_wrapper_attributes( array( 'class' => 'jwt-hero' . ( ! empty( $attributes['compact'] ) ? ' jwt-hero--compact' : '' ) ) );
+$jwt_tag = in_array( $attributes['titleTag'], array( 'h1', 'h2', 'p' ), true ) ? $attributes['titleTag'] : 'h1';
+
+// Optional lead-magnet auto-download (thank-you pages): when a downloadUrl is
+// set, the file is fetched automatically on load (main.js) and the primary CTA
+// falls back to it so the manual button and auto-download share one source.
+$jwt_download = trim( (string) ( $attributes['downloadUrl'] ?? '' ) );
+$jwt_wrap_attrs = array( 'class' => 'jwt-hero' . ( ! empty( $attributes['compact'] ) ? ' jwt-hero--compact' : '' ) );
+if ( '' !== $jwt_download ) {
+	$jwt_wrap_attrs['data-jwt-autodownload'] = esc_url( $jwt_download );
+}
+$jwt_wrapper = get_block_wrapper_attributes( $jwt_wrap_attrs );
 ?>
 <section <?php echo $jwt_wrapper; // phpcs:ignore WordPress.Security.EscapeOutput ?>>
 	<div class="jwt-container" data-jwt-reveal>
@@ -35,8 +44,12 @@ $jwt_wrapper = get_block_wrapper_attributes( array( 'class' => 'jwt-hero' . ( ! 
 
 		<?php if ( '' !== trim( $attributes['primaryText'] ) || '' !== trim( $attributes['secondaryText'] ) ) : ?>
 			<div class="jwt-hero__actions">
-				<?php if ( '' !== trim( $attributes['primaryText'] ) ) : ?>
-					<a class="jwt-btn jwt-btn--primary" href="<?php echo esc_url( $attributes['primaryUrl'] ?: '#' ); ?>"><?php echo esc_html( $attributes['primaryText'] ); ?></a>
+				<?php
+				if ( '' !== trim( $attributes['primaryText'] ) ) :
+					$jwt_primary_url = $attributes['primaryUrl'] ?: ( $jwt_download ?: '#' );
+					$jwt_is_dl       = ( '' !== $jwt_download && $jwt_primary_url === $jwt_download );
+					?>
+					<a class="jwt-btn jwt-btn--primary" href="<?php echo esc_url( $jwt_primary_url ); ?>"<?php echo $jwt_is_dl ? ' download' : ''; ?>><?php echo esc_html( $attributes['primaryText'] ); ?></a>
 				<?php endif; ?>
 				<?php if ( '' !== trim( $attributes['secondaryText'] ) ) : ?>
 					<a class="jwt-btn jwt-btn--ghost" href="<?php echo esc_url( $attributes['secondaryUrl'] ?: '#' ); ?>"><?php echo esc_html( $attributes['secondaryText'] ); ?></a>
@@ -44,8 +57,18 @@ $jwt_wrapper = get_block_wrapper_attributes( array( 'class' => 'jwt-hero' . ( ! 
 			</div>
 		<?php endif; ?>
 
-		<?php if ( '' !== trim( $attributes['note'] ) ) : ?>
-			<p class="jwt-hero__note"><?php echo esc_html( $attributes['note'] ); ?></p>
+		<?php
+		$jwt_note_wa = preg_replace( '/\D+/', '', (string) ( $attributes['noteWa'] ?? '' ) );
+		if ( '' !== trim( $attributes['note'] ) || '' !== $jwt_note_wa ) :
+			?>
+			<p class="jwt-hero__note">
+				<?php echo esc_html( $attributes['note'] ); ?>
+				<?php
+				if ( '' !== $jwt_note_wa && function_exists( 'jwt_cloak_wa' ) ) {
+					echo ' ' . jwt_cloak_wa( $jwt_note_wa, esc_html__( 'Chat WhatsApp', 'jwtrading' ) ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper.
+				}
+				?>
+			</p>
 		<?php endif; ?>
 
 		<?php

@@ -169,6 +169,18 @@ registerBlockType('jwt/hero', {
               value={attributes.chips}
               onChange={(chips) => setAttributes({ chips })}
             />
+            <TextControl
+              label={__('URL unduhan otomatis (PDF)', 'jwtrading')}
+              help={__('Halaman thank-you: file ini otomatis terunduh saat halaman dibuka. Tombol utama juga mengarah ke sini bila URL-nya dikosongkan.', 'jwtrading')}
+              value={attributes.downloadUrl}
+              onChange={(downloadUrl) => setAttributes({ downloadUrl })}
+            />
+            <TextControl
+              label={__('Nomor WhatsApp di catatan', 'jwtrading')}
+              help={__('Bila diisi, teks "Chat WhatsApp" yang bisa diklik ditambahkan setelah catatan (nomor disembunyikan dari bot).', 'jwtrading')}
+              value={attributes.noteWa}
+              onChange={(noteWa) => setAttributes({ noteWa })}
+            />
           </PanelBody>
         </InspectorControls>
 

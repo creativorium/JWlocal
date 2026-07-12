@@ -414,6 +414,26 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
   });
 })();
 
+// --- Lead-magnet auto-download (thank-you pages) -----------------------------
+// A jwt/hero with a downloadUrl set triggers the file download automatically a
+// beat after the page paints, so the visitor lands on the styled thank-you view
+// first. The primary button is the manual fallback.
+(() => {
+  const host = document.querySelector('[data-jwt-autodownload]');
+  if (!host) return;
+  const url = host.getAttribute('data-jwt-autodownload');
+  if (!url || url === '#') return;
+  setTimeout(() => {
+    const a = document.createElement('a');
+    a.href = url;
+    a.setAttribute('download', '');
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }, 900);
+})();
+
 // --- Landing scroll cue: fade out once the visitor starts scrolling ----------
 (() => {
   const cue = document.querySelector('[data-jwt-scrollcue]');

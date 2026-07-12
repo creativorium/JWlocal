@@ -26,6 +26,8 @@
 		"secondaryText": { "type": "string", "default": "" },
 		"secondaryUrl": { "type": "string", "default": "" },
 		"note": { "type": "string", "default": "" },
+		"noteWa": { "type": "string", "default": "" },
+		"downloadUrl": { "type": "string", "default": "" },
 		"chips": { "type": "string", "default": "" }
 	}
 }
