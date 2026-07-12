@@ -27,7 +27,6 @@ require_once JWT_CORE_PATH . 'includes/class-preview-gate.php';
 require_once JWT_CORE_PATH . 'includes/class-tracking.php';
 require_once JWT_CORE_PATH . 'includes/class-redirects.php';
 require_once JWT_CORE_PATH . 'includes/class-roadmap.php';
-require_once JWT_CORE_PATH . 'includes/class-page-access.php';
 
 // WooCommerce-independent features — boot immediately.
 JWT_Plugin_Guard::init();
@@ -35,7 +34,6 @@ JWT_Preview_Gate::init();
 JWT_Roadmap::init();
 JWT_Tracking::init();
 JWT_Redirects::init();
-JWT_Page_Access::init();
 
 /**
  * Activation: create log table + schedule retry cron.
