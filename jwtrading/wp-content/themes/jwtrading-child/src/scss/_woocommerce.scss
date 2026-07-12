@@ -847,12 +847,14 @@
 	margin-bottom: 0.5rem;
 }
 
-// `.single-content a` (Kadence, 0,1,1) out-specifies a bare `.jw-btn` and
-// tints the label — scope under .jw-step so #fff wins in both states.
-.jw-step .jw-btn,
-.jw-step .jw-btn:hover,
-.jw-step .jw-btn:focus {
-	color: #fff;
+// `.single-content a` (Kadence) tints the label purple — force #fff in every
+// state (!important because Kadence's link rules can match at higher specificity).
+.jw-next-steps .jw-btn,
+.jw-next-steps .jw-btn:link,
+.jw-next-steps .jw-btn:visited,
+.jw-next-steps .jw-btn:hover,
+.jw-next-steps .jw-btn:focus {
+	color: #fff !important;
 }
 
 .jw-btn {

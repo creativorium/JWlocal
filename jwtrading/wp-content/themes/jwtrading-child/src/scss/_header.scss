@@ -107,11 +107,10 @@ body.admin-bar .jwt-header {
 	grid-template-columns: 1fr auto 1fr;
 	align-items: center;
 	gap: 1rem;
-	// Taller bar + balanced top/bottom padding so the bigger logo has
-	// breathing room on both edges (bottom was visibly slimmer before).
-	min-height: 96px;
-	padding-top: 1rem;
-	padding-bottom: 1rem;
+	// Balanced top/bottom padding around the logo.
+	min-height: 78px;
+	padding-top: 0.9rem;
+	padding-bottom: 0.9rem;
 }
 
 .jwt-brand {
@@ -119,7 +118,7 @@ body.admin-bar .jwt-header {
 	align-items: center;
 
 	img {
-		max-height: 65px;
+		max-height: 46px;
 		width: auto;
 		display: block;
 	}
