@@ -371,7 +371,8 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
 // No backend — the form gathers name/email/message and opens wa.me pre-filled.
 (() => {
   document.querySelectorAll('[data-jwt-contact]').forEach((form) => {
-    const wa = form.getAttribute('data-wa');
+    let wa = '';
+    try { wa = atob(form.getAttribute('data-wa') || ''); } catch (e) { wa = ''; }
     if (!wa) return;
     form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -386,6 +387,30 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
       ].filter(Boolean);
       window.open(`https://wa.me/${wa}?text=${encodeURIComponent(lines.join('\n\n'))}`, '_blank', 'noopener');
     });
+  });
+})();
+
+// --- Anti-scraper: assemble cloaked email / WhatsApp links at runtime --------
+// The real address is base64 in data-c; simple HTML scrapers never see a plain
+// mailto: / wa.me number. See jwt_cloak_email() / jwt_cloak_wa().
+(() => {
+  document.querySelectorAll('a.jwt-cloak').forEach((a) => {
+    const type = a.getAttribute('data-cloak');
+    let dec = '';
+    try { dec = atob(a.getAttribute('data-c') || ''); } catch (e) { return; }
+    if (!dec) return;
+    if (type === 'email') {
+      a.href = 'mailto:' + dec;
+      const slot = a.querySelector('[data-cloak-text]');
+      if (slot) slot.textContent = dec;
+      else if (!a.textContent.trim()) a.textContent = dec;
+    } else if (type === 'wa') {
+      a.href = 'https://wa.me/' + dec;
+      a.setAttribute('target', '_blank');
+      a.setAttribute('rel', 'noopener noreferrer');
+    }
+    a.removeAttribute('data-c');
+    a.removeAttribute('data-cloak');
   });
 })();
 

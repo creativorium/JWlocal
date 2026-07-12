@@ -112,3 +112,41 @@ function jwt_social_links_html( bool $show_labels = false ): string {
 
 	return $html . '</ul>';
 }
+
+/**
+ * Bot-scraper protection for emails / WhatsApp numbers shown on the site.
+ * The real address never appears in the served HTML — it's base64-encoded in a
+ * data-c attribute and the href/label are assembled by main.js at runtime
+ * (`a.jwt-cloak`). Simple HTML scrapers (the vast majority) can't read it.
+ */
+function jwt_cloak_email( string $email, string $label = '', string $class = '' ): string {
+	$email = sanitize_email( $email );
+	if ( '' === $email ) {
+		return '';
+	}
+	$inner = '' !== $label ? esc_html( $label ) : '<span data-cloak-text></span>';
+	return sprintf(
+		'<a class="jwt-cloak %s" href="#" data-cloak="email" data-c="%s">%s</a>',
+		esc_attr( trim( $class ) ),
+		esc_attr( base64_encode( $email ) ),
+		$inner
+	);
+}
+
+/**
+ * @param string $inner Already-escaped/safe HTML for the link body (text or SVG).
+ */
+function jwt_cloak_wa( string $number, string $inner, string $class = '', string $aria = '', string $prefill = '' ): string {
+	$digits = preg_replace( '/\D+/', '', $number );
+	if ( '' === $digits ) {
+		return '';
+	}
+	$payload = $digits . ( '' !== $prefill ? '?text=' . rawurlencode( $prefill ) : '' );
+	return sprintf(
+		'<a class="jwt-cloak %s" href="#" data-cloak="wa" data-c="%s"%s>%s</a>',
+		esc_attr( trim( $class ) ),
+		esc_attr( base64_encode( $payload ) ),
+		'' !== $aria ? ' aria-label="' . esc_attr( $aria ) . '"' : '',
+		$inner
+	);
+}

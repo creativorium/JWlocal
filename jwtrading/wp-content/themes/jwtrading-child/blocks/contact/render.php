@@ -22,7 +22,7 @@ $jwt_wrap    = get_block_wrapper_attributes( array( 'class' => 'jwt-contact' ) )
 		<div class="jwt-contact__grid">
 			<div class="jwt-contact__info">
 				<?php if ( '' !== $jwt_wa ) : ?>
-					<a class="jwt-contact__card jwt-contact__card--wa" href="https://wa.me/<?php echo esc_attr( $jwt_wa ); ?>" target="_blank" rel="noopener">
+					<a class="jwt-contact__card jwt-contact__card--wa jwt-cloak" href="#" data-cloak="wa" data-c="<?php echo esc_attr( base64_encode( $jwt_wa ) ); ?>">
 						<span class="jwt-contact__icon jwt-contact__icon--wa" aria-hidden="true">
 							<svg viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C9.4 3 4 8.4 4 15c0 2.1.6 4.1 1.6 5.9L4 29l8.3-1.6c1.7.9 3.6 1.4 5.7 1.4 6.6 0 12-5.4 12-12S22.6 3 16 3zm0 21.8c-1.8 0-3.5-.5-5-1.4l-.4-.2-3.7.7.7-3.6-.2-.4c-1-1.6-1.5-3.4-1.5-5.3 0-5.4 4.4-9.8 9.9-9.8 5.4 0 9.8 4.4 9.8 9.8s-4.3 9.8-9.8 9.8zm5.4-7.3c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1c-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5s-.7-1.7-1-2.3c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1.1 2.8 1.2 3c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.6-.3z"/></svg>
 						</span>
@@ -36,7 +36,7 @@ $jwt_wrap    = get_block_wrapper_attributes( array( 'class' => 'jwt-contact' ) )
 				<?php endif; ?>
 
 				<?php if ( '' !== $jwt_email ) : ?>
-					<a class="jwt-contact__card" href="mailto:<?php echo esc_attr( $jwt_email ); ?>">
+					<a class="jwt-contact__card jwt-cloak" href="#" data-cloak="email" data-c="<?php echo esc_attr( base64_encode( $jwt_email ) ); ?>">
 						<span class="jwt-contact__icon" aria-hidden="true">
 							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
 						</span>
@@ -80,7 +80,7 @@ $jwt_wrap    = get_block_wrapper_attributes( array( 'class' => 'jwt-contact' ) )
 					<p class="jwt-contact__form-note"><?php echo esc_html( $attributes['formNote'] ); ?></p>
 				<?php endif; ?>
 
-				<form class="jwt-contact__form" data-jwt-contact data-wa="<?php echo esc_attr( $jwt_wa ); ?>">
+				<form class="jwt-contact__form" data-jwt-contact data-wa="<?php echo esc_attr( base64_encode( $jwt_wa ) ); ?>">
 					<div class="jwt-contact__fields">
 						<label class="jwt-contact__field">
 							<span><?php esc_html_e( 'Nama', 'jwtrading' ); ?></span>
@@ -97,7 +97,7 @@ $jwt_wrap    = get_block_wrapper_attributes( array( 'class' => 'jwt-contact' ) )
 					</label>
 					<button type="submit" class="jwt-btn jwt-btn--primary jwt-contact__submit"><?php esc_html_e( 'Kirim Pesan →', 'jwtrading' ); ?></button>
 					<?php if ( '' !== trim( (string) ( $attributes['formFootnote'] ?? '' ) ) && '' !== $jwt_wa ) : ?>
-						<p class="jwt-contact__form-footnote"><?php echo esc_html( $attributes['formFootnote'] ); ?> <a href="https://wa.me/<?php echo esc_attr( $jwt_wa ); ?>" target="_blank" rel="noopener">WhatsApp</a></p>
+						<p class="jwt-contact__form-footnote"><?php echo esc_html( $attributes['formFootnote'] ); ?> <?php echo jwt_cloak_wa( $jwt_wa, esc_html__( 'WhatsApp', 'jwtrading' ) ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper. ?></p>
 					<?php endif; ?>
 				</form>
 			</div>

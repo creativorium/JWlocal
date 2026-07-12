@@ -17,7 +17,8 @@ class JWT_Thankyou {
 	}
 
 	public static function received_text( $text, $order ) {
-		return __( 'Terima kasih. Pesanan Anda telah berhasil kami terima.', 'jwtrading' );
+		return '<span class="jw-ty-eyebrow">' . esc_html__( 'Pembayaran Berhasil', 'jwtrading' ) . '</span>'
+			. '<span class="jw-ty-title">' . esc_html__( 'Terima kasih. Pesanan Anda telah berhasil kami terima.', 'jwtrading' ) . '</span>';
 	}
 
 	public static function page_title( $title ) {
@@ -33,22 +34,20 @@ class JWT_Thankyou {
 			return;
 		}
 
-		$discord_url  = apply_filters( 'jwt/discord_url', home_url( '/discord/' ) );
-		$whatsapp     = apply_filters( 'jwt/whatsapp_number', '628113931505' );
-		$whatsapp_url = 'https://wa.me/' . $whatsapp;
-		$wa_display   = '+' . $whatsapp;
+		$discord_url = apply_filters( 'jwt/discord_url', home_url( '/discord/' ) );
+		$whatsapp    = apply_filters( 'jwt/whatsapp_number', '628113931505' );
 		?>
 		<section class="jw-thankyou-card jw-next-steps">
 			<h3><?php esc_html_e( 'Langkah Selanjutnya', 'jwtrading' ); ?></h3>
 
 			<div class="jw-steps-grid">
 				<div class="jw-step">
-					<div class="jw-step-title">1️⃣ <?php esc_html_e( 'Cek Email Anda', 'jwtrading' ); ?></div>
+					<div class="jw-step-title">1 <?php esc_html_e( 'Cek Email Anda', 'jwtrading' ); ?></div>
 					<p><?php esc_html_e( 'Silakan periksa email Anda untuk mendapatkan link akses ke video course Bootcamp.', 'jwtrading' ); ?></p>
 				</div>
 
 				<div class="jw-step">
-					<div class="jw-step-title">2️⃣ <?php esc_html_e( 'Bergabung ke Discord', 'jwtrading' ); ?></div>
+					<div class="jw-step-title">2 <?php esc_html_e( 'Bergabung ke Discord', 'jwtrading' ); ?></div>
 					<p><?php esc_html_e( 'Pastikan Anda sudah bergabung ke komunitas Discord kami. Admin kami akan menambahkan Anda ke channel khusus member dalam beberapa jam setelah pembelian dikonfirmasi.', 'jwtrading' ); ?></p>
 					<a class="jw-btn" href="<?php echo esc_url( $discord_url ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Join Discord', 'jwtrading' ); ?></a>
 				</div>
@@ -58,11 +57,25 @@ class JWT_Thankyou {
 				<div class="jw-help-left">
 					<div class="jw-help-text"><?php esc_html_e( 'Butuh bantuan?', 'jwtrading' ); ?></div>
 					<div class="jw-help-wa">
-						<?php esc_html_e( 'Hubungi WA:', 'jwtrading' ); ?> <a href="<?php echo esc_url( $whatsapp_url ); ?>" target="_blank" rel="noopener"><?php echo esc_html( $wa_display ); ?></a>
+						<?php esc_html_e( 'Hubungi via', 'jwtrading' ); ?>
+						<?php
+						if ( function_exists( 'jwt_cloak_wa' ) ) {
+							echo jwt_cloak_wa( $whatsapp, esc_html__( 'WhatsApp', 'jwtrading' ) ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper.
+						} else {
+							echo '<a href="' . esc_url( 'https://wa.me/' . $whatsapp ) . '" target="_blank" rel="noopener">' . esc_html__( 'WhatsApp', 'jwtrading' ) . '</a>';
+						}
+						?>
 					</div>
 					<div class="jw-help-meta">
 						<strong>JW Trading Academy</strong><br>
-						Email: <a href="mailto:info@jwtradingacademy.com">info@jwtradingacademy.com</a>
+						<?php esc_html_e( 'Email:', 'jwtrading' ); ?>
+						<?php
+						if ( function_exists( 'jwt_cloak_email' ) ) {
+							echo jwt_cloak_email( 'info@jwtradingacademy.com' ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper.
+						} else {
+							echo '<a href="mailto:info@jwtradingacademy.com">info@jwtradingacademy.com</a>';
+						}
+						?>
 					</div>
 				</div>
 			</div>
