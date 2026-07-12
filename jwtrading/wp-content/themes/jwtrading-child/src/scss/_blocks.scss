@@ -802,6 +802,26 @@
 	margin: 0;
 }
 
+// Auto-numbered showcase cards (mono number, same treatment as feature cards).
+.jwt-showcase__cards {
+	counter-reset: jwt-showcase;
+}
+
+.jwt-showcase-card {
+	counter-increment: jwt-showcase;
+}
+
+.jwt-showcase-card__title::before {
+	content: counter(jwt-showcase, decimal-leading-zero);
+	display: block;
+	font-family: var(--jwt-font-mono);
+	font-size: 0.8rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	color: var(--jwt-accent-light);
+	margin-bottom: 0.5rem;
+}
+
 .jwt-showcase-card__text {
 	color: var(--jwt-muted);
 	line-height: 1.6;
@@ -871,7 +891,7 @@
 	display: flex;
 	align-items: center;
 	gap: 0.55rem;
-	margin-bottom: 18px;
+	margin-bottom: 0.4rem; // minimal gap to the title
 
 	.jwt-feature__num {
 		margin-bottom: 0;
