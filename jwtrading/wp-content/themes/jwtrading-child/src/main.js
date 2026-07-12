@@ -452,7 +452,13 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
     const img = document.createElement('img');
     img.src = src;
     img.alt = '';
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'jwt-lightbox__close';
+    btn.setAttribute('aria-label', 'Tutup');
+    btn.innerHTML = '&times;';
     overlay.appendChild(img);
+    overlay.appendChild(btn);
     document.body.appendChild(overlay);
     document.body.style.overflow = 'hidden';
     requestAnimationFrame(() => overlay.classList.add('is-open'));

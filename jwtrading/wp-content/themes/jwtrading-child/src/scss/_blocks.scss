@@ -1649,6 +1649,34 @@
 	}
 }
 
+.jwt-lightbox__close {
+	position: absolute;
+	top: clamp(0.75rem, 3vw, 1.5rem);
+	right: clamp(0.75rem, 3vw, 1.5rem);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	padding: 0;
+	font-size: 1.75rem;
+	line-height: 1;
+	color: #fff;
+	background: rgb(255 255 255 / 0.12);
+	border: 1px solid rgb(255 255 255 / 0.25);
+	border-radius: 50%;
+	cursor: pointer;
+	-webkit-backdrop-filter: blur(4px);
+	backdrop-filter: blur(4px);
+	transition: background 0.2s, transform 0.2s;
+
+	&:hover {
+		background: var(--jwt-accent);
+		border-color: var(--jwt-accent);
+		transform: scale(1.05);
+	}
+}
+
 .jwt-casestudy__placeholder {
 	display: flex;
 	align-items: center;
