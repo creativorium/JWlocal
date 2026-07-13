@@ -26,6 +26,7 @@
 		"vertical": { "type": "boolean", "default": false },
 		"rating": { "type": "boolean", "default": false },
 		"ratingText": { "type": "string", "default": "" },
+		"chips": { "type": "string", "default": "" },
 		"price": { "type": "string", "default": "" },
 		"priceOld": { "type": "string", "default": "" },
 		"footnote": { "type": "string", "default": "" },

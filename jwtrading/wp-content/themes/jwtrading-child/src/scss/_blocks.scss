@@ -996,6 +996,15 @@
 	gap: 2px;
 }
 
+// Chips row (e.g. "1-on-1 • Program 6 Minggu") — sits where the rating would.
+.jwt-offer-card__chips {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.5rem;
+	margin-top: 0.85rem;
+}
+
 .jwt-offer-card__price {
 	display: flex;
 	flex-direction: column;

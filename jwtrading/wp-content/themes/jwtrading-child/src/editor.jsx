@@ -1473,6 +1473,12 @@ registerBlockType('jwt/offer-card', {
               onChange={(badge) => setAttributes({ badge })}
             />
             <TextControl
+              label={__('Chips (pisahkan dengan | )', 'jwtrading')}
+              help={__('Pil kecil di bawah judul, mis. "1-on-1 • Program 6 Minggu". Beberapa pil: pisah dengan |', 'jwtrading')}
+              value={attributes.chips}
+              onChange={(chips) => setAttributes({ chips })}
+            />
+            <TextControl
               label={__('URL tombol', 'jwtrading')}
               value={attributes.buttonUrl}
               onChange={(buttonUrl) => setAttributes({ buttonUrl })}

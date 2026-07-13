@@ -62,6 +62,18 @@ $jwt_btn_text = trim( (string) ( $attributes['buttonText'] ?? '' ) );
 			</div>
 		<?php endif; ?>
 
+		<?php
+		$jwt_chips = trim( (string) ( $attributes['chips'] ?? '' ) );
+		if ( '' !== $jwt_chips ) :
+			$jwt_chip_list = array_filter( array_map( 'trim', preg_split( '/\|/u', $jwt_chips ) ) );
+			?>
+			<div class="jwt-offer-card__chips">
+				<?php foreach ( $jwt_chip_list as $jwt_chip ) : ?>
+					<span class="jwt-pill"><?php echo esc_html( $jwt_chip ); ?></span>
+				<?php endforeach; ?>
+			</div>
+		<?php endif; ?>
+
 		<?php if ( '' !== $jwt_price ) : ?>
 			<div class="jwt-offer-card__price">
 				<span class="jwt-offer-card__price-now"><?php echo esc_html( $jwt_price ); ?></span>
