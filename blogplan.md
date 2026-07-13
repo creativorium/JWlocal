@@ -70,6 +70,8 @@ Reuse jwt tokens + `.single-content`. New `src/scss/_blog.scss`: archive grid, c
 3. Category filter: category-archive links (SEO) vs JS instant filter vs **both**?
 4. Single header: full-bleed featured-image banner vs compact jwt/hero with image beside?
 
+
+//Read below after blog and admin function is fixed
 also create a thing when we go live, i will download the backup of the current site like everything and we need to make sure the blog, the order and everything will be able to migrate, is that easy to do?
 
 https://pagespeed.web.dev/analysis/https-jwtradingacademy-creativorium-com/2vlanir9o6?form_factor=mobile
@@ -172,3 +174,21 @@ Unattributable
 193 ms
 46 ms
 0 ms
+
+
+Forced reflow
+A forced reflow occurs when JavaScript queries geometric properties (such as offsetWidth) after styles have been invalidated by a change to the DOM state. This can result in poor performance. Learn more about forced reflows and possible mitigations.Unscored
+Source
+Total reflow time
+https://jwtradingacademy.creativorium.com:667:83
+62 ms
+[unattributed]
+9 ms
+…assets/main-Cey8dlPO.js:1:207(jwtradingacademy.creativorium.com)
+7 ms
+…assets/main-Cey8dlPO.js:1:369(jwtradingacademy.creativorium.com)
+13 ms
+…assets/main-Cey8dlPO.js:1:1020(jwtradingacademy.creativorium.com)
+1 ms
+…assets/main-Cey8dlPO.js:3:1729(jwtradingacademy.creativorium.com)
+1 ms

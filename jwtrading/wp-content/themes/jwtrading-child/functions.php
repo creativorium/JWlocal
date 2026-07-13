@@ -14,6 +14,7 @@ require_once JWT_THEME_DIR . '/inc/theme-setup.php';
 require_once JWT_THEME_DIR . '/inc/kadence-palette.php';
 require_once JWT_THEME_DIR . '/inc/editor-lock.php';
 require_once JWT_THEME_DIR . '/inc/blog.php';
+require_once JWT_THEME_DIR . '/inc/perf.php';
 
 /**
  * Vite bridge.

@@ -617,7 +617,7 @@ body.jwt-lightbox-open {
 .jwt-feature--numbered {
 	position: relative;
 	overflow: hidden;
-	padding: 34px;
+	padding: 34px !important;
 }
 
 // Purple glow top-right of each numbered box (per spec: 0.16 + blur 38px).

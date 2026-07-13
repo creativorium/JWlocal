@@ -484,7 +484,7 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
 (() => {
   const grid = document.querySelector('[data-jwt-filter-grid]');
   if (!grid) return;
-  const cards = Array.from(grid.querySelectorAll('.jwt-card'));
+  const cards = Array.from(grid.querySelectorAll('.jwt-blog-card'));
   const tabs = Array.from(document.querySelectorAll('[data-jwt-filter] .jwt-filter__tab'));
   const search = document.querySelector('[data-jwt-search]');
   const noResults = document.querySelector('[data-jwt-noresults]');

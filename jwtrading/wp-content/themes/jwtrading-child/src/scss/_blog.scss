@@ -161,7 +161,7 @@
 	@media (max-width: 600px) { grid-template-columns: 1fr; }
 }
 
-.jwt-card {
+.jwt-blog-card {
 	display: flex;
 	flex-direction: column;
 	padding: 0.6rem;
@@ -180,7 +180,7 @@
 	}
 }
 
-.jwt-card__media {
+.jwt-blog-card__media {
 	position: relative;
 	display: block;
 	aspect-ratio: 16 / 9;
@@ -191,17 +191,17 @@
 		var(--jwt-surface-2, #12101c);
 }
 
-.jwt-card__img {
+.jwt-blog-card__img {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
 	display: block;
 	transition: transform 0.4s var(--jwt-ease);
 
-	.jwt-card:hover & { transform: scale(1.04); }
+	.jwt-blog-card:hover & { transform: scale(1.04); }
 }
 
-.jwt-card__placeholder {
+.jwt-blog-card__placeholder {
 	position: absolute;
 	inset: 0;
 	display: flex;
@@ -214,7 +214,7 @@
 	color: rgb(255 255 255 / 0.16);
 }
 
-.jwt-card__chip {
+.jwt-blog-card__chip {
 	position: absolute;
 	top: 0.75rem;
 	left: 0.75rem;
@@ -230,7 +230,7 @@
 	backdrop-filter: blur(4px);
 }
 
-.jwt-card__body {
+.jwt-blog-card__body {
 	display: flex;
 	flex-direction: column;
 	gap: 0.6rem;
@@ -238,7 +238,7 @@
 	padding: 0.9rem 0.65rem 0.75rem;
 }
 
-.jwt-card__title {
+.jwt-blog-card__title {
 	margin: 0;
 	font-family: var(--jwt-font-heading);
 	font-size: 1.15rem;
@@ -251,14 +251,14 @@
 	}
 }
 
-.jwt-card__excerpt {
+.jwt-blog-card__excerpt {
 	margin: 0;
 	color: var(--jwt-text);
 	font-size: 0.9rem;
 	line-height: 1.55;
 }
 
-.jwt-card__meta {
+.jwt-blog-card__meta {
 	margin-top: auto;
 	padding-top: 0.4rem;
 	display: flex;
@@ -269,14 +269,14 @@
 	color: var(--jwt-muted);
 }
 
-.jwt-card__by {
+.jwt-blog-card__by {
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
 	min-width: 0;
 }
 
-.jwt-card__date { white-space: nowrap; }
+.jwt-blog-card__date { white-space: nowrap; }
 
 // Brand avatar (product image) — shared by card + article meta. Use `contain`
 // so the square JW logo shows fully inside the circle instead of being cropped.
@@ -300,7 +300,7 @@
 	font-size: 0.7rem;
 }
 
-.jwt-card__author { color: var(--jwt-text); font-weight: 600; }
+.jwt-blog-card__author { color: var(--jwt-text); font-weight: 600; }
 
 // ----- Pagination ------------------------------------------------------------
 .jwt-pagination {
@@ -359,26 +359,27 @@
 	display: inline-flex;
 	align-items: center;
 	gap: 0.5rem;
-	padding: 0.5rem 1.1rem 0.5rem 0.95rem;
+	padding: 0.5rem 1.2rem 0.5rem 1rem;
 	border-radius: 999px;
-	border: 1px solid rgb(255 255 255 / 0.18);
-	background: rgb(255 255 255 / 0.03);
+	border: 1px solid var(--jwt-accent);
+	background: var(--jwt-accent);
 	font-size: 0.85rem;
 	font-weight: 600;
 	text-decoration: none;
-	transition: color 0.2s, border-color 0.2s, background 0.2s;
+	box-shadow: 0 8px 22px rgb(124 77 255 / 0.35);
+	transition: background 0.2s, box-shadow 0.2s;
 
 	svg { width: 16px; height: 16px; transition: transform 0.2s; }
 	&:hover svg { transform: translateX(-3px); }
 }
 
-// #jwt-content prefix beats the base link colour (1,1,1); colour the pill white.
+// #jwt-content prefix beats the base link colour (1,1,1); keep the label white.
 #jwt-content .jwt-article__back {
-	color: #fff;
+	color: #fff !important;
 
 	&:hover {
-		border-color: rgb(124 77 255 / 0.55);
-		background: rgb(124 77 255 / 0.12);
+		background: var(--jwt-accent-hover);
+		border-color: var(--jwt-accent-hover);
 	}
 }
 
