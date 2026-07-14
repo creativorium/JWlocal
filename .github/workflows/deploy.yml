@@ -1,0 +1,77 @@
+name: Deploy to EasyWP (SFTP)
+
+# Code-only deploy: builds the theme's dist/ and uploads the child theme + the
+# two plugins to EasyWP over SFTP. The database is NEVER touched (live orders +
+# content stay put). Runs on a push that changes theme/plugin code, or manually.
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - 'jwtrading/wp-content/themes/jwtrading-child/**'
+      - 'jwtrading/wp-content/plugins/jwtrading-core/**'
+      - 'jwtrading/wp-content/plugins/jw-integrations/**'
+
+# Never let two deploys overlap.
+concurrency:
+  group: deploy-easywp
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: jwtrading/wp-content/themes/jwtrading-child/package-lock.json
+
+      - name: Build theme assets (dist/)
+        working-directory: jwtrading/wp-content/themes/jwtrading-child
+        run: |
+          npm ci
+          npm run build
+
+      - name: Stage files to deploy
+        run: |
+          set -e
+          THEME=jwtrading/wp-content/themes/jwtrading-child
+          mkdir -p deploy/themes deploy/plugins
+
+          # Child theme — everything EXCEPT dev/build sources.
+          rsync -a \
+            --exclude 'node_modules' \
+            --exclude 'src' \
+            --exclude '.git*' \
+            --exclude 'vite.config.js' \
+            --exclude 'package.json' \
+            --exclude 'package-lock.json' \
+            --exclude 'dist/hot' \
+            "$THEME"/ deploy/themes/jwtrading-child/
+
+          # Plugins — full copy (drop any stray dev cruft).
+          rsync -a --exclude '.git*' --exclude 'node_modules' \
+            jwtrading/wp-content/plugins/jwtrading-core/ deploy/plugins/jwtrading-core/
+          rsync -a --exclude '.git*' --exclude 'node_modules' \
+            jwtrading/wp-content/plugins/jw-integrations/ deploy/plugins/jw-integrations/
+
+          echo "Staged:"; find deploy -maxdepth 2 -type d | sort
+
+      - name: Upload via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.5
+        with:
+          server: ${{ secrets.EASYWP_SFTP_HOST }}
+          username: ${{ secrets.EASYWP_SFTP_USER }}
+          password: ${{ secrets.EASYWP_SFTP_PASSWORD }}
+          port: ${{ secrets.EASYWP_SFTP_PORT }}
+          # Uploads deploy/themes/** and deploy/plugins/** into <remote>/themes and <remote>/plugins.
+          local_path: './deploy/*'
+          remote_path: ${{ secrets.EASYWP_REMOTE_WPCONTENT }}
+          sftp_only: true
+          # Keep false so a bad run can't wipe remote files (incl. EasyWP's mu-plugins).
+          delete_remote_files: false
