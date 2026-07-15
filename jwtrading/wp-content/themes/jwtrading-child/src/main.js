@@ -434,6 +434,58 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
   }, 900);
 })();
 
+// --- Generic carousel ([data-jwt-carousel]) ----------------------------------
+// Reusable slider: a [data-jwt-carousel-track] of equal-width slides, prev/next
+// buttons, and auto-built dots. Auto-advances, pauses on hover. Used by the
+// case-study block (testimonials); mirrors the Discord community carousel.
+(() => {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('[data-jwt-carousel]').forEach((root) => {
+    const track = root.querySelector('[data-jwt-carousel-track]');
+    if (!track) return;
+    const slides = Array.from(track.children);
+    if (slides.length <= 1) return;
+    const dotsWrap = root.querySelector('[data-jwt-carousel-dots]');
+    const prev = root.querySelector('[data-jwt-carousel-prev]');
+    const next = root.querySelector('[data-jwt-carousel-next]');
+    let active = 0;
+
+    const dots = slides.map((_, i) => {
+      const d = document.createElement('button');
+      d.type = 'button';
+      d.className = 'jwt-carousel__dot';
+      d.setAttribute('aria-label', `${i + 1}`);
+      d.addEventListener('click', () => go(i, true));
+      dotsWrap && dotsWrap.appendChild(d);
+      return d;
+    });
+
+    const render = () => {
+      track.style.transform = `translateX(-${active * 100}%)`;
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === active));
+    };
+    const go = (i, stop) => {
+      active = (i + slides.length) % slides.length;
+      render();
+      if (stop) rearm();
+    };
+
+    let timer = null;
+    const rearm = () => {
+      clearInterval(timer);
+      if (!reduce) timer = setInterval(() => go(active + 1), 5000);
+    };
+
+    prev && prev.addEventListener('click', () => go(active - 1, true));
+    next && next.addEventListener('click', () => go(active + 1, true));
+    root.addEventListener('mouseenter', () => clearInterval(timer));
+    root.addEventListener('mouseleave', rearm);
+
+    render();
+    rearm();
+  });
+})();
+
 // --- Image lightbox ----------------------------------------------------------
 // Any <a class="jwt-zoom" href="<full image>"> opens the image in an overlay
 // instead of navigating. Without JS the link still opens the full image.

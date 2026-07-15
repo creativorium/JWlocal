@@ -1979,7 +1979,11 @@ registerBlockType('jwt/community', {
 registerBlockType('jwt/case-study', {
   edit({ attributes, setAttributes }) {
     const blockProps = useBlockProps();
-    const { imageId } = attributes;
+    // Multi-image (imageIds) with backward-compat fallback to the legacy imageId.
+    const csIds = (attributes.imageIds
+      ? attributes.imageIds.split('|')
+      : (attributes.imageId ? [String(attributes.imageId)] : [])
+    ).map((n) => parseInt(n, 10)).filter((n) => n > 0);
     return (
       <>
         <InspectorControls>
@@ -1996,15 +2000,22 @@ registerBlockType('jwt/case-study', {
               options={[{ label: 'Kanan', value: 'right' }, { label: 'Kiri', value: 'left' }]}
               onChange={(imageSide) => setAttributes({ imageSide })}
             />
+            <p style={{ fontSize: 12, opacity: 0.8, margin: '8px 0 0' }}>
+              {__('Pilih 1 atau lebih gambar. Jika lebih dari 1, otomatis jadi slider dengan panah.', 'jwtrading')}
+            </p>
             <MediaUploadCheck>
               <MediaUpload
-                onSelect={(m) => setAttributes({ imageId: m.id })}
+                multiple
+                gallery
                 allowedTypes={['image']}
-                value={imageId}
+                value={csIds}
+                onSelect={(media) => setAttributes({ imageIds: media.map((m) => m.id).join('|'), imageId: 0 })}
                 render={({ open }) => (
                   <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-                    <Button variant="secondary" onClick={open}>{imageId ? __('Ganti gambar', 'jwtrading') : __('Pilih gambar', 'jwtrading')}</Button>
-                    {imageId ? <Button variant="link" isDestructive onClick={() => setAttributes({ imageId: 0 })}>{__('Hapus', 'jwtrading')}</Button> : null}
+                    <Button variant="secondary" onClick={open}>
+                      {csIds.length ? `${__('Ganti gambar', 'jwtrading')} (${csIds.length})` : __('Pilih gambar', 'jwtrading')}
+                    </Button>
+                    {csIds.length ? <Button variant="link" isDestructive onClick={() => setAttributes({ imageIds: '', imageId: 0 })}>{__('Kosongkan', 'jwtrading')}</Button> : null}
                   </div>
                 )}
               />

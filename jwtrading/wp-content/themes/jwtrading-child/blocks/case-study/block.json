@@ -18,6 +18,7 @@
 		"buttonText": { "type": "string", "default": "" },
 		"buttonUrl": { "type": "string", "default": "" },
 		"imageId": { "type": "number", "default": 0 },
+		"imageIds": { "type": "string", "default": "" },
 		"imageSide": { "type": "string", "default": "right" }
 	}
 }

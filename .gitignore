@@ -14,3 +14,15 @@ JWtradingLocal/
 # OS noise
 Thumbs.db
 .DS_Store
+
+# Local dev / planning / source assets — kept on disk, NOT in the repo.
+# (The repo should carry only the deploy workflow, theme, and plugins.)
+.claude/
+CLAUDE.md
+jwtrading/CLAUDE.md
+tools/
+blogplan.md
+headerfooter.html
+backupthemefunction and style.txt
+Brand Partner Logos/
+Home Page Icons/
