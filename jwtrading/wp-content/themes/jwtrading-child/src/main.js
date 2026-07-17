@@ -434,6 +434,72 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
   }, 900);
 })();
 
+// --- Promo banner countdown --------------------------------------------------
+// Counts down to an absolute epoch (ms) set by the promo-banner plugin. Hours
+// can exceed 24 (e.g. 130) by design. Removes the banner when it hits zero.
+(() => {
+  const el = document.querySelector('[data-jwt-countdown]');
+  if (!el) return;
+  let target = parseInt(el.getAttribute('data-jwt-countdown'), 10);
+  if (!target) return;
+  const d = el.querySelector('[data-d]');
+  const h = el.querySelector('[data-h]');
+  const m = el.querySelector('[data-m]');
+  const banner = el.closest('[data-jwt-promo]');
+  const pad = (n) => String(n).padStart(2, '0');
+
+  // The banner is position:fixed, so publish its height for the body/header
+  // offset (CSS reads --jwt-promo-h). Keep it in sync on resize/wrap.
+  const setH = () => {
+    document.documentElement.style.setProperty('--jwt-promo-h', (banner ? banner.offsetHeight : 0) + 'px');
+  };
+  setH();
+  window.addEventListener('resize', setH);
+
+  // When the primary countdown hits zero and an extension is configured, flip
+  // the banner to the extension deadline instead of removing it.
+  const flip = () => {
+    const extMs = parseInt(el.getAttribute('data-jwt-extend') || '0', 10);
+    if (!extMs || extMs <= Date.now()) return false;
+    target = extMs;
+    el.removeAttribute('data-jwt-extend');
+    if (banner) {
+      banner.classList.add('is-extended');
+      if (!banner.querySelector('.jwt-promo-banner__badge')) {
+        const b = document.createElement('span');
+        b.className = 'jwt-promo-banner__badge';
+        b.textContent = 'EXTENDED';
+        banner.insertBefore(b, banner.firstChild);
+      }
+      setH();
+    }
+    return true;
+  };
+
+  let timer = null;
+  const tick = () => {
+    let diff = Math.floor((target - Date.now()) / 1000);
+    if (diff <= 0) {
+      if (flip()) { tick(); return; }
+      clearInterval(timer);
+      if (banner) banner.remove();
+      document.documentElement.style.setProperty('--jwt-promo-h', '0px');
+      document.body.classList.remove('jwt-has-promo');
+      return;
+    }
+    const dd = Math.floor(diff / 86400);
+    diff -= dd * 86400;
+    const hh = Math.floor(diff / 3600);
+    diff -= hh * 3600;
+    const mm = Math.floor(diff / 60);
+    if (d) d.textContent = pad(dd);
+    if (h) h.textContent = pad(hh);
+    if (m) m.textContent = pad(mm);
+  };
+  tick();
+  timer = setInterval(tick, 1000);
+})();
+
 // --- Generic carousel ([data-jwt-carousel]) ----------------------------------
 // Reusable slider: a [data-jwt-carousel-track] of equal-width slides, prev/next
 // buttons, and auto-built dots. Auto-advances, pauses on hover. Used by the

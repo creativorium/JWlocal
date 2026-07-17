@@ -1,0 +1,146 @@
+// ---------------------------------------------------------------------------
+// Promo banner — fixed neon-purple countdown strip above the header, rendered
+// by the jwtrading-core promo-banner plugin (via wp_body_open). Orange time,
+// green coupon code. The plugin adds body.jwt-has-promo so the fixed strip can
+// offset the layout; JS publishes its height as --jwt-promo-h.
+// ---------------------------------------------------------------------------
+
+.jwt-promo-banner {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 200;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 0.4rem 1.1rem;
+	padding: 0.55rem 1.1rem;
+	background:
+		linear-gradient(90deg, #6d3bff, #8b5cff 50%, #6d3bff);
+	color: #fff;
+	text-decoration: none;
+	font-family: var(--jwt-font-mono);
+	font-size: 0.85rem;
+	font-weight: 600;
+	line-height: 1.2;
+	text-align: center;
+	border-bottom: 1px solid rgb(180 150 255 / 0.6);
+	box-shadow:
+		0 6px 26px rgb(124 77 255 / 0.55),
+		inset 0 1px 0 rgb(255 255 255 / 0.18);
+	transition: filter 0.2s;
+
+	&:hover { filter: brightness(1.05); }
+
+	@media (max-width: 560px) {
+		font-size: 0.72rem;
+		gap: 0.3rem 0.7rem;
+		padding: 0.5rem 0.7rem;
+	}
+}
+
+// Fixed strip → push the page + sticky header down by its height.
+body.jwt-has-promo { padding-top: var(--jwt-promo-h, 44px); }
+body.jwt-has-promo .jwt-header { top: var(--jwt-promo-h, 44px); }
+
+// With the WP admin bar the banner sits below it, header below both.
+body.admin-bar .jwt-promo-banner { top: 32px; }
+body.jwt-has-promo.admin-bar .jwt-header { top: calc(32px + var(--jwt-promo-h, 44px)); }
+
+@media screen and (max-width: 782px) {
+	body.admin-bar .jwt-promo-banner { top: 46px; }
+	body.jwt-has-promo.admin-bar .jwt-header { top: calc(46px + var(--jwt-promo-h, 44px)); }
+}
+
+// "EXTENDED" badge during the extension phase.
+.jwt-promo-banner__badge {
+	padding: 2px 9px;
+	border-radius: 999px;
+	background: #ffb020;
+	color: #2a1400;
+	font-size: 0.6rem;
+	font-weight: 800;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	box-shadow: 0 0 12px rgb(255 176 32 / 0.5);
+}
+
+.jwt-promo-banner__msg {
+	font-weight: 800;
+	letter-spacing: 0.01em;
+
+	mark {
+		background: none;
+		color: #fff;
+		font-weight: 800;
+		text-shadow: 0 0 10px rgb(255 255 255 / 0.6);
+	}
+}
+
+.jwt-promo-banner__sep {
+	width: 1px;
+	height: 18px;
+	background: rgb(255 255 255 / 0.3);
+
+	@media (max-width: 560px) { display: none; }
+}
+
+// Coupon code — neon green.
+.jwt-promo-banner__code {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+
+	code {
+		padding: 2px 9px;
+		border-radius: 6px;
+		background: rgb(61 255 166 / 0.12);
+		border: 1px solid rgb(61 255 166 / 0.55);
+		color: #4dffb0;
+		font-family: var(--jwt-font-mono);
+		font-weight: 700;
+		letter-spacing: 0.05em;
+		text-shadow: 0 0 8px rgb(61 255 166 / 0.5);
+	}
+}
+
+// Countdown — neon orange.
+.jwt-promo-banner__timer {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+}
+
+.jwt-promo-banner__unit {
+	display: inline-flex;
+	flex-direction: column;
+	align-items: center;
+	line-height: 1;
+
+	b {
+		font-size: 1.05rem;
+		font-weight: 800;
+		font-variant-numeric: tabular-nums;
+		color: #ffb020;
+		text-shadow: 0 0 10px rgb(255 176 32 / 0.55);
+	}
+
+	small {
+		margin-top: 2px;
+		font-size: 0.56rem;
+		font-weight: 700;
+		letter-spacing: 0.12em;
+		color: rgb(255 255 255 / 0.75);
+	}
+}
+
+.jwt-promo-banner__colon {
+	align-self: flex-start;
+	margin-top: 1px;
+	font-size: 1.05rem;
+	font-weight: 800;
+	color: #ffb020;
+	text-shadow: 0 0 10px rgb(255 176 32 / 0.5);
+}
