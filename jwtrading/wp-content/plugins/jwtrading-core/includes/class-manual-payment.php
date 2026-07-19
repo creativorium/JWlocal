@@ -708,8 +708,8 @@ class JWT_Manual_Payment {
 	if ( b.dataset.armed !== '1' ) {
 						b.dataset.armed = '1';
 						b.dataset.label = b.textContent;
-						b.textContent = '<?php echo esc_js( __( 'Klik lagi untuk buat order', 'jwtrading' ) ); ?>';
-						b.style.color = '#0a7d33'; b.style.fontWeight = '700';
+						b.textContent = '<?php echo esc_js( __( 'Confirm?', 'jwtrading' ) ); ?>';
+						b.style.color = '#fff'; b.style.fontWeight = '700';
 						setTimeout( function () { if ( b.dataset.armed === '1' ) { b.dataset.armed = '0'; b.textContent = b.dataset.label || 'Confirm'; b.style.color = ''; b.style.fontWeight = ''; } }, 4000 );
 						return;
 					}
