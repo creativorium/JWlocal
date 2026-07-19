@@ -20,6 +20,17 @@ $jwt_split = static function ( $val ) {
 
 $jwt_methods = $jwt_split( $attributes['methods'] ?? '' );
 $jwt_points  = $jwt_split( $attributes['points'] ?? '' );
+
+// During an active promo/campaign (Promo Banner → "Visa / Mastercard" ticked),
+// surface card methods too. Turns off automatically when the banner ends.
+if ( class_exists( 'JWT_Promo_Banner' ) && JWT_Promo_Banner::cards_active() ) {
+	$jwt_lower = array_map( 'strtolower', $jwt_methods );
+	foreach ( array( 'Mastercard', 'Visa' ) as $jwt_card ) {
+		if ( ! in_array( strtolower( $jwt_card ), $jwt_lower, true ) ) {
+			$jwt_methods[] = $jwt_card;
+		}
+	}
+}
 $jwt_wrapper = get_block_wrapper_attributes( array( 'class' => 'jwt-payments' ) );
 ?>
 <section <?php echo $jwt_wrapper; // phpcs:ignore WordPress.Security.EscapeOutput ?>>

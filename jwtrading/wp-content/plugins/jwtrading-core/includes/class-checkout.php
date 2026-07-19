@@ -20,6 +20,15 @@ class JWT_Checkout {
 		add_filter( 'woocommerce_default_address_fields', array( __CLASS__, 'strip_address_fields' ), 99999 );
 		add_filter( 'woocommerce_enable_order_notes_field', array( __CLASS__, 'disable_order_notes' ) );
 
+		// Empty-cart / expired-session notice: point "Return to shop" at Bootcamp
+		// instead of the undesigned shop page (which looks broken).
+		add_filter( 'woocommerce_return_to_shop_redirect', static function () {
+			return home_url( '/bootcamp/' );
+		} );
+		add_filter( 'woocommerce_return_to_shop_text', static function () {
+			return __( 'Kembali ke Bootcamp', 'jwtrading' );
+		} );
+
 		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'discord_field' ), 20 );
 		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'coupon_field' ), 25 );
 		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'payment_slot' ), 28 );
@@ -233,16 +242,32 @@ class JWT_Checkout {
 			. '</span><div id="jwt-payment-list" class="jwt-payment__list"></div></div>';
 	}
 
-	/** Manual bank-transfer alternative (Google Form). */
+	/**
+	 * Manual bank-transfer alternative. Gated on the required checkout data
+	 * (validated client-side in manual-payment.js); a valid click captures the
+	 * order into the Manual Payment store (JWT_Manual_Payment) and forwards the
+	 * buyer to a themed instruction screen — no more off-grid Google Form.
+	 */
 	public static function manual_transfer_cta() {
-		$url = apply_filters(
-			'jwt/manual_transfer_url',
-			'https://docs.google.com/forms/d/e/1FAIpQLSfYjTEGC41lwQ9jl8oCVyMuSLOvh5JpXmfrkSLeiCvJlE-iDA/viewform?usp=sharing&ouid=111044366817694125987'
-		);
+		if ( ! self::virtual_mode() ) {
+			return;
+		}
+		// The button always shows. The Manual Payment "Aktifkan Transfer Manual"
+		// switch only decides where it goes:
+		//   ON  → the on-site manual-transfer flow (JS-driven #jwt-manual-btn).
+		//   OFF → the original external Google Form (a plain link).
+		$mp       = class_exists( 'JWT_Manual_Payment' ) ? JWT_Manual_Payment::settings() : array();
+		$enabled  = ! empty( $mp['enabled'] );
+		$form_url = isset( $mp['form_url'] ) ? $mp['form_url'] : '';
 		?>
 		<div id="alt-transfer-box">
 			<p class="alt-text"><?php esc_html_e( 'Ingin menggunakan pembayaran menggunakan bank transfer secara manual?', 'jwtrading' ); ?></p>
-			<a href="<?php echo esc_url( $url ); ?>" class="alt-btn jwt-btn jwt-btn--ghost" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Gunakan Transfer Manual →', 'jwtrading' ); ?></a>
+			<?php if ( $enabled ) : ?>
+				<button type="button" class="alt-btn jwt-btn jwt-btn--ghost" id="jwt-manual-btn"><?php esc_html_e( 'Gunakan Transfer Manual →', 'jwtrading' ); ?></button>
+				<div class="jwt-manual-warning" id="jwt-manual-warning" role="alert" hidden></div>
+			<?php elseif ( $form_url ) : ?>
+				<a class="alt-btn jwt-btn jwt-btn--ghost" href="<?php echo esc_url( $form_url ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Gunakan Transfer Manual →', 'jwtrading' ); ?></a>
+			<?php endif; ?>
 		</div>
 		<?php
 	}

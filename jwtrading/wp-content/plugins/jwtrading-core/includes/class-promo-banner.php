@@ -41,6 +41,9 @@ class JWT_Promo_Banner {
 			// `extend_end` with an "EXTENDED" badge (same headline + code).
 			'extend'          => 0,
 			'extend_end'      => '',
+			// Show Visa/Mastercard in the payments panel while the banner is active
+			// (e.g. a campaign that temporarily enables card checkout).
+			'show_cards'      => 0,
 		);
 	}
 
@@ -100,6 +103,16 @@ class JWT_Promo_Banner {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Whether Visa/Mastercard should be shown in the payments panel right now:
+	 * the toggle is on AND the banner is currently active. Turns off with the
+	 * banner (disabled, not started yet, or expired).
+	 */
+	public static function cards_active() {
+		$o = self::get();
+		return ! empty( $o['show_cards'] ) && self::is_active();
 	}
 
 	// --- Front-end render -----------------------------------------------------
@@ -189,6 +202,7 @@ class JWT_Promo_Banner {
 			'timezone'        => $tz,
 			'extend'          => empty( $input['extend'] ) ? 0 : 1,
 			'extend_end'      => sanitize_text_field( $input['extend_end'] ?? '' ),
+			'show_cards'      => empty( $input['show_cards'] ) ? 0 : 1,
 		);
 	}
 
@@ -275,6 +289,11 @@ class JWT_Promo_Banner {
 							<input type="datetime-local" name="<?php echo esc_attr( $name ); ?>[extend_end]" value="<?php echo esc_attr( $o['extend_end'] ); ?>">
 							<p class="description"><?php esc_html_e( 'Contoh: "Berakhir" = Rabu 23:59 → isi ini Kamis 23:59. Saat fase ini, badge "EXTENDED" muncul dan hitung mundur lanjut ke sini. Setelah lewat, banner hilang.', 'jwtrading' ); ?></p>
 						</td>
+					</tr>
+
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Visa / Mastercard', 'jwtrading' ); ?></th>
+						<td><label><input type="checkbox" name="<?php echo esc_attr( $name ); ?>[show_cards]" value="1" <?php checked( $o['show_cards'], 1 ); ?>> <?php esc_html_e( 'Tampilkan Visa & Mastercard di panel "Pembayaran Aman" selama banner aktif. Otomatis hilang saat banner mati / berakhir.', 'jwtrading' ); ?></label></td>
 					</tr>
 				</table>
 				<?php submit_button(); ?>

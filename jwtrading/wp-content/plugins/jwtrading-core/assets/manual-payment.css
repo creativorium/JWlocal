@@ -1,0 +1,216 @@
+/* Manual bank-transfer — checkout warning + themed instruction/verify/thank-you screens. */
+
+/* On the manual-payment screens, hide the theme's fixed floating WhatsApp button
+   (the screen provides its own WhatsApp button) so it can't overlap the action
+   buttons or fight the sticky header for z-index. */
+body.jwt-manual-screen .jwt-wa-float {
+	display: none !important;
+}
+
+/* Warning box on the checkout page (aligns with the site's amber Payment Notice). */
+.jwt-manual-warning {
+	margin-top: 12px;
+	padding: 12px 16px;
+	border: 1px solid rgba( 255, 138, 54, .55 );
+	border-radius: 12px;
+	background: rgba( 255, 138, 54, .08 );
+	color: #ffcfa3;
+	font-size: .92rem;
+	line-height: 1.5;
+}
+
+.jwt-manual-warning strong { color: #ff8a36; }
+
+/* --- Themed screens ------------------------------------------------------- */
+
+.jwt-manual-wrap {
+	max-width: 640px;
+	margin: 0 auto;
+	padding: 48px 20px 80px;
+}
+
+.jwt-manual-card {
+	position: relative;
+	padding: 36px 32px;
+	border: 1px solid rgba( 124, 77, 255, .35 );
+	border-radius: 20px;
+	background: rgba( 255, 255, 255, .03 );
+	box-shadow: 0 0 60px rgba( 124, 77, 255, .12 );
+	backdrop-filter: blur( 8px );
+}
+
+.jwt-manual-eyebrow {
+	display: inline-block;
+	margin-bottom: 8px;
+	font-size: .78rem;
+	letter-spacing: .14em;
+	text-transform: uppercase;
+	color: #7c4dff;
+	font-weight: 700;
+}
+
+.jwt-manual-title {
+	margin: 0 0 16px;
+	font-size: clamp( 1.6rem, 4vw, 2.2rem );
+	line-height: 1.15;
+}
+
+.jwt-manual-subtitle {
+	margin: 4px 0 8px;
+	font-size: 1.15rem;
+}
+
+.jwt-manual-lead { margin: 0 0 20px; font-size: 1.02rem; line-height: 1.6; }
+.jwt-manual-lead strong { color: #b79dff; }
+
+.jwt-manual-note {
+	margin: 16px 0;
+	font-size: .9rem;
+	line-height: 1.55;
+	color: rgba( 255, 255, 255, .62 );
+}
+
+/* Reassurance note — buyer gets an access email once admin confirms. */
+.jwt-manual-info {
+	margin: 16px 0;
+	padding: 12px 16px;
+	border: 1px solid rgba( 124, 77, 255, .35 );
+	border-radius: 12px;
+	background: rgba( 124, 77, 255, .1 );
+	color: #d9cdff;
+	font-size: .92rem;
+	line-height: 1.55;
+}
+
+/* Bank details block. */
+.jwt-manual-bank {
+	margin: 20px 0;
+	border: 1px solid rgba( 124, 77, 255, .28 );
+	border-radius: 14px;
+	overflow: hidden;
+}
+
+.jwt-manual-bank__row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	padding: 12px 18px;
+	border-bottom: 1px solid rgba( 255, 255, 255, .06 );
+}
+
+.jwt-manual-bank__row:last-child { border-bottom: 0; }
+.jwt-manual-bank__row span { color: rgba( 255, 255, 255, .6 ); font-size: .9rem; }
+.jwt-manual-bank__row strong { font-size: 1.02rem; letter-spacing: .01em; }
+
+.jwt-manual-bank__total {
+	background: rgba( 124, 77, 255, .12 );
+}
+.jwt-manual-bank__total strong { color: #b79dff; font-size: 1.12rem; }
+
+/* Actions. */
+.jwt-manual-actions {
+	display: flex;
+	gap: 12px;
+	margin-top: 24px;
+}
+.jwt-manual-actions--wrap { flex-wrap: wrap; }
+
+/* Self-contained button styles so they render consistently on this template
+   regardless of where the theme scopes its own .jwt-btn rules. */
+.jwt-manual-actions .jwt-btn {
+	flex: 1 1 auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	padding: 13px 22px;
+	border-radius: 999px;
+	font-weight: 700;
+	font-size: .96rem;
+	line-height: 1.2;
+	text-decoration: none;
+	border: 1px solid transparent;
+	background: #7c4dff;
+	color: #fff;
+	box-shadow: 0 8px 20px rgba( 124, 77, 255, .35 ), inset 0 -4px 4px rgba( 0, 0, 0, .18 );
+	transition: transform .15s ease, box-shadow .15s ease;
+	cursor: pointer;
+}
+.jwt-manual-actions .jwt-btn:hover {
+	transform: translateY( -1px );
+	box-shadow: 0 10px 26px rgba( 124, 77, 255, .45 ), inset 0 -4px 4px rgba( 0, 0, 0, .18 );
+	color: #fff;
+}
+.jwt-manual-actions .jwt-btn--ghost {
+	background: rgba( 255, 255, 255, .05 );
+	border-color: rgba( 255, 255, 255, .16 );
+	color: #fff;
+	box-shadow: none;
+}
+.jwt-manual-actions .jwt-btn--ghost:hover {
+	background: rgba( 255, 255, 255, .1 );
+	box-shadow: none;
+}
+
+/* Verify form. */
+.jwt-manual-verify {
+	margin-top: 28px;
+	padding-top: 24px;
+	border-top: 1px solid rgba( 255, 255, 255, .1 );
+}
+
+.jwt-manual-field {
+	display: block;
+	margin-bottom: 16px;
+}
+
+.jwt-manual-field > span {
+	display: block;
+	margin-bottom: 6px;
+	font-size: .88rem;
+	color: rgba( 255, 255, 255, .72 );
+}
+
+.jwt-manual-field input,
+.jwt-manual-field select {
+	width: 100%;
+	padding: 12px 14px;
+	border: 1px solid rgba( 124, 77, 255, .3 );
+	border-radius: 10px;
+	background: rgba( 8, 7, 14, .6 );
+	color: #fff;
+	font-size: 1rem;
+}
+
+.jwt-manual-field input:focus,
+.jwt-manual-field select:focus {
+	outline: none;
+	border-color: #7c4dff;
+	box-shadow: 0 0 0 3px rgba( 124, 77, 255, .25 );
+}
+
+/* Native dropdown options — force readable light text on a dark popup.
+   Overrides a global rule `select:focus option { color:#333 }` (same
+   specificity, loaded later), so we out-specify it AND use !important;
+   the :focus variant matches while the dropdown is open. */
+.jwt-manual-field select option,
+.jwt-manual-field select:focus option {
+	color: #fff !important;
+	background: #14121c !important;
+}
+
+.jwt-manual-msg {
+	margin-bottom: 14px;
+	padding: 10px 14px;
+	border: 1px solid rgba( 255, 138, 54, .55 );
+	border-radius: 10px;
+	background: rgba( 255, 138, 54, .08 );
+	color: #ffcfa3;
+	font-size: .9rem;
+}
+
+@media ( max-width: 520px ) {
+	.jwt-manual-card { padding: 26px 20px; }
+	.jwt-manual-actions { flex-direction: column; }
+}
