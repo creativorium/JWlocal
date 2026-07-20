@@ -51,6 +51,67 @@
 	}
 }
 
+// Click-to-copy promo strip under the checkout title (shown while a promo is active).
+.jwt-checkout-promo {
+	display: inline-flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.4rem 0.7rem;
+	margin-top: clamp(0.9rem, 2.5vw, 1.25rem);
+	margin-bottom: clamp(1rem, 3vw, 1.5rem);
+	padding: 0.55rem 0.9rem;
+	border: 1px solid color-mix(in srgb, var(--jwt-accent) 45%, var(--jwt-line));
+	background: color-mix(in srgb, var(--jwt-accent) 12%, transparent);
+	border-radius: var(--jwt-radius);
+	color: var(--jwt-text);
+	font-family: var(--jwt-font-mono);
+	font-size: 0.85rem;
+	font-weight: 600;
+	line-height: 1.3;
+	text-align: left;
+	cursor: pointer;
+	transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+
+	&:hover {
+		background: color-mix(in srgb, var(--jwt-accent) 18%, transparent);
+		border-color: var(--jwt-accent);
+		box-shadow: 0 0 18px color-mix(in srgb, var(--jwt-accent) 35%, transparent);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--jwt-accent);
+		outline-offset: 2px;
+	}
+
+	&__code {
+		padding: 2px 9px;
+		border-radius: 6px;
+		background: #fff;
+		border: 1px solid var(--jwt-accent);
+		color: var(--jwt-accent);
+		font-weight: 700;
+		letter-spacing: 0.05em;
+		transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+	}
+
+	&:hover &__code {
+		background: var(--jwt-accent);
+		border-color: var(--jwt-accent);
+		color: #fff;
+	}
+
+	&__hint {
+		font-size: 0.68rem;
+		font-weight: 500;
+		color: var(--jwt-muted);
+	}
+
+	&.is-copied {
+		border-color: #3ecf8e;
+		background: color-mix(in srgb, #3ecf8e 12%, transparent);
+	}
+}
+
 .jwt-checkout-trust {
 	list-style: none;
 	margin: clamp(1.25rem, 3vw, 1.75rem) 0 0;

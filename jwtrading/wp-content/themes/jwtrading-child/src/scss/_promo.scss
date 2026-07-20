@@ -98,6 +98,14 @@ body.jwt-has-promo.admin-bar .jwt-header { top: calc(32px + var(--jwt-promo-h, 4
 	display: inline-flex;
 	align-items: center;
 	gap: 0.4rem;
+	cursor: pointer;
+	user-select: none;
+
+	&:focus-visible {
+		outline: 2px solid #fff;
+		outline-offset: 2px;
+		border-radius: 6px;
+	}
 
 	code {
 		padding: 2px 9px;

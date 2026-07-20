@@ -500,6 +500,59 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
   timer = setInterval(tick, 1000);
 })();
 
+// --- Click-to-copy ([data-jwt-copy]) -----------------------------------------
+// Copies data-jwt-copy to the clipboard and briefly swaps the inner <code> text
+// to data-jwt-copied for feedback. Used by the promo-banner code pill and the
+// checkout promo strip. Stops the click from following any parent link.
+(() => {
+  const els = document.querySelectorAll('[data-jwt-copy]');
+  if (!els.length) return;
+
+  const write = (text) => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
+    return Promise.reject();
+  };
+  const fallbackCopy = (text) => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try { document.execCommand('copy'); } catch (_) {}
+    document.body.removeChild(ta);
+  };
+
+  els.forEach((el) => {
+    const fire = (e) => {
+      if (e) { e.preventDefault(); e.stopPropagation(); }
+      const text = el.getAttribute('data-jwt-copy') || '';
+      write(text).catch(() => fallbackCopy(text)).then(flash, flash);
+
+      function flash() {
+        if (el.dataset.copiedActive === '1') return;
+        el.dataset.copiedActive = '1';
+        const slot = el.querySelector('code') || el;
+        const original = slot.textContent;
+        slot.textContent = el.getAttribute('data-jwt-copied') || 'Tersalin!';
+        el.classList.add('is-copied');
+        setTimeout(() => {
+          slot.textContent = original;
+          el.classList.remove('is-copied');
+          el.dataset.copiedActive = '0';
+        }, 1600);
+      }
+    };
+    el.addEventListener('click', fire);
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') fire(e);
+    });
+  });
+})();
+
 // --- Generic carousel ([data-jwt-carousel]) ----------------------------------
 // Reusable slider: a [data-jwt-carousel-track] of equal-width slides, prev/next
 // buttons, and auto-built dots. Auto-advances, pauses on hover. Used by the

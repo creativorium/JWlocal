@@ -141,7 +141,7 @@ class JWT_Promo_Banner {
 
 			<?php if ( '' !== trim( (string) $o['code'] ) ) : ?>
 				<span class="jwt-promo-banner__sep" aria-hidden="true"></span>
-				<span class="jwt-promo-banner__code"><?php esc_html_e( 'Kode:', 'jwtrading' ); ?> <code><?php echo esc_html( $o['code'] ); ?></code></span>
+				<span class="jwt-promo-banner__code" data-jwt-copy="<?php echo esc_attr( $o['code'] ); ?>" data-jwt-copied="<?php esc_attr_e( 'Tersalin! ✓', 'jwtrading' ); ?>" role="button" tabindex="0" title="<?php esc_attr_e( 'Klik untuk salin kode', 'jwtrading' ); ?>"><?php esc_html_e( 'Kode:', 'jwtrading' ); ?> <code><?php echo esc_html( $o['code'] ); ?></code></span>
 			<?php endif; ?>
 
 			<?php if ( $target_ms > 0 ) : ?>

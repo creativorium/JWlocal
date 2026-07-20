@@ -293,6 +293,29 @@ class JWT_Checkout {
 		<header class="jwt-checkout-head">
 			<?php if ( $eyebrow ) : ?><span class="jwt-checkout-head__eyebrow"><?php echo esc_html( $eyebrow ); ?></span><?php endif; ?>
 			<?php if ( $title ) : ?><h1 class="jwt-checkout-head__title"><?php echo esc_html( $title ); ?></h1><?php endif; ?>
+			<?php
+			// Click-to-copy promo strip — shown only while the Promo Banner is active.
+			if ( class_exists( 'JWT_Promo_Banner' ) && JWT_Promo_Banner::is_active() ) {
+				$jwt_promo = JWT_Promo_Banner::get();
+				if ( '' !== trim( (string) $jwt_promo['code'] ) ) {
+					?>
+					<button type="button" class="jwt-checkout-promo" data-jwt-copy="<?php echo esc_attr( $jwt_promo['code'] ); ?>" data-jwt-copied="<?php esc_attr_e( 'Kode disalin! ✓', 'jwtrading' ); ?>">
+						<span class="jwt-checkout-promo__text">
+							<?php
+							printf(
+								/* translators: %s = promo headline, e.g. "Diskon 20% Bootcamp". */
+								esc_html__( 'Klaim %s — pakai kode', 'jwtrading' ),
+								esc_html( $jwt_promo['headline'] )
+							);
+							?>
+						</span>
+						<code class="jwt-checkout-promo__code"><?php echo esc_html( $jwt_promo['code'] ); ?></code>
+						<span class="jwt-checkout-promo__hint"><?php esc_html_e( 'klik untuk salin', 'jwtrading' ); ?></span>
+					</button>
+					<?php
+				}
+			}
+			?>
 			<?php if ( ! empty( $badges ) ) : ?>
 				<ul class="jwt-checkout-trust">
 					<?php foreach ( $badges as $i => $badge ) : ?>
