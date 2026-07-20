@@ -153,6 +153,19 @@
 	gap: 1rem;
 }
 
+// Small phones: when the hero buttons stack, give them equal (full) width
+// instead of each sizing to its own text. Larger phones/desktop unchanged.
+@media (max-width: 400px) {
+	.jwt-hero__actions {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.jwt-hero__actions .jwt-btn {
+		width: 100%;
+	}
+}
+
 .jwt-hero .jwt-hero__note {
 	margin-top: 2.25rem;
 	font-size: 0.875rem;
