@@ -76,6 +76,13 @@
 		background: color-mix(in srgb, var(--jwt-accent) 18%, transparent);
 		border-color: var(--jwt-accent);
 		box-shadow: 0 0 18px color-mix(in srgb, var(--jwt-accent) 35%, transparent);
+		color: var(--jwt-text);
+	}
+
+	// Keep the label text light on hover (a theme button:hover rule darkens it).
+	&:hover &__text,
+	&:focus &__text {
+		color: var(--jwt-text);
 	}
 
 	&:focus-visible {
@@ -94,7 +101,9 @@
 		transition: background-color 0.2s, color 0.2s, border-color 0.2s;
 	}
 
-	&:hover &__code {
+	// Card (code chip) keeps its hover invert: filled accent + white text.
+	&:hover &__code,
+	&:focus &__code {
 		background: var(--jwt-accent);
 		border-color: var(--jwt-accent);
 		color: #fff;
