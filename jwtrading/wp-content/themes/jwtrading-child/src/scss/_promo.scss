@@ -32,7 +32,13 @@
 		inset 0 1px 0 rgb(255 255 255 / 0.18);
 	transition: filter 0.2s;
 
-	&:hover { filter: brightness(1.05); }
+	// Keep the banner text white on hover (it's an <a>, so the theme's link-hover
+	// colour would otherwise turn the inherited text purple).
+	&:hover,
+	&:focus {
+		filter: brightness(1.05);
+		color: #fff;
+	}
 
 	@media (max-width: 560px) {
 		font-size: 0.72rem;
@@ -87,7 +93,7 @@ body.jwt-has-promo.admin-bar .jwt-header { top: calc(32px + var(--jwt-promo-h, 4
 	@media (max-width: 560px) { display: none; }
 }
 
-// Coupon code — neon green.
+// Coupon code — neon orange pill. Inverts (filled orange + white text) on hover.
 .jwt-promo-banner__code {
 	display: inline-flex;
 	align-items: center;
@@ -96,14 +102,23 @@ body.jwt-has-promo.admin-bar .jwt-header { top: calc(32px + var(--jwt-promo-h, 4
 	code {
 		padding: 2px 9px;
 		border-radius: 6px;
-		background: rgb(61 255 166 / 0.12);
-		border: 1px solid rgb(61 255 166 / 0.55);
-		color: #4dffb0;
+		background: #fff;
+		border: 1px solid var(--jwt-accent);
+		color: var(--jwt-accent);
 		font-family: var(--jwt-font-mono);
 		font-weight: 700;
 		letter-spacing: 0.05em;
-		text-shadow: 0 0 8px rgb(61 255 166 / 0.5);
+		transition: background-color 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
 	}
+}
+
+// Hover: reverse the code pill → solid orange background, white text.
+.jwt-promo-banner:hover .jwt-promo-banner__code code,
+.jwt-promo-banner:focus .jwt-promo-banner__code code {
+	background: #ffb020;
+	border-color: #ffb020;
+	color: #fff;
+	box-shadow: 0 0 14px rgb(255 176 32 / 0.55);
 }
 
 // Countdown — neon orange.
