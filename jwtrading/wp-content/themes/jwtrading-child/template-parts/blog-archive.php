@@ -3,7 +3,8 @@
  * Blog archive body — hero header, category filter (JS instant + real archive
  * links), the card grid, and pagination. Shared by home.php + archive.php.
  *
- * @param array $args { title, lead, current (active category slug, '' on index) }
+ * @param array $args { title, lead, current (active category slug, '' on index),
+ *                     eyebrow, empty (message when there are no results) }
  * @package jwtrading-child
  */
 
@@ -12,6 +13,8 @@ defined( 'ABSPATH' ) || exit;
 $jwt_title   = $args['title'] ?? esc_html__( 'Blog', 'jwtrading' );
 $jwt_lead    = $args['lead'] ?? '';
 $jwt_current = $args['current'] ?? '';
+$jwt_eyebrow = $args['eyebrow'] ?? esc_html__( 'Blog', 'jwtrading' );
+$jwt_empty   = $args['empty'] ?? esc_html__( 'Belum ada artikel di sini.', 'jwtrading' );
 
 $jwt_cats = get_categories(
 	array(
@@ -23,7 +26,7 @@ $jwt_cats = get_categories(
 <main class="jwt-blog">
 	<div class="jwt-container">
 		<header class="jwt-blog__head">
-			<span class="jwt-badge jwt-blog__eyebrow"><span class="jwt-eyebrow__dot"></span><?php esc_html_e( 'Blog', 'jwtrading' ); ?></span>
+			<span class="jwt-badge jwt-blog__eyebrow"><span class="jwt-eyebrow__dot"></span><?php echo esc_html( $jwt_eyebrow ); ?></span>
 			<h1 class="jwt-blog__title"><?php echo esc_html( $jwt_title ); ?></h1>
 			<?php if ( '' !== $jwt_lead ) : ?>
 				<p class="jwt-blog__lead"><?php echo esc_html( $jwt_lead ); ?></p>
@@ -70,7 +73,11 @@ $jwt_cats = get_categories(
 			);
 			?>
 		<?php else : ?>
-			<p class="jwt-blog__empty"><?php esc_html_e( 'Belum ada artikel di sini.', 'jwtrading' ); ?></p>
+			<p class="jwt-blog__empty"><?php echo esc_html( $jwt_empty ); ?></p>
+			<div class="jwt-blog__empty-actions">
+				<a class="jwt-btn" href="<?php echo esc_url( get_permalink( (int) get_option( 'page_for_posts' ) ) ); ?>"><?php esc_html_e( 'Lihat semua artikel', 'jwtrading' ); ?></a>
+				<a class="jwt-btn jwt-btn--ghost" href="<?php echo esc_url( home_url( '/bootcamp/' ) ); ?>"><?php esc_html_e( 'Lihat Bootcamp', 'jwtrading' ); ?></a>
+			</div>
 		<?php endif; ?>
 	</div>
 </main>
