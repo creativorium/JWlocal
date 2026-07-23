@@ -29,9 +29,7 @@ require_once JWT_CORE_PATH . 'includes/class-redirects.php';
 require_once JWT_CORE_PATH . 'includes/class-roadmap.php';
 require_once JWT_CORE_PATH . 'includes/class-maintenance.php';
 require_once JWT_CORE_PATH . 'includes/class-promo-banner.php';
-// Journal webhook is kept local-only for now (not loaded on production).
-// To re-enable: restore the require + JWT_Journal_Sync::init() below.
-// require_once JWT_CORE_PATH . 'includes/class-journal-sync.php';
+require_once JWT_CORE_PATH . 'includes/class-journal-sync.php';
 require_once JWT_CORE_PATH . 'includes/class-manual-payment.php';
 
 // WooCommerce-independent features — boot immediately.
@@ -42,7 +40,7 @@ JWT_Tracking::init();
 JWT_Redirects::init();
 JWT_Maintenance::init();
 JWT_Promo_Banner::init();
-// JWT_Journal_Sync::init(); // local-only for now — see require note above.
+JWT_Journal_Sync::init();
 JWT_Manual_Payment::init();
 
 /**

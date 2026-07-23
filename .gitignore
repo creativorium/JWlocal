@@ -25,9 +25,6 @@ blogplan.md
 JOURNAL-INTEGRATION.md
 PROJECT-NOTES.md
 PANDUAN-TRANSFER-MANUAL.md
-
-# Journal webhook — kept local-only until the token is ready (not on production).
-jwtrading/wp-content/plugins/jwtrading-core/includes/class-journal-sync.php
 headerfooter.html
 backupthemefunction and style.txt
 Brand Partner Logos/
