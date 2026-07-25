@@ -153,9 +153,11 @@
 	gap: 1rem;
 }
 
-// Small phones: when the hero buttons stack, give them equal (full) width
-// instead of each sizing to its own text. Larger phones/desktop unchanged.
-@media (max-width: 400px) {
+// Phones: stack the hero buttons and give them equal (full) width instead of
+// each sizing to its own text. 400px was too narrow — most phones are 401–430px
+// (iPhone Pro Max 430, many Androids 412/428), so they fell through to the
+// unequal side-by-side row. 600px covers all portrait phones. Desktop unchanged.
+@media (max-width: 600px) {
 	.jwt-hero__actions {
 		flex-direction: column;
 		align-items: stretch;
