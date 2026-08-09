@@ -4,6 +4,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * GTM + GA4 tracking — ported from the live site.
  * GA4 purchase event fires on the thank-you page with per-browser dedup.
+ * begin_checkout fires on the checkout page (maps to Meta InitiateCheckout in GTM).
  */
 class JWT_Tracking {
 
@@ -15,6 +16,7 @@ class JWT_Tracking {
 		add_action( 'wp_body_open', array( __CLASS__, 'gtm_noscript' ) );
 		add_action( 'wp_head', array( __CLASS__, 'gtag' ) );
 		add_action( 'woocommerce_thankyou', array( __CLASS__, 'purchase_datalayer' ), 10 );
+		add_action( 'wp_footer', array( __CLASS__, 'begin_checkout_datalayer' ), 20 );
 	}
 
 	public static function gtm_head() {
@@ -129,6 +131,98 @@ class JWT_Tracking {
 		  if (typeof gtag === 'function') {
 			gtag('event', 'purchase', purchaseData);
 		  }
+		})();
+		</script>
+		<?php
+	}
+
+	/**
+	 * begin_checkout dataLayer event on the checkout page.
+	 *
+	 * The site previously pushed only `purchase`, so GTM had nothing to trigger
+	 * Meta's InitiateCheckout on — the mid-funnel signal ads use for retargeting
+	 * ("started checkout, didn't buy") and for optimisation. This adds the missing
+	 * step; GTM maps it to InitiateCheckout / GA4 begin_checkout.
+	 *
+	 * Payload carries both shapes so the GTM mapping is trivial:
+	 *  - `ecommerce.items` (GA4 standard)
+	 *  - `contents` / `content_ids` / `num_items` (Meta pixel params)
+	 *
+	 * Fires on each checkout page view (what a URL-based GTM trigger would do,
+	 * but with value/currency attached). Deliberately NOT on the order-received
+	 * endpoint — that's the thank-you page, which already fires `purchase`.
+	 */
+	public static function begin_checkout_datalayer() {
+		if ( is_admin() || wp_doing_ajax() ) {
+			return;
+		}
+		if ( ! function_exists( 'is_checkout' ) || ! is_checkout() || is_wc_endpoint_url() ) {
+			return;
+		}
+		if ( ! function_exists( 'WC' ) || ! WC()->cart || WC()->cart->is_empty() ) {
+			return;
+		}
+
+		$items       = array();
+		$contents    = array();
+		$content_ids = array();
+		$num_items   = 0;
+
+		foreach ( WC()->cart->get_cart() as $cart_item ) {
+			if ( empty( $cart_item['data'] ) || ! is_a( $cart_item['data'], 'WC_Product' ) ) {
+				continue;
+			}
+
+			$product    = $cart_item['data'];
+			$product_id = (int) ( $cart_item['product_id'] ?? $product->get_id() );
+			$quantity   = max( 1, (int) ( $cart_item['quantity'] ?? 1 ) );
+			$subtotal   = isset( $cart_item['line_subtotal'] ) ? (float) $cart_item['line_subtotal'] : 0.0;
+			$item_price = $subtotal > 0 ? $subtotal / $quantity : (float) $product->get_price();
+
+			$items[] = array(
+				'item_id'   => (string) $product_id,
+				'item_name' => $product->get_name(),
+				'price'     => $item_price,
+				'quantity'  => $quantity,
+			);
+
+			$contents[] = array(
+				'id'         => (string) $product_id,
+				'quantity'   => $quantity,
+				'item_price' => $item_price,
+			);
+
+			$content_ids[] = (string) $product_id;
+			$num_items    += $quantity;
+		}
+
+		if ( ! $items ) {
+			return;
+		}
+
+		$totals   = WC()->cart->get_totals();
+		$value    = isset( $totals['total'] ) ? (float) $totals['total'] : 0.0;
+		$currency = get_woocommerce_currency();
+		?>
+		<script>
+		(function() {
+		  window.dataLayer = window.dataLayer || [];
+		  // Clear any previous ecommerce object so GA4 doesn't merge stale data.
+		  window.dataLayer.push({ ecommerce: null });
+		  window.dataLayer.push({
+			event:     'begin_checkout',
+			ecommerce: {
+			  currency: <?php echo wp_json_encode( $currency ); ?>,
+			  value:    <?php echo wp_json_encode( $value ); ?>,
+			  items:    <?php echo wp_json_encode( $items ); ?>
+			},
+			contents:     <?php echo wp_json_encode( $contents ); ?>,
+			content_ids:  <?php echo wp_json_encode( $content_ids ); ?>,
+			content_type: 'product',
+			num_items:    <?php echo wp_json_encode( $num_items ); ?>,
+			value:        <?php echo wp_json_encode( $value ); ?>,
+			currency:     <?php echo wp_json_encode( $currency ); ?>
+		  });
 		})();
 		</script>
 		<?php
