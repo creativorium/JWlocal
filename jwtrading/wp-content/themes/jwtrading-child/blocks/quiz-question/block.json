@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/quiz-question",
+	"title": "JWT Quiz Question",
+	"category": "jwtrading",
+	"icon": "editor-help",
+	"description": "Satu pertanyaan aplikasi: pilihan ganda, skala 1–5, atau isian bebas.",
+	"textdomain": "jwtrading",
+	"parent": [ "jwt/quiz" ],
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"html": false,
+		"reusable": false
+	},
+	"attributes": {
+		"question": { "type": "string", "default": "" },
+		"type": { "type": "string", "default": "choice" },
+		"options": { "type": "string", "default": "" },
+		"scaleMin": { "type": "number", "default": 1 },
+		"scaleMax": { "type": "number", "default": 5 },
+		"placeholder": { "type": "string", "default": "" },
+		"required": { "type": "boolean", "default": true }
+	}
+}

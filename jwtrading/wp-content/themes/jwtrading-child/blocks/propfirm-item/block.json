@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/propfirm-item",
+	"title": "JWT Prop Firm",
+	"category": "jwtrading",
+	"icon": "building",
+	"description": "Satu prop firm: logo, blurb singkat, atribut opsional (payout, funding, fee), dan link afiliasi.",
+	"textdomain": "jwtrading",
+	"parent": [ "jwt/propfirm" ],
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"html": false,
+		"reusable": false
+	},
+	"attributes": {
+		"name": { "type": "string", "default": "" },
+		"blurb": { "type": "string", "default": "" },
+		"imageId": { "type": "number", "default": 0 },
+		"imageUrl": { "type": "string", "default": "" },
+		"specs": { "type": "string", "default": "" },
+		"badge": { "type": "string", "default": "" },
+		"url": { "type": "string", "default": "" },
+		"buttonText": { "type": "string", "default": "Kunjungi" }
+	}
+}

@@ -116,6 +116,31 @@ function jwt_section_header_html( array $attributes ): string {
 }
 
 /**
+ * Extract the 11-char YouTube video ID from any of the URL shapes the client
+ * might paste (watch?v=, youtu.be/, /embed/, /shorts/) — or a bare ID.
+ * Returns '' when nothing usable is found, which renders the empty video frame.
+ *
+ * @param string $url Raw URL or ID.
+ */
+function jwt_youtube_id( string $url ): string {
+	$url = trim( $url );
+
+	if ( '' === $url ) {
+		return '';
+	}
+
+	if ( preg_match( '#^[A-Za-z0-9_-]{11}$#', $url ) ) {
+		return $url;
+	}
+
+	if ( preg_match( '#(?:youtu\.be/|v=|/embed/|/shorts/|/live/)([A-Za-z0-9_-]{11})#', $url, $m ) ) {
+		return $m[1];
+	}
+
+	return '';
+}
+
+/**
  * Inline SVG icon set for feature cards (stroke = currentColor).
  *
  * @param string $name Icon key.

@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/optin-form",
+	"title": "JWT Opt-in Form (Mentorship)",
+	"category": "jwtrading",
+	"icon": "feedback",
+	"description": "Kartu form opt-in funnel mentorship: nama, email, WhatsApp — semuanya wajib. Lead masuk ke Kit, lalu diarahkan ke halaman aplikasi.",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"align": [ "full" ],
+		"html": false,
+		"anchor": true
+	},
+	"attributes": {
+		"title": { "type": "string", "default": "" },
+		"namePlaceholder": { "type": "string", "default": "Nama lengkap" },
+		"emailPlaceholder": { "type": "string", "default": "Email aktif" },
+		"phonePlaceholder": { "type": "string", "default": "Nomor WhatsApp" },
+		"submitText": { "type": "string", "default": "Mulai Sekarang" },
+		"note": { "type": "string", "default": "Data kamu 100% aman & tidak akan dibagikan ke siapa pun." }
+	}
+}

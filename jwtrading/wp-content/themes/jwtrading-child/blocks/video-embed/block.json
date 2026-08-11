@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/video-embed",
+	"title": "JWT Video (YouTube)",
+	"category": "jwtrading",
+	"icon": "video-alt3",
+	"description": "Video YouTube dengan facade — thumbnail dulu, iframe baru dimuat saat diklik. Untuk VSL funnel (jangan self-host).",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"align": [ "full" ],
+		"html": false,
+		"anchor": true
+	},
+	"attributes": {
+		"videoUrl": { "type": "string", "default": "" },
+		"posterId": { "type": "number", "default": 0 },
+		"posterUrl": { "type": "string", "default": "" },
+		"label": { "type": "string", "default": "" },
+		"narrow": { "type": "boolean", "default": true }
+	}
+}

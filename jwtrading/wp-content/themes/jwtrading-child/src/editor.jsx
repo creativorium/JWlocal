@@ -19,6 +19,7 @@ const {
 const {
   PanelBody,
   TextControl,
+  TextareaControl,
   ToggleControl,
   RangeControl,
   SelectControl,
@@ -2131,6 +2132,435 @@ registerBlockType('jwt/contact', {
         <div {...blockProps}>
           <ServerSideRender block="jwt/contact" attributes={attributes} />
         </div>
+      </>
+    );
+  },
+  save: saveNull,
+});
+
+// --- Phase 2: mentorship funnel + prop firms ---------------------------------
+
+// Shared media picker for the item blocks below.
+const MediaPicker = ({ id, onPick, onClear, pickLabel, changeLabel }) => (
+  <MediaUploadCheck>
+    <MediaUpload
+      onSelect={onPick}
+      allowedTypes={['image']}
+      value={id}
+      render={({ open }) => (
+        <div style={{ display: 'flex', gap: 8 }}>
+          <Button variant="secondary" onClick={open}>
+            {id ? changeLabel : pickLabel}
+          </Button>
+          {id ? (
+            <Button variant="link" isDestructive onClick={onClear}>
+              {__('Hapus', 'jwtrading')}
+            </Button>
+          ) : null}
+        </div>
+      )}
+    />
+  </MediaUploadCheck>
+);
+
+registerBlockType('jwt/optin-form', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps();
+    const F = (label, key, help) => (
+      <TextControl
+        label={__(label, 'jwtrading')}
+        help={help ? __(help, 'jwtrading') : undefined}
+        value={attributes[key]}
+        onChange={(v) => setAttributes({ [key]: v })}
+      />
+    );
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Teks Form', 'jwtrading')}>
+            {F('Judul kartu', 'title')}
+            {F('Teks tombol', 'submitText')}
+            {F('Catatan keamanan', 'note')}
+          </PanelBody>
+          <PanelBody title={__('Placeholder', 'jwtrading')} initialOpen={false}>
+            {F('Nama', 'namePlaceholder')}
+            {F('Email', 'emailPlaceholder')}
+            {F('WhatsApp', 'phonePlaceholder')}
+            <p style={{ fontSize: 12, opacity: 0.8 }}>
+              {__('Ketiganya wajib diisi — tim menyaring lead lewat WhatsApp, jadi lead tanpa nomor tidak bisa dipakai.', 'jwtrading')}
+            </p>
+          </PanelBody>
+        </InspectorControls>
+        <div {...blockProps}>
+          <ServerSideRender block="jwt/optin-form" attributes={attributes} />
+        </div>
+      </>
+    );
+  },
+  save: saveNull,
+});
+
+registerBlockType('jwt/funnel-cta', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps({ className: 'jwt-funnel-cta' });
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Tombol', 'jwtrading')}>
+            <TextControl
+              label={__('URL tombol', 'jwtrading')}
+              help={__('Biasanya anchor ke form di atas, mis. #mulai', 'jwtrading')}
+              value={attributes.buttonUrl}
+              onChange={(buttonUrl) => setAttributes({ buttonUrl })}
+            />
+            <TextControl
+              label={__('Catatan di bawah tombol', 'jwtrading')}
+              value={attributes.note}
+              onChange={(note) => setAttributes({ note })}
+            />
+          </PanelBody>
+        </InspectorControls>
+        <section {...blockProps}>
+          <div className="jwt-container">
+            <RichText
+              tagName="span"
+              className="jwt-btn jwt-btn--primary jwt-funnel-cta__btn"
+              allowedFormats={[]}
+              placeholder={__('Teks tombol…', 'jwtrading')}
+              value={attributes.buttonText}
+              onChange={(buttonText) => setAttributes({ buttonText })}
+            />
+          </div>
+        </section>
+      </>
+    );
+  },
+  save: saveNull,
+});
+
+registerBlockType('jwt/quiz', {
+  edit: makeSectionEdit({
+    className: 'jwt-quiz-section',
+    innerClass: 'jwt-quiz',
+    allowed: ['jwt/quiz-question'],
+    template: [['jwt/quiz-question']],
+    panelExtras: ({ attributes, setAttributes }) => (
+      <>
+        <TextControl
+          label={__('Teks tombol lanjut', 'jwtrading')}
+          value={attributes.nextText}
+          onChange={(nextText) => setAttributes({ nextText })}
+        />
+        <TextControl
+          label={__('Teks tombol kembali', 'jwtrading')}
+          value={attributes.backText}
+          onChange={(backText) => setAttributes({ backText })}
+        />
+        <TextControl
+          label={__('Teks tombol kirim', 'jwtrading')}
+          value={attributes.submitText}
+          onChange={(submitText) => setAttributes({ submitText })}
+        />
+        <TextControl
+          label={__('Format nomor pertanyaan', 'jwtrading')}
+          help={__('%1$s = nomor, %2$s = total. Nomor dihitung otomatis.', 'jwtrading')}
+          value={attributes.stepLabel}
+          onChange={(stepLabel) => setAttributes({ stepLabel })}
+        />
+      </>
+    ),
+  }),
+  save: saveInner,
+});
+
+registerBlockType('jwt/quiz-question', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps({ className: 'jwt-quiz__step' });
+    const { type } = attributes;
+
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Pertanyaan', 'jwtrading')}>
+            <SelectControl
+              label={__('Tipe jawaban', 'jwtrading')}
+              value={type}
+              options={[
+                { label: __('Pilihan ganda', 'jwtrading'), value: 'choice' },
+                { label: __('Skala angka', 'jwtrading'), value: 'scale' },
+                { label: __('Isian bebas', 'jwtrading'), value: 'text' },
+              ]}
+              onChange={(v) => setAttributes({ type: v })}
+            />
+            {type === 'choice' ? (
+              <TextareaControl
+                label={__('Pilihan jawaban', 'jwtrading')}
+                help={__('Pisahkan dengan | — contoh: Ya|Tidak', 'jwtrading')}
+                value={attributes.options}
+                onChange={(options) => setAttributes({ options })}
+              />
+            ) : null}
+            {type === 'scale' ? (
+              <>
+                <TextControl
+                  type="number"
+                  label={__('Angka terkecil', 'jwtrading')}
+                  value={attributes.scaleMin}
+                  onChange={(v) => setAttributes({ scaleMin: parseInt(v, 10) || 0 })}
+                />
+                <TextControl
+                  type="number"
+                  label={__('Angka terbesar', 'jwtrading')}
+                  value={attributes.scaleMax}
+                  onChange={(v) => setAttributes({ scaleMax: parseInt(v, 10) || 5 })}
+                />
+              </>
+            ) : null}
+            {type === 'text' ? (
+              <TextControl
+                label={__('Placeholder', 'jwtrading')}
+                value={attributes.placeholder}
+                onChange={(placeholder) => setAttributes({ placeholder })}
+              />
+            ) : null}
+            <ToggleControl
+              label={__('Wajib dijawab', 'jwtrading')}
+              checked={!!attributes.required}
+              onChange={(required) => setAttributes({ required })}
+            />
+          </PanelBody>
+        </InspectorControls>
+
+        <fieldset {...blockProps}>
+          <RichText
+            tagName="p"
+            className="jwt-quiz__question"
+            allowedFormats={[]}
+            placeholder={__('Tulis pertanyaannya…', 'jwtrading')}
+            value={attributes.question}
+            onChange={(question) => setAttributes({ question })}
+          />
+          <div className={`jwt-quiz__answer jwt-quiz__answer--${type}`}>
+            {type === 'text' ? (
+              <div className="jwt-quiz__textarea">{attributes.placeholder || __('Isian bebas…', 'jwtrading')}</div>
+            ) : null}
+            {type === 'scale'
+              ? Array.from(
+                  { length: Math.max(1, (attributes.scaleMax || 5) - (attributes.scaleMin || 1) + 1) },
+                  (_, i) => (
+                    <span className="jwt-quiz__scale" key={i}>
+                      <span>{(attributes.scaleMin || 1) + i}</span>
+                    </span>
+                  )
+                )
+              : null}
+            {type === 'choice'
+              ? (attributes.options || '')
+                  .split('|')
+                  .map((o) => o.trim())
+                  .filter(Boolean)
+                  .map((o, i) => (
+                    <span className="jwt-quiz__option" key={i}>
+                      <span>{o}</span>
+                    </span>
+                  ))
+              : null}
+          </div>
+        </fieldset>
+      </>
+    );
+  },
+  save: saveNull,
+});
+
+registerBlockType('jwt/video-embed', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps();
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Video YouTube', 'jwtrading')}>
+            <TextControl
+              label={__('URL / ID YouTube', 'jwtrading')}
+              help={__('Tempel link YouTube (unlisted juga bisa). Kosong = frame placeholder.', 'jwtrading')}
+              value={attributes.videoUrl}
+              onChange={(videoUrl) => setAttributes({ videoUrl })}
+            />
+            <TextControl
+              label={__('Label placeholder', 'jwtrading')}
+              help={__('Muncul di frame kosong selama video belum ada.', 'jwtrading')}
+              value={attributes.label}
+              onChange={(label) => setAttributes({ label })}
+            />
+            <ToggleControl
+              label={__('Lebar sempit (funnel)', 'jwtrading')}
+              checked={!!attributes.narrow}
+              onChange={(narrow) => setAttributes({ narrow })}
+            />
+            <p style={{ fontSize: 12, opacity: 0.8 }}>
+              {__('Thumbnail kustom opsional — kalau kosong, dipakai thumbnail dari YouTube.', 'jwtrading')}
+            </p>
+            <MediaPicker
+              id={attributes.posterId}
+              onPick={(m) => setAttributes({ posterId: m.id, posterUrl: m.url })}
+              onClear={() => setAttributes({ posterId: 0, posterUrl: '' })}
+              pickLabel={__('Upload thumbnail', 'jwtrading')}
+              changeLabel={__('Ganti thumbnail', 'jwtrading')}
+            />
+          </PanelBody>
+        </InspectorControls>
+        <div {...blockProps}>
+          <ServerSideRender block="jwt/video-embed" attributes={attributes} />
+        </div>
+      </>
+    );
+  },
+  save: saveNull,
+});
+
+registerBlockType('jwt/faq-videos', {
+  edit: makeSectionEdit({
+    className: 'jwt-faqvid',
+    innerClass: 'jwt-faqvid__list',
+    allowed: ['jwt/faq-video-item'],
+    template: [['jwt/faq-video-item'], ['jwt/faq-video-item'], ['jwt/faq-video-item']],
+  }),
+  save: saveInner,
+});
+
+registerBlockType('jwt/faq-video-item', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps({ className: 'jwt-faqvid__item' });
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Video Jawaban', 'jwtrading')}>
+            <TextControl
+              label={__('URL / ID YouTube', 'jwtrading')}
+              value={attributes.videoUrl}
+              onChange={(videoUrl) => setAttributes({ videoUrl })}
+            />
+            <MediaPicker
+              id={attributes.posterId}
+              onPick={(m) => setAttributes({ posterId: m.id, posterUrl: m.url })}
+              onClear={() => setAttributes({ posterId: 0, posterUrl: '' })}
+              pickLabel={__('Upload thumbnail', 'jwtrading')}
+              changeLabel={__('Ganti thumbnail', 'jwtrading')}
+            />
+          </PanelBody>
+        </InspectorControls>
+        <article {...blockProps}>
+          <RichText
+            tagName="h3"
+            className="jwt-faqvid__q"
+            allowedFormats={[]}
+            placeholder={__('Pertanyaan FAQ…', 'jwtrading')}
+            value={attributes.question}
+            onChange={(question) => setAttributes({ question })}
+          />
+          <p style={{ margin: 0, fontSize: 12, opacity: 0.7 }}>
+            {attributes.videoUrl || __('Link YouTube belum diisi (frame placeholder).', 'jwtrading')}
+          </p>
+        </article>
+      </>
+    );
+  },
+  save: saveNull,
+});
+
+registerBlockType('jwt/propfirm', {
+  edit: makeSectionEdit({
+    className: 'jwt-propfirm',
+    innerClass: 'jwt-propfirm__list',
+    allowed: ['jwt/propfirm-item'],
+    template: [['jwt/propfirm-item'], ['jwt/propfirm-item'], ['jwt/propfirm-item']],
+    panelExtras: ({ attributes, setAttributes }) => (
+      <TextareaControl
+        label={__('Disclosure afiliasi', 'jwtrading')}
+        value={attributes.disclosure}
+        onChange={(disclosure) => setAttributes({ disclosure })}
+      />
+    ),
+  }),
+  save: saveInner,
+});
+
+registerBlockType('jwt/propfirm-item', {
+  edit({ attributes, setAttributes }) {
+    const blockProps = useBlockProps({ className: 'jwt-propfirm__card' });
+    const { imageId, imageUrl } = attributes;
+
+    return (
+      <>
+        <InspectorControls>
+          <PanelBody title={__('Prop Firm', 'jwtrading')}>
+            <MediaPicker
+              id={imageId}
+              onPick={(m) => setAttributes({ imageId: m.id, imageUrl: m.url })}
+              onClear={() => setAttributes({ imageId: 0, imageUrl: '' })}
+              pickLabel={__('Upload logo', 'jwtrading')}
+              changeLabel={__('Ganti logo', 'jwtrading')}
+            />
+            <TextControl
+              label={__('Link afiliasi', 'jwtrading')}
+              help={__('Otomatis rel="sponsored nofollow" + buka tab baru.', 'jwtrading')}
+              value={attributes.url}
+              onChange={(url) => setAttributes({ url })}
+            />
+            <TextControl
+              label={__('Teks tombol', 'jwtrading')}
+              value={attributes.buttonText}
+              onChange={(buttonText) => setAttributes({ buttonText })}
+            />
+            <TextControl
+              label={__('Badge (opsional)', 'jwtrading')}
+              value={attributes.badge}
+              onChange={(badge) => setAttributes({ badge })}
+            />
+            <TextareaControl
+              label={__('Atribut (opsional)', 'jwtrading')}
+              help={__('Format "Label: nilai", dipisah | — contoh: Payout: 90%|Funding: $100K', 'jwtrading')}
+              value={attributes.specs}
+              onChange={(specs) => setAttributes({ specs })}
+            />
+          </PanelBody>
+        </InspectorControls>
+
+        <article {...blockProps}>
+          <div className="jwt-propfirm__brand">
+            {imageId ? (
+              <img className="jwt-propfirm__logo" src={imageUrl} alt={attributes.name} />
+            ) : (
+              <span className="jwt-propfirm__placeholder" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="4" />
+                  <path d="M8 12h8" />
+                </svg>
+              </span>
+            )}
+          </div>
+          <div className="jwt-propfirm__body">
+            <RichText
+              tagName="h3"
+              className="jwt-propfirm__name"
+              allowedFormats={[]}
+              placeholder={__('Nama prop firm…', 'jwtrading')}
+              value={attributes.name}
+              onChange={(name) => setAttributes({ name })}
+            />
+            <RichText
+              tagName="p"
+              className="jwt-propfirm__blurb"
+              allowedFormats={[]}
+              placeholder={__('Blurb singkat…', 'jwtrading')}
+              value={attributes.blurb}
+              onChange={(blurb) => setAttributes({ blurb })}
+            />
+          </div>
+          <div className="jwt-propfirm__action">
+            <span className="jwt-btn jwt-btn--primary">{attributes.buttonText || __('Kunjungi', 'jwtrading')} →</span>
+          </div>
+        </article>
       </>
     );
   },

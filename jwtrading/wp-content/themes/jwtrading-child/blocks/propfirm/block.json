@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/propfirm",
+	"title": "JWT Prop Firm List",
+	"category": "jwtrading",
+	"icon": "list-view",
+	"description": "Daftar prop firm rekomendasi dengan link afiliasi. Tanpa form, tanpa funnel.",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"align": [ "full" ],
+		"html": false,
+		"anchor": true
+	},
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "" },
+		"lead": { "type": "string", "default": "" },
+		"center": { "type": "boolean", "default": true },
+		"disclosure": { "type": "string", "default": "Beberapa link di halaman ini adalah link afiliasi. Kamu tidak dikenakan biaya tambahan." }
+	}
+}

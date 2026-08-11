@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/faq-video-item",
+	"title": "JWT FAQ Video",
+	"category": "jwtrading",
+	"icon": "format-video",
+	"description": "Satu FAQ: pertanyaan + video YouTube jawabannya.",
+	"textdomain": "jwtrading",
+	"parent": [ "jwt/faq-videos" ],
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"html": false,
+		"reusable": false
+	},
+	"attributes": {
+		"question": { "type": "string", "default": "" },
+		"videoUrl": { "type": "string", "default": "" },
+		"posterId": { "type": "number", "default": 0 },
+		"posterUrl": { "type": "string", "default": "" }
+	}
+}

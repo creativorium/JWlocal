@@ -7,6 +7,50 @@
  */
 
 defined( 'ABSPATH' ) || exit;
+
+/**
+ * Funnel pages get a legal-only footer (refund + privacy + copyright) and no
+ * floating WhatsApp button — same reason as the funnel header: no exit routes.
+ * Menu `jwt-funnel` when set, otherwise the two policy links from the layout.
+ */
+if ( apply_filters( 'jwt/funnel_chrome', false ) ) :
+	?>
+	</div><!-- #jwt-content -->
+
+	<footer class="jwt-funnel-footer">
+		<div class="jwt-container jwt-funnel-footer__bar">
+			<?php
+			if ( has_nav_menu( 'jwt-funnel' ) ) {
+				wp_nav_menu(
+					array(
+						'theme_location' => 'jwt-funnel',
+						'container'      => false,
+						'menu_class'     => 'jwt-funnel-footer__links',
+						'fallback_cb'    => false,
+						'depth'          => 1,
+					)
+				);
+			} else {
+				?>
+				<ul class="jwt-funnel-footer__links">
+					<li><a href="<?php echo esc_url( home_url( '/refund-policy/' ) ); ?>"><?php esc_html_e( 'Kebijakan Refund', 'jwtrading' ); ?></a></li>
+					<li><a href="<?php echo esc_url( home_url( '/privacy-policy/' ) ); ?>"><?php esc_html_e( 'Kebijakan Privasi', 'jwtrading' ); ?></a></li>
+				</ul>
+				<?php
+			}
+			?>
+			<p class="jwt-funnel-footer__note">
+				&copy; <?php echo esc_html( get_bloginfo( 'name' ) ); ?>. <?php esc_html_e( 'Hasil bukan garansi profit.', 'jwtrading' ); ?>
+			</p>
+		</div>
+	</footer>
+
+	<?php wp_footer(); ?>
+	</body>
+	</html>
+	<?php
+	return;
+endif;
 ?>
 </div><!-- #jwt-content -->
 

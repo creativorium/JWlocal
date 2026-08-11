@@ -26,16 +26,25 @@ defined( 'ABSPATH' ) || exit;
  */
 $jwt_minimal_header = apply_filters( 'jwt/minimal_header', function_exists( 'is_page' ) && is_page( array( 'trader-roadmap', 'ifvg-strategy', 'thank-you-page-trader-road-map', 'thank-you-page-lead-magnet-strategi-ifvg' ) ) );
 
+/**
+ * Funnel chrome (mentorship opt-in / application / thank you): logo only,
+ * centred, no CTA at all. A funnel page deliberately offers no exit routes —
+ * every link out is a lead lost. Set by JWT_Funnel via `jwt/funnel_chrome`.
+ */
+$jwt_funnel_chrome = apply_filters( 'jwt/funnel_chrome', false );
+
 if ( $jwt_minimal_header ) :
-	$jwt_landing_cta = apply_filters(
-		'jwt/minimal_header_cta',
-		array(
-			'text' => __( 'Akses Bootcamp', 'jwtrading' ),
-			'url'  => home_url( '/bootcamp/' ),
-		)
-	);
+	$jwt_landing_cta = $jwt_funnel_chrome
+		? array( 'text' => '', 'url' => '' )
+		: apply_filters(
+			'jwt/minimal_header_cta',
+			array(
+				'text' => __( 'Akses Bootcamp', 'jwtrading' ),
+				'url'  => home_url( '/bootcamp/' ),
+			)
+		);
 	?>
-	<header class="jwt-header jwt-header--minimal">
+	<header class="jwt-header jwt-header--minimal<?php echo $jwt_funnel_chrome ? ' jwt-header--funnel' : ''; ?>">
 		<div class="jwt-container jwt-header__bar">
 			<div class="jwt-brand"><?php echo jwt_brand_html(); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper. ?></div>
 			<?php if ( ! empty( $jwt_landing_cta['text'] ) ) : ?>

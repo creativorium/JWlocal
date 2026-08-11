@@ -14,6 +14,7 @@ add_action( 'after_setup_theme', function () {
 			'jwt-footer'  => __( 'Footer — Navigasi', 'jwtrading' ),
 			'jwt-legal'   => __( 'Footer — Legal', 'jwtrading' ),
 			'jwt-social'  => __( 'Footer — Social (isi custom links)', 'jwtrading' ),
+			'jwt-funnel'  => __( 'Footer — Funnel (legal saja)', 'jwtrading' ),
 		)
 	);
 
