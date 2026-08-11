@@ -558,6 +558,25 @@ class JWT_Funnel {
 		return $plus . preg_replace( '/\D+/', '', $raw );
 	}
 
+	/**
+	 * Phone → wa.me digits. Leads type their number the Indonesian way
+	 * ("08123…"), but wa.me needs the country code and rejects the leading 0 —
+	 * so a raw digit-strip produces a dead click-to-chat link.
+	 *
+	 * @param string $phone Stored phone value.
+	 */
+	public static function wa_digits( $phone ): string {
+		$digits = preg_replace( '/\D+/', '', (string) $phone );
+
+		if ( '' === $digits ) {
+			return '';
+		}
+		if ( str_starts_with( $digits, '0' ) ) {
+			return apply_filters( 'jwt/funnel_country_code', '62' ) . ltrim( $digits, '0' );
+		}
+		return $digits;
+	}
+
 	protected static function set_cookie( string $name, string $value ) {
 		if ( headers_sent() ) {
 			return;
@@ -641,8 +660,12 @@ class JWT_Funnel {
 							<td><?php echo esc_html( (string) $lead->name ); ?></td>
 							<td><?php echo esc_html( (string) $lead->email ); ?></td>
 							<td>
-								<?php $wa = preg_replace( '/\D+/', '', (string) $lead->phone ); ?>
-								<a href="<?php echo esc_url( 'https://wa.me/' . $wa ); ?>" target="_blank" rel="noopener"><?php echo esc_html( (string) $lead->phone ); ?></a>
+								<?php $wa = self::wa_digits( $lead->phone ); ?>
+								<?php if ( '' !== $wa ) : ?>
+									<a href="<?php echo esc_url( 'https://wa.me/' . $wa ); ?>" target="_blank" rel="noopener"><?php echo esc_html( (string) $lead->phone ); ?></a>
+								<?php else : ?>
+									<?php echo esc_html( (string) $lead->phone ); ?>
+								<?php endif; ?>
 							</td>
 							<td><?php echo esc_html( (string) $lead->status ); ?></td>
 							<td><?php echo esc_html( (string) ( $lead->sheet_status ?: '—' ) ); ?></td>
