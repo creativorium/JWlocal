@@ -956,6 +956,48 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
   });
 })();
 
+// --- Copy-to-clipboard pills (partner discount codes) ------------------------
+// navigator.clipboard needs a secure context; http:// Local and any non-HTTPS
+// visitor fall back to the old execCommand path so the code still copies.
+(() => {
+  const pills = document.querySelectorAll('[data-jwt-copy]');
+  if (!pills.length) return;
+
+  const copy = async (text) => {
+    if (navigator.clipboard && window.isSecureContext) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch (ex) { /* fall through */ }
+    }
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:absolute;left:-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (ex) { ok = false; }
+    ta.remove();
+    return ok;
+  };
+
+  pills.forEach((pill) => {
+    const code = pill.getAttribute('data-jwt-copy') || '';
+    const label = pill.textContent;
+
+    pill.addEventListener('click', async () => {
+      if (!(await copy(code))) return;
+      pill.classList.add('is-copied');
+      pill.textContent = 'Tersalin ✓';
+      window.setTimeout(() => {
+        pill.classList.remove('is-copied');
+        pill.textContent = label;
+      }, 1600);
+    });
+  });
+})();
+
 // --- Always-open checkout coupon field ---------------------------------------
 // Our field replaces WooCommerce's collapsible "Have a coupon?" toggle. It isn't
 // a <form> (it sits inside the checkout form), so Apply calls the same

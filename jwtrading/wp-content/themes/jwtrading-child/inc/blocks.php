@@ -141,6 +141,64 @@ function jwt_youtube_id( string $url ): string {
 }
 
 /**
+ * YouTube facade markup — poster now, iframe only after a click (the handler is
+ * [data-jwt-ytembed] in main.js). Shared by jwt/video-embed, jwt/faq-video-item
+ * and the prop-firm guide videos, all of which need the identical behaviour.
+ *
+ * With no usable video ID it renders the empty frame from the layout PDFs, so a
+ * page can ship before the client's links arrive.
+ *
+ * @param array $args video, posterId, label, class, red (YouTube-red button),
+ *                    placeholder (text shown in the empty frame).
+ */
+function jwt_ytembed_html( array $args ): string {
+	$id       = jwt_youtube_id( (string) ( $args['video'] ?? '' ) );
+	$poster   = (int) ( $args['posterId'] ?? 0 );
+	$label    = trim( (string) ( $args['label'] ?? '' ) );
+	$class    = trim( 'jwt-ytembed ' . (string) ( $args['class'] ?? '' ) );
+	$alt      = '' !== $label ? $label : __( 'Putar video', 'jwtrading' );
+	$is_empty = '' === $id;
+
+	$html = '<figure class="' . esc_attr( $class . ( $is_empty ? ' is-empty' : '' ) ) . '"'
+		. ( $is_empty ? '' : ' data-jwt-ytembed data-video="' . esc_attr( $id ) . '"' )
+		. '><div class="jwt-ytembed__frame">';
+
+	if ( $poster ) {
+		$html .= wp_get_attachment_image(
+			$poster,
+			'large',
+			false,
+			array(
+				'class'    => 'jwt-ytembed__poster',
+				'loading'  => 'lazy',
+				'decoding' => 'async',
+				'alt'      => $alt,
+			)
+		);
+	} elseif ( ! $is_empty ) {
+		// YouTube's own still. maxres does not exist for every video, so the
+		// smaller hq thumbnail is the safe default outside the big hero VSL.
+		$size  = ! empty( $args['maxres'] ) ? 'maxresdefault' : 'hqdefault';
+		$html .= sprintf(
+			'<img class="jwt-ytembed__poster" src="%s" alt="%s" loading="lazy" decoding="async" width="1280" height="720">',
+			esc_url( 'https://i.ytimg.com/vi/' . $id . '/' . $size . '.jpg' ),
+			esc_attr( $alt )
+		);
+	}
+
+	$html .= '<button type="button" class="jwt-ytembed__play' . ( ! empty( $args['red'] ) ? ' is-yt' : '' ) . '"'
+		. ' data-jwt-ytembed-play aria-label="' . esc_attr( $alt ) . '"' . ( $is_empty ? ' disabled' : '' ) . '>'
+		. '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>';
+
+	$placeholder = trim( (string) ( $args['placeholder'] ?? '' ) );
+	if ( $is_empty && '' !== $placeholder ) {
+		$html .= '<span class="jwt-ytembed__placeholder">[ ' . esc_html( $placeholder ) . ' ]</span>';
+	}
+
+	return $html . '</div></figure>';
+}
+
+/**
  * Inline SVG icon set for feature cards (stroke = currentColor).
  *
  * @param string $name Icon key.

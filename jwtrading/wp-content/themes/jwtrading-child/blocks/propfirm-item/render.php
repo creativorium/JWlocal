@@ -1,87 +1,71 @@
 <?php
 /**
- * Render: jwt/propfirm-item — one prop firm row with its affiliate link.
+ * Render: jwt/propfirm-item — one partner card (prop firm / broker / tool).
  *
- * Affiliate links always carry rel="sponsored nofollow noopener" (Google's
- * requirement for paid/affiliate links — leaving it off risks the whole site's
- * ranking) and open in a new tab.
+ * Anatomy per the client's layout PDF: tinted head with name + blurb, a
+ * "Use Code" row whose pill copies the discount code to the clipboard, and a
+ * guide sub-card holding that partner's walkthrough video.
  *
- * `specs` is an optional pipe-separated "Label: value" list, so the same block
- * reads as a comparison row when the client supplies comparable attributes and
- * as a clean stacked card when they only send logo + blurb + link.
+ * The name links out through the affiliate URL with rel="sponsored nofollow
+ * noopener" — Google requires `sponsored` on affiliate links, and omitting it
+ * puts the whole site's ranking at risk. A card with no URL renders as plain
+ * text rather than a dead link, so it can ship before the links arrive.
  *
  * @var array $attributes
  */
 
 defined( 'ABSPATH' ) || exit;
 
-$jwt_name  = trim( (string) ( $attributes['name'] ?? '' ) );
-$jwt_url   = trim( (string) ( $attributes['url'] ?? '' ) );
-$jwt_blurb = trim( (string) ( $attributes['blurb'] ?? '' ) );
-$jwt_badge = trim( (string) ( $attributes['badge'] ?? '' ) );
-$jwt_specs = array_values( array_filter( array_map( 'trim', explode( '|', (string) ( $attributes['specs'] ?? '' ) ) ) ) );
+$jwt_name    = trim( (string) ( $attributes['name'] ?? '' ) );
+$jwt_url     = trim( (string) ( $attributes['url'] ?? '' ) );
+$jwt_blurb   = trim( (string) ( $attributes['blurb'] ?? '' ) );
+$jwt_code    = trim( (string) ( $attributes['code'] ?? '' ) );
+$jwt_guide   = trim( (string) ( $attributes['guideLabel'] ?? '' ) );
+$jwt_variant = in_array( $attributes['variant'] ?? 'default', array( 'default', 'green', 'blue' ), true )
+	? $attributes['variant']
+	: 'default';
 ?>
-<article class="jwt-propfirm__card">
-	<div class="jwt-propfirm__brand">
-		<?php if ( ! empty( $attributes['imageId'] ) ) : ?>
-			<?php
-			echo wp_get_attachment_image( // phpcs:ignore WordPress.Security.EscapeOutput
-				(int) $attributes['imageId'],
-				'medium',
-				false,
-				array(
-					'class'    => 'jwt-propfirm__logo',
-					'loading'  => 'lazy',
-					'decoding' => 'async',
-					'sizes'    => '180px',
-					'alt'      => $jwt_name,
-				)
-			);
-			?>
-		<?php else : ?>
-			<span class="jwt-propfirm__placeholder" aria-hidden="true">
-				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12h8"/></svg>
-			</span>
-		<?php endif; ?>
-	</div>
-
-	<div class="jwt-propfirm__body">
-		<h3 class="jwt-propfirm__name">
-			<?php echo esc_html( $jwt_name ); ?>
-			<?php if ( '' !== $jwt_badge ) : ?>
-				<span class="jwt-propfirm__badge"><?php echo esc_html( $jwt_badge ); ?></span>
+<article class="jwt-pfcard is-<?php echo esc_attr( $jwt_variant ); ?>">
+	<div class="jwt-pfcard__head">
+		<h3 class="jwt-pfcard__name">
+			<?php if ( '' !== $jwt_url ) : ?>
+				<a href="<?php echo esc_url( $jwt_url ); ?>" target="_blank" rel="sponsored nofollow noopener"><?php echo esc_html( $jwt_name ); ?></a>
+			<?php else : ?>
+				<?php echo esc_html( $jwt_name ); ?>
 			<?php endif; ?>
 		</h3>
-
 		<?php if ( '' !== $jwt_blurb ) : ?>
-			<p class="jwt-propfirm__blurb"><?php echo esc_html( $jwt_blurb ); ?></p>
-		<?php endif; ?>
-
-		<?php if ( ! empty( $jwt_specs ) ) : ?>
-			<dl class="jwt-propfirm__specs">
-				<?php foreach ( $jwt_specs as $jwt_spec ) : ?>
-					<?php
-					$jwt_parts = array_map( 'trim', explode( ':', $jwt_spec, 2 ) );
-					if ( count( $jwt_parts ) < 2 ) {
-						continue;
-					}
-					?>
-					<div class="jwt-propfirm__spec">
-						<dt><?php echo esc_html( $jwt_parts[0] ); ?></dt>
-						<dd><?php echo esc_html( $jwt_parts[1] ); ?></dd>
-					</div>
-				<?php endforeach; ?>
-			</dl>
+			<p class="jwt-pfcard__blurb"><?php echo esc_html( $jwt_blurb ); ?></p>
 		<?php endif; ?>
 	</div>
 
-	<div class="jwt-propfirm__action">
-		<?php if ( '' !== $jwt_url ) : ?>
-			<a class="jwt-btn jwt-btn--primary" href="<?php echo esc_url( $jwt_url ); ?>" target="_blank" rel="sponsored nofollow noopener">
-				<?php echo esc_html( (string) $attributes['buttonText'] ); ?> →
-			</a>
-		<?php else : ?>
-			<span class="jwt-propfirm__soon"><?php esc_html_e( 'Link menyusul', 'jwtrading' ); ?></span>
+	<?php if ( '' !== $jwt_code ) : ?>
+		<div class="jwt-pfcard__code">
+			<span class="jwt-pfcard__code-label"><?php echo esc_html( (string) $attributes['codeLabel'] ); ?></span>
+			<button
+				type="button"
+				class="jwt-pfcard__code-pill"
+				data-jwt-copy="<?php echo esc_attr( $jwt_code ); ?>"
+				aria-label="<?php echo esc_attr( sprintf( /* translators: %s: discount code. */ __( 'Salin kode %s', 'jwtrading' ), $jwt_code ) ); ?>"
+			><?php echo esc_html( $jwt_code ); ?></button>
+		</div>
+	<?php endif; ?>
+
+	<div class="jwt-pfcard__guide">
+		<?php if ( '' !== $jwt_guide ) : ?>
+			<span class="jwt-pfcard__guide-label"><?php echo esc_html( $jwt_guide ); ?></span>
 		<?php endif; ?>
+		<?php
+		echo jwt_ytembed_html( // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper.
+			array(
+				'video'       => $attributes['guideVideoUrl'] ?? '',
+				'posterId'    => $attributes['guidePosterId'] ?? 0,
+				'label'       => '' !== $jwt_guide ? $jwt_guide : $jwt_name,
+				'class'       => 'jwt-pfcard__video',
+				'placeholder' => __( 'video menyusul', 'jwtrading' ),
+				'red'         => true,
+			)
+		);
+		?>
 	</div>
 </article>

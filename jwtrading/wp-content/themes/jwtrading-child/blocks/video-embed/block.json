@@ -19,6 +19,7 @@
 		"posterId": { "type": "number", "default": 0 },
 		"posterUrl": { "type": "string", "default": "" },
 		"label": { "type": "string", "default": "" },
-		"narrow": { "type": "boolean", "default": true }
+		"narrow": { "type": "boolean", "default": true },
+		"redPlay": { "type": "boolean", "default": false }
 	}
 }

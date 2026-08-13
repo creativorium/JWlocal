@@ -548,145 +548,170 @@
 	}
 }
 
-// --- Prop firm list ---------------------------------------------------------
+// --- Partner sections (prop firms / brokers / tools) ------------------------
 
 .jwt-propfirm {
-	padding-block: var(--jwt-section-y);
+	padding-block: clamp(2.5rem, 6vw, 4rem);
 
-	&__list {
+	&__grid {
 		display: grid;
-		gap: 1rem;
-		max-width: 980px;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1.25rem;
+		max-width: 860px;
 		margin-inline: auto;
-	}
 
-	&__card {
-		display: grid;
-		grid-template-columns: 180px 1fr auto;
-		align-items: center;
-		gap: 1.5rem;
-		padding: 1.35rem 1.5rem;
-		border: 1px solid var(--jwt-line);
-		border-radius: var(--jwt-radius);
-		background: var(--jwt-surface-2);
-		transition: border-color 0.2s, transform 0.2s var(--jwt-ease);
-
-		&:hover {
-			border-color: var(--jwt-line-strong);
-			transform: translateY(-2px);
+		// A section with a single card (Broker, Tools) centres a half-width card.
+		&.is-single {
+			grid-template-columns: minmax(0, 1fr);
+			max-width: 420px;
 		}
 
-		@media (max-width: 780px) {
-			grid-template-columns: 1fr;
-			text-align: center;
-			justify-items: center;
+		@media (max-width: 720px) {
+			grid-template-columns: minmax(0, 1fr);
+			max-width: 420px;
 		}
 	}
 
-	&__brand {
-		display: grid;
-		place-items: center;
-	}
-
-	&__logo {
-		max-width: 160px;
-		height: auto;
-	}
-
-	&__placeholder {
-		display: grid;
-		place-items: center;
-		width: 56px;
-		height: 56px;
-		border-radius: var(--jwt-radius-sm);
-		background: rgb(255 255 255 / 0.05);
+	&__disclosure {
+		max-width: 860px;
+		margin: 1.5rem auto 0;
 		color: var(--jwt-dim);
+		font-size: 0.8rem;
+		text-align: center;
+	}
+}
 
-		svg {
-			width: 26px;
-			height: 26px;
-		}
+.jwt-pfcard {
+	display: flex;
+	flex-direction: column;
+	gap: 0.85rem;
+	padding: 1.15rem;
+	border: 1px solid var(--jwt-line);
+	border-radius: var(--jwt-radius);
+	background: var(--jwt-surface-2);
+	transition: border-color 0.2s, transform 0.2s var(--jwt-ease);
+
+	&:hover {
+		border-color: var(--jwt-line-strong);
+		transform: translateY(-2px);
+	}
+
+	// The head carries the card's tint; variants exist so the client can flag a
+	// featured partner without touching CSS.
+	&__head {
+		padding: 0.9rem 1rem 1rem;
+		border-radius: var(--jwt-radius-sm);
+		text-align: center;
+		background: linear-gradient(180deg, rgb(124 77 255 / 0.16), transparent);
+	}
+
+	&.is-green &__head {
+		background: linear-gradient(180deg, rgb(62 207 142 / 0.16), transparent);
+	}
+
+	&.is-blue &__head {
+		background: linear-gradient(180deg, rgb(64 142 255 / 0.18), transparent);
 	}
 
 	&__name {
-		display: flex;
-		align-items: center;
-		gap: 0.6rem;
-		margin: 0 0 0.35rem;
+		margin: 0 0 0.4rem;
 		font-family: var(--jwt-font-heading);
-		font-size: 1.1rem;
+		font-size: 1.05rem;
 		font-weight: 700;
 		color: var(--jwt-text);
 
-		@media (max-width: 780px) {
-			justify-content: center;
-		}
-	}
+		a {
+			color: inherit;
+			text-decoration: none;
 
-	&__badge {
-		padding: 0.2rem 0.55rem;
-		border-radius: 999px;
-		background: rgb(124 77 255 / 0.2);
-		border: 1px solid rgb(124 77 255 / 0.4);
-		color: var(--jwt-accent-light);
-		font-family: var(--jwt-font-mono);
-		font-size: 0.65rem;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
+			&:hover {
+				color: var(--jwt-accent-light);
+			}
+		}
 	}
 
 	&__blurb {
 		margin: 0;
 		color: var(--jwt-muted);
-		font-size: 0.94rem;
-		line-height: 1.6;
-	}
-
-	&__specs {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.4rem 1.5rem;
-		margin: 0.75rem 0 0;
-
-		@media (max-width: 780px) {
-			justify-content: center;
-		}
-	}
-
-	&__spec {
-		dt {
-			margin: 0;
-			font-family: var(--jwt-font-mono);
-			font-size: 0.65rem;
-			letter-spacing: 0.1em;
-			text-transform: uppercase;
-			color: var(--jwt-dim);
-		}
-
-		dd {
-			margin: 0.15rem 0 0;
-			font-family: var(--jwt-font-heading);
-			font-size: 0.95rem;
-			font-weight: 600;
-			color: var(--jwt-text);
-		}
-	}
-
-	&__action .jwt-btn {
-		border-radius: 999px;
-		white-space: nowrap;
-	}
-
-	&__soon {
-		color: var(--jwt-dim);
-		font-size: 0.85rem;
-	}
-
-	&__disclosure {
-		max-width: 980px;
-		margin: 1.5rem auto 0;
-		color: var(--jwt-dim);
 		font-size: 0.8rem;
-		text-align: center;
+		line-height: 1.55;
+	}
+
+	// "Use Code" row — the pill copies the code to the clipboard.
+	&__code {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+		padding: 0.45rem 0.5rem 0.45rem 0.9rem;
+		border: 1px solid var(--jwt-line-strong);
+		border-radius: 999px;
+		background: rgb(0 0 0 / 0.3);
+	}
+
+	&__code-label {
+		color: var(--jwt-dim);
+		font-size: 0.78rem;
+	}
+
+	&__code-pill {
+		flex: none;
+		min-width: 66px;
+		padding: 0.42rem 0.9rem;
+		border: 0;
+		border-radius: 999px;
+		background: var(--jwt-accent);
+		color: #fff;
+		font-family: var(--jwt-font-heading);
+		font-size: 0.8rem;
+		font-weight: 700;
+		cursor: pointer;
+		transition: background 0.2s, transform 0.15s var(--jwt-ease);
+
+		&:hover {
+			background: var(--jwt-accent-hover);
+		}
+
+		&:active {
+			transform: scale(0.96);
+		}
+
+		// Set by the [data-jwt-copy] handler in main.js.
+		&.is-copied {
+			background: var(--jwt-success);
+		}
+	}
+
+	&__guide {
+		margin-top: auto;
+		padding: 0.55rem;
+		border: 1px solid var(--jwt-line);
+		border-radius: var(--jwt-radius-sm);
+		background: rgb(0 0 0 / 0.25);
+	}
+
+	&__guide-label {
+		display: block;
+		margin-bottom: 0.5rem;
+		font-family: var(--jwt-font-mono);
+		font-size: 0.62rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--jwt-dim);
+	}
+
+	&__video .jwt-ytembed__frame {
+		border-radius: var(--jwt-radius-sm);
+	}
+
+	&__video .jwt-ytembed__play {
+		width: 40px;
+		height: 40px;
+
+		svg {
+			width: 18px;
+			height: 18px;
+			margin-left: 2px;
+		}
 	}
 }

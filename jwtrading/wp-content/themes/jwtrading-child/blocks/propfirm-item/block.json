@@ -2,10 +2,10 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "jwt/propfirm-item",
-	"title": "JWT Prop Firm",
+	"title": "JWT Partner Card",
 	"category": "jwtrading",
 	"icon": "building",
-	"description": "Satu prop firm: logo, blurb singkat, atribut opsional (payout, funding, fee), dan link afiliasi.",
+	"description": "Satu partner: nama, blurb, kode diskon (klik untuk copy), dan video guide-nya.",
 	"textdomain": "jwtrading",
 	"parent": [ "jwt/propfirm" ],
 	"editorScript": "jwt-blocks-editor",
@@ -17,11 +17,13 @@
 	"attributes": {
 		"name": { "type": "string", "default": "" },
 		"blurb": { "type": "string", "default": "" },
-		"imageId": { "type": "number", "default": 0 },
-		"imageUrl": { "type": "string", "default": "" },
-		"specs": { "type": "string", "default": "" },
-		"badge": { "type": "string", "default": "" },
 		"url": { "type": "string", "default": "" },
-		"buttonText": { "type": "string", "default": "Kunjungi" }
+		"variant": { "type": "string", "default": "default" },
+		"code": { "type": "string", "default": "" },
+		"codeLabel": { "type": "string", "default": "Use Code" },
+		"guideLabel": { "type": "string", "default": "" },
+		"guideVideoUrl": { "type": "string", "default": "" },
+		"guidePosterId": { "type": "number", "default": 0 },
+		"guidePosterUrl": { "type": "string", "default": "" }
 	}
 }

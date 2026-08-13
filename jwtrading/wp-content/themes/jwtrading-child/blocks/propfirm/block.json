@@ -2,10 +2,10 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "jwt/propfirm",
-	"title": "JWT Prop Firm List",
+	"title": "JWT Partner Section",
 	"category": "jwtrading",
 	"icon": "list-view",
-	"description": "Daftar prop firm rekomendasi dengan link afiliasi. Tanpa form, tanpa funnel.",
+	"description": "Satu section partner (prop firm / broker / tools) berisi kartu-kartu dengan kode diskon dan video guide.",
 	"textdomain": "jwtrading",
 	"editorScript": "jwt-blocks-editor",
 	"render": "file:./render.php",
@@ -19,6 +19,6 @@
 		"title": { "type": "string", "default": "" },
 		"lead": { "type": "string", "default": "" },
 		"center": { "type": "boolean", "default": true },
-		"disclosure": { "type": "string", "default": "Beberapa link di halaman ini adalah link afiliasi. Kamu tidak dikenakan biaya tambahan." }
+		"disclosure": { "type": "string", "default": "" }
 	}
 }

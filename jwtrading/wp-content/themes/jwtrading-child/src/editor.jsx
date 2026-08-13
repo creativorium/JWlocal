@@ -2471,12 +2471,13 @@ registerBlockType('jwt/faq-video-item', {
 registerBlockType('jwt/propfirm', {
   edit: makeSectionEdit({
     className: 'jwt-propfirm',
-    innerClass: 'jwt-propfirm__list',
+    innerClass: 'jwt-propfirm__grid',
     allowed: ['jwt/propfirm-item'],
-    template: [['jwt/propfirm-item'], ['jwt/propfirm-item'], ['jwt/propfirm-item']],
+    template: [['jwt/propfirm-item'], ['jwt/propfirm-item']],
     panelExtras: ({ attributes, setAttributes }) => (
       <TextareaControl
         label={__('Disclosure afiliasi', 'jwtrading')}
+        help={__('Biasanya diisi di section terakhir saja.', 'jwtrading')}
         value={attributes.disclosure}
         onChange={(disclosure) => setAttributes({ disclosure })}
       />
@@ -2487,78 +2488,98 @@ registerBlockType('jwt/propfirm', {
 
 registerBlockType('jwt/propfirm-item', {
   edit({ attributes, setAttributes }) {
-    const blockProps = useBlockProps({ className: 'jwt-propfirm__card' });
-    const { imageId, imageUrl } = attributes;
+    const blockProps = useBlockProps({ className: `jwt-pfcard is-${attributes.variant || 'default'}` });
 
     return (
       <>
         <InspectorControls>
-          <PanelBody title={__('Prop Firm', 'jwtrading')}>
-            <MediaPicker
-              id={imageId}
-              onPick={(m) => setAttributes({ imageId: m.id, imageUrl: m.url })}
-              onClear={() => setAttributes({ imageId: 0, imageUrl: '' })}
-              pickLabel={__('Upload logo', 'jwtrading')}
-              changeLabel={__('Ganti logo', 'jwtrading')}
-            />
+          <PanelBody title={__('Partner', 'jwtrading')}>
             <TextControl
               label={__('Link afiliasi', 'jwtrading')}
-              help={__('Otomatis rel="sponsored nofollow" + buka tab baru.', 'jwtrading')}
+              help={__('Otomatis rel="sponsored nofollow" + buka tab baru. Kosong = nama tampil sebagai teks biasa.', 'jwtrading')}
               value={attributes.url}
               onChange={(url) => setAttributes({ url })}
             />
+            <SelectControl
+              label={__('Warna kartu', 'jwtrading')}
+              value={attributes.variant}
+              options={[
+                { label: __('Ungu (default)', 'jwtrading'), value: 'default' },
+                { label: __('Hijau (unggulan)', 'jwtrading'), value: 'green' },
+                { label: __('Biru', 'jwtrading'), value: 'blue' },
+              ]}
+              onChange={(variant) => setAttributes({ variant })}
+            />
+          </PanelBody>
+          <PanelBody title={__('Kode Diskon', 'jwtrading')}>
             <TextControl
-              label={__('Teks tombol', 'jwtrading')}
-              value={attributes.buttonText}
-              onChange={(buttonText) => setAttributes({ buttonText })}
+              label={__('Kode', 'jwtrading')}
+              help={__('Kosong = baris kode disembunyikan. Pengunjung bisa klik untuk copy.', 'jwtrading')}
+              value={attributes.code}
+              onChange={(code) => setAttributes({ code })}
             />
             <TextControl
-              label={__('Badge (opsional)', 'jwtrading')}
-              value={attributes.badge}
-              onChange={(badge) => setAttributes({ badge })}
+              label={__('Label di kiri', 'jwtrading')}
+              value={attributes.codeLabel}
+              onChange={(codeLabel) => setAttributes({ codeLabel })}
             />
-            <TextareaControl
-              label={__('Atribut (opsional)', 'jwtrading')}
-              help={__('Format "Label: nilai", dipisah | — contoh: Payout: 90%|Funding: $100K', 'jwtrading')}
-              value={attributes.specs}
-              onChange={(specs) => setAttributes({ specs })}
+          </PanelBody>
+          <PanelBody title={__('Video Guide', 'jwtrading')}>
+            <TextControl
+              label={__('Judul guide', 'jwtrading')}
+              help={__('Contoh: WMT FULL GUIDE', 'jwtrading')}
+              value={attributes.guideLabel}
+              onChange={(guideLabel) => setAttributes({ guideLabel })}
+            />
+            <TextControl
+              label={__('URL / ID YouTube', 'jwtrading')}
+              value={attributes.guideVideoUrl}
+              onChange={(guideVideoUrl) => setAttributes({ guideVideoUrl })}
+            />
+            <MediaPicker
+              id={attributes.guidePosterId}
+              onPick={(m) => setAttributes({ guidePosterId: m.id, guidePosterUrl: m.url })}
+              onClear={() => setAttributes({ guidePosterId: 0, guidePosterUrl: '' })}
+              pickLabel={__('Upload thumbnail', 'jwtrading')}
+              changeLabel={__('Ganti thumbnail', 'jwtrading')}
             />
           </PanelBody>
         </InspectorControls>
 
         <article {...blockProps}>
-          <div className="jwt-propfirm__brand">
-            {imageId ? (
-              <img className="jwt-propfirm__logo" src={imageUrl} alt={attributes.name} />
-            ) : (
-              <span className="jwt-propfirm__placeholder" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="4" />
-                  <path d="M8 12h8" />
-                </svg>
-              </span>
-            )}
-          </div>
-          <div className="jwt-propfirm__body">
+          <div className="jwt-pfcard__head">
             <RichText
               tagName="h3"
-              className="jwt-propfirm__name"
+              className="jwt-pfcard__name"
               allowedFormats={[]}
-              placeholder={__('Nama prop firm…', 'jwtrading')}
+              placeholder={__('Nama partner…', 'jwtrading')}
               value={attributes.name}
               onChange={(name) => setAttributes({ name })}
             />
             <RichText
               tagName="p"
-              className="jwt-propfirm__blurb"
+              className="jwt-pfcard__blurb"
               allowedFormats={[]}
               placeholder={__('Blurb singkat…', 'jwtrading')}
               value={attributes.blurb}
               onChange={(blurb) => setAttributes({ blurb })}
             />
           </div>
-          <div className="jwt-propfirm__action">
-            <span className="jwt-btn jwt-btn--primary">{attributes.buttonText || __('Kunjungi', 'jwtrading')} →</span>
+
+          {attributes.code ? (
+            <div className="jwt-pfcard__code">
+              <span className="jwt-pfcard__code-label">{attributes.codeLabel}</span>
+              <span className="jwt-pfcard__code-pill">{attributes.code}</span>
+            </div>
+          ) : null}
+
+          <div className="jwt-pfcard__guide">
+            {attributes.guideLabel ? (
+              <span className="jwt-pfcard__guide-label">{attributes.guideLabel}</span>
+            ) : null}
+            <p style={{ margin: 0, fontSize: 12, opacity: 0.7 }}>
+              {attributes.guideVideoUrl || __('Link video guide belum diisi.', 'jwtrading')}
+            </p>
           </div>
         </article>
       </>
