@@ -753,6 +753,251 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
   });
 })();
 
+// --- Mentorship funnel: opt-in form (step 1) ---------------------------------
+// Posts nama/email/WhatsApp to jwt_funnel_optin (JWT_Funnel), which tags the
+// lead in Kit and answers with the application URL carrying the lead token.
+(() => {
+  const ajaxUrl = (window.jwtData && window.jwtData.ajaxUrl) || '/wp-admin/admin-ajax.php';
+
+  document.querySelectorAll('[data-jwt-optin]').forEach((form) => {
+    const btn = form.querySelector('.jwt-optin__submit');
+    const msg = form.querySelector('.jwt-optin__msg');
+    const btnLabel = btn ? btn.textContent : '';
+    const field = (n) => form.querySelector(`[name="${n}"]`);
+    const val = (n) => (field(n)?.value || '').trim();
+
+    const fail = (text, name) => {
+      if (msg) msg.textContent = text;
+      if (name) {
+        const el = field(name);
+        el?.classList.add('is-invalid');
+        el?.focus();
+      }
+      if (btn) { btn.disabled = false; btn.textContent = btnLabel; }
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      form.querySelectorAll('.is-invalid').forEach((n) => n.classList.remove('is-invalid'));
+      if (msg) msg.textContent = '';
+
+      // All three are required — the team filters leads over WhatsApp.
+      if (!val('name')) return fail('Mohon isi nama lengkap.', 'name');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val('email'))) return fail('Email tidak valid.', 'email');
+      if (val('phone').replace(/\D/g, '').length < 8) return fail('Nomor WhatsApp tidak valid.', 'phone');
+
+      if (btn) { btn.disabled = true; btn.textContent = 'Memproses...'; }
+
+      const body = new URLSearchParams({
+        action: 'jwt_funnel_optin',
+        nonce: val('nonce'),
+        name: val('name'),
+        email: val('email'),
+        phone: val('phone'),
+        source: val('source'),
+        cf_token: (form.querySelector('[name="cf-turnstile-response"]')?.value || ''),
+      });
+
+      try {
+        const res = await fetch(ajaxUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+          body,
+        });
+        const data = await res.json();
+        if (!data.success || !data.data?.redirect) {
+          return fail((data && data.data && data.data.message) || 'Terjadi kesalahan. Coba lagi.');
+        }
+        window.location.href = data.data.redirect;
+      } catch (ex) {
+        fail('Koneksi gagal. Coba lagi.');
+      }
+    });
+  });
+})();
+
+// --- Mentorship funnel: application quiz (step 2) ----------------------------
+// One question per screen. Numbering and the progress bar are computed here
+// rather than baked into each step's markup, so adding/removing a question in
+// the editor stays correct. On submit the answers go to jwt_funnel_apply and
+// `application_submitted` is pushed to the dataLayer — GTM owns the conversion
+// trigger, we never touch pixel config.
+(() => {
+  const ajaxUrl = (window.jwtData && window.jwtData.ajaxUrl) || '/wp-admin/admin-ajax.php';
+
+  document.querySelectorAll('[data-jwt-quiz]').forEach((form) => {
+    const steps = Array.from(form.querySelectorAll('[data-jwt-quiz-step]'));
+    if (!steps.length) return;
+
+    const bar = form.querySelector('[data-jwt-quiz-progress]');
+    const back = form.querySelector('[data-jwt-quiz-back]');
+    const next = form.querySelector('[data-jwt-quiz-next]');
+    const msg = form.querySelector('.jwt-quiz__msg');
+    const labelTpl = form.getAttribute('data-step-label') || 'Pertanyaan %1$s dari %2$s';
+    const nextText = form.getAttribute('data-next-text') || 'Lanjut';
+    const submitText = form.getAttribute('data-submit-text') || 'Kirim Aplikasi';
+
+    let index = 0;
+
+    steps.forEach((step, i) => {
+      const label = step.querySelector('[data-jwt-quiz-label]');
+      if (label) {
+        label.textContent = labelTpl
+          .replace('%1$s', String(i + 1))
+          .replace('%2$s', String(steps.length));
+      }
+    });
+
+    const answerOf = (step) => {
+      const checked = step.querySelector('input[type="radio"]:checked');
+      if (checked) return checked.value;
+      const text = step.querySelector('textarea');
+      return text ? text.value.trim() : '';
+    };
+
+    const show = (i) => {
+      index = Math.max(0, Math.min(steps.length - 1, i));
+      steps.forEach((step, s) => { step.hidden = s !== index; });
+      if (bar) bar.style.width = `${((index + 1) / steps.length) * 100}%`;
+      if (back) back.hidden = index === 0;
+      if (next) next.textContent = `${index === steps.length - 1 ? submitText : nextText} →`;
+      if (msg) msg.textContent = '';
+    };
+
+    const validate = () => {
+      const step = steps[index];
+      if (step.dataset.required !== '1') return true;
+      if (answerOf(step)) return true;
+      if (msg) msg.textContent = step.dataset.type === 'text' ? 'Mohon isi jawabanmu dulu.' : 'Pilih salah satu dulu.';
+      return false;
+    };
+
+    // Picking an option advances automatically — matches the reference funnel
+    // and removes a click. Free-text steps still need the button.
+    form.addEventListener('change', (e) => {
+      if (e.target.matches('input[type="radio"]') && index < steps.length - 1) {
+        if (msg) msg.textContent = '';
+        window.setTimeout(() => show(index + 1), 180);
+      }
+    });
+
+    back?.addEventListener('click', () => show(index - 1));
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!validate()) return;
+
+      if (index < steps.length - 1) { show(index + 1); return; }
+
+      const answers = steps.map((step) => ({
+        q: step.dataset.question || '',
+        a: answerOf(step),
+      }));
+
+      if (next) { next.disabled = true; next.textContent = 'Mengirim...'; }
+
+      const body = new URLSearchParams({
+        action: 'jwt_funnel_apply',
+        nonce: (form.querySelector('[name="nonce"]')?.value || ''),
+        token: (form.querySelector('[name="token"]')?.value || ''),
+        answers: JSON.stringify(answers),
+        cf_token: (form.querySelector('[name="cf-turnstile-response"]')?.value || ''),
+      });
+
+      try {
+        const res = await fetch(ajaxUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+          body,
+        });
+        const data = await res.json();
+
+        if (!data.success) {
+          if (msg) msg.textContent = (data.data && data.data.message) || 'Terjadi kesalahan. Coba lagi.';
+          if (next) { next.disabled = false; next.textContent = `${submitText} →`; }
+          if (data.data && data.data.redirect) window.setTimeout(() => { window.location.href = data.data.redirect; }, 2500);
+          return;
+        }
+
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ event: 'application_submitted' });
+
+        window.location.href = data.data.redirect;
+      } catch (ex) {
+        if (msg) msg.textContent = 'Koneksi gagal. Coba lagi.';
+        if (next) { next.disabled = false; next.textContent = `${submitText} →`; }
+      }
+    });
+
+    show(0);
+  });
+})();
+
+// --- YouTube facade ----------------------------------------------------------
+// Nothing is requested from YouTube until the visitor clicks play — the
+// thank-you page carries a dozen FAQ videos and a dozen iframes would sink it.
+(() => {
+  document.querySelectorAll('[data-jwt-ytembed]').forEach((figure) => {
+    const play = figure.querySelector('[data-jwt-ytembed-play]');
+    const id = figure.getAttribute('data-video');
+    if (!play || !id) return;
+
+    play.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0&modestbranding=1`;
+      iframe.title = play.getAttribute('aria-label') || 'Video';
+      iframe.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
+      iframe.allowFullscreen = true;
+      figure.querySelector('.jwt-ytembed__frame').appendChild(iframe);
+      figure.classList.add('is-playing');
+      play.remove();
+      figure.querySelector('.jwt-ytembed__poster')?.remove();
+    }, { once: true });
+  });
+})();
+
+// --- Copy-to-clipboard pills (partner discount codes) ------------------------
+// navigator.clipboard needs a secure context; http:// Local and any non-HTTPS
+// visitor fall back to the old execCommand path so the code still copies.
+(() => {
+  const pills = document.querySelectorAll('[data-jwt-copy]');
+  if (!pills.length) return;
+
+  const copy = async (text) => {
+    if (navigator.clipboard && window.isSecureContext) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch (ex) { /* fall through */ }
+    }
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:absolute;left:-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (ex) { ok = false; }
+    ta.remove();
+    return ok;
+  };
+
+  pills.forEach((pill) => {
+    const code = pill.getAttribute('data-jwt-copy') || '';
+    const label = pill.textContent;
+
+    pill.addEventListener('click', async () => {
+      if (!(await copy(code))) return;
+      pill.classList.add('is-copied');
+      pill.textContent = 'Tersalin ✓';
+      window.setTimeout(() => {
+        pill.classList.remove('is-copied');
+        pill.textContent = label;
+      }, 1600);
+    });
+  });
+})();
+
 // --- Always-open checkout coupon field ---------------------------------------
 // Our field replaces WooCommerce's collapsible "Have a coupon?" toggle. It isn't
 // a <form> (it sits inside the checkout form), so Apply calls the same

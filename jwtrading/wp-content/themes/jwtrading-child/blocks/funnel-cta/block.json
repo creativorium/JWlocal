@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/funnel-cta",
+	"title": "JWT Funnel CTA",
+	"category": "jwtrading",
+	"icon": "button",
+	"description": "Satu tombol besar di tengah dengan glow ungu — penutup halaman funnel.",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"align": [ "full" ],
+		"html": false,
+		"anchor": true
+	},
+	"attributes": {
+		"buttonText": { "type": "string", "default": "Mulai Sekarang" },
+		"buttonUrl": { "type": "string", "default": "" },
+		"note": { "type": "string", "default": "" }
+	}
+}

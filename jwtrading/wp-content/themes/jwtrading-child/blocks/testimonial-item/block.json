@@ -20,6 +20,8 @@
 		"role": { "type": "string", "default": "" },
 		"imageId": { "type": "number", "default": 0 },
 		"imageUrl": { "type": "string", "default": "" },
-		"imageAlt": { "type": "string", "default": "" }
+		"imageAlt": { "type": "string", "default": "" },
+		"avatarId": { "type": "number", "default": 0 },
+		"avatarUrl": { "type": "string", "default": "" }
 	}
 }

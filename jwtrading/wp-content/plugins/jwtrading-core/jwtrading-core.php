@@ -31,6 +31,7 @@ require_once JWT_CORE_PATH . 'includes/class-maintenance.php';
 require_once JWT_CORE_PATH . 'includes/class-promo-banner.php';
 require_once JWT_CORE_PATH . 'includes/class-journal-sync.php';
 require_once JWT_CORE_PATH . 'includes/class-manual-payment.php';
+require_once JWT_CORE_PATH . 'includes/class-funnel.php';
 
 // WooCommerce-independent features — boot immediately.
 JWT_Plugin_Guard::init();
@@ -42,6 +43,7 @@ JWT_Maintenance::init();
 JWT_Promo_Banner::init();
 JWT_Journal_Sync::init();
 JWT_Manual_Payment::init();
+JWT_Funnel::init();
 
 /**
  * Activation: create log table + schedule retry cron.
@@ -49,6 +51,7 @@ JWT_Manual_Payment::init();
 register_activation_hook( __FILE__, function () {
 	JWT_Sync_Log::create_table();
 	JWT_Manual_Payment::create_table();
+	JWT_Funnel::create_table();
 
 	if ( ! wp_next_scheduled( 'jwt_retry_failed_syncs' ) ) {
 		wp_schedule_event( time() + 300, 'jwt_15min', 'jwt_retry_failed_syncs' );

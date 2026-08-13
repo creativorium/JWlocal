@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "jwt/quiz",
+	"title": "JWT Application Quiz",
+	"category": "jwtrading",
+	"icon": "editor-ol",
+	"description": "Form aplikasi mentorship — satu pertanyaan per layar, dengan progress bar. Jawaban tersimpan di admin Mentorship dan dikirim ke Google Sheet.",
+	"textdomain": "jwtrading",
+	"editorScript": "jwt-blocks-editor",
+	"render": "file:./render.php",
+	"supports": {
+		"align": [ "full" ],
+		"html": false,
+		"anchor": true
+	},
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "" },
+		"lead": { "type": "string", "default": "" },
+		"center": { "type": "boolean", "default": true },
+		"stepLabel": { "type": "string", "default": "Pertanyaan %1$s dari %2$s" },
+		"nextText": { "type": "string", "default": "Lanjut" },
+		"backText": { "type": "string", "default": "Kembali" },
+		"submitText": { "type": "string", "default": "Kirim Aplikasi" }
+	}
+}

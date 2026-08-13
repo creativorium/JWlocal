@@ -1,11 +1,11 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "jwt/testimonials",
-	"title": "JWT Testimonials",
+	"name": "jwt/propfirm",
+	"title": "JWT Partner Section",
 	"category": "jwtrading",
-	"icon": "format-quote",
-	"description": "Deretan testimoni member (scroll horizontal, tanpa JS).",
+	"icon": "list-view",
+	"description": "Satu section partner (prop firm / broker / tools) berisi kartu-kartu dengan kode diskon dan video guide.",
 	"textdomain": "jwtrading",
 	"editorScript": "jwt-blocks-editor",
 	"render": "file:./render.php",
@@ -19,7 +19,6 @@
 		"title": { "type": "string", "default": "" },
 		"lead": { "type": "string", "default": "" },
 		"center": { "type": "boolean", "default": true },
-		"marquee": { "type": "boolean", "default": false },
-		"speed": { "type": "number", "default": 60 }
+		"disclosure": { "type": "string", "default": "" }
 	}
 }

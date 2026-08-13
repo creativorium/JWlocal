@@ -1,11 +1,11 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "jwt/testimonials",
-	"title": "JWT Testimonials",
+	"name": "jwt/faq-videos",
+	"title": "JWT FAQ Videos",
 	"category": "jwtrading",
-	"icon": "format-quote",
-	"description": "Deretan testimoni member (scroll horizontal, tanpa JS).",
+	"icon": "video-alt2",
+	"description": "Daftar FAQ dalam bentuk video YouTube (bukan teks) — untuk halaman thank you.",
 	"textdomain": "jwtrading",
 	"editorScript": "jwt-blocks-editor",
 	"render": "file:./render.php",
@@ -18,8 +18,6 @@
 		"eyebrow": { "type": "string", "default": "" },
 		"title": { "type": "string", "default": "" },
 		"lead": { "type": "string", "default": "" },
-		"center": { "type": "boolean", "default": true },
-		"marquee": { "type": "boolean", "default": false },
-		"speed": { "type": "number", "default": 60 }
+		"center": { "type": "boolean", "default": true }
 	}
 }
