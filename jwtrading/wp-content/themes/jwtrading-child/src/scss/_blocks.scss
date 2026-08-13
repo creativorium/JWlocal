@@ -2433,9 +2433,10 @@
 	margin: 0 0 0.85rem;
 }
 
-// Landing pages (roadmap / ifvg): kill Kadence's .content-area top margin so the
-// hero sits right under the minimal header.
-.jwt-landing .content-area {
+// Landing + funnel pages: kill Kadence's .content-area top margin so the hero
+// sits right under the minimal header instead of ~80px below it.
+.jwt-landing .content-area,
+.jwt-funnel-page .content-area {
 	margin-top: 0 !important;
 }
 

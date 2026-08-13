@@ -79,6 +79,17 @@
 // bootcamp heroes keep their own 880px measure and flat accent colour.
 
 .jwt-funnel-page {
+	// Funnel steps open straight into the headline — no need for the marketing
+	// hero's generous lead-in above it.
+	.jwt-hero {
+		padding-block: clamp(1.25rem, 3vw, 2.25rem) clamp(2rem, 5vw, 3rem);
+		min-height: 0;
+	}
+
+	.jwt-hero .jwt-hero__title {
+		margin-top: 0.25em;
+	}
+
 	.jwt-hero__title {
 		// The funnel headlines are long two-liners with their own <br>, so each
 		// authored line has to survive on one visual line. Two changes get
@@ -153,7 +164,9 @@
 		max-width: 720px;
 		margin-inline: auto;
 		padding: clamp(1.75rem, 4vw, 2.75rem);
-		border: 1px solid var(--jwt-line);
+		// A touch stronger than the site's --jwt-line: the card sits on the bare
+		// near-black canvas (not a lighter section), where 7% white vanishes.
+		border: 1px solid rgb(255 255 255 / 0.16);
 		border-radius: var(--jwt-radius);
 		background: var(--jwt-surface-2);
 		box-shadow: var(--jwt-shadow), 0 0 70px rgb(124 77 255 / 0.1);
@@ -196,7 +209,13 @@
 		gap: 1.1rem;
 	}
 
-	&__field {
+	// MUST stay double-scoped (.jwt-optin .jwt-optin__field input = 0,2,1).
+	// Kadence ships `input[type="text"], input[type="email"], …` at (0,1,1) —
+	// identical specificity to a single-class `.jwt-optin__field input`, and it
+	// loads later, so it won on source order and forced 3px radius, a light
+	// grey border and 6px padding. This is the same guard the contact form
+	// carries; do not flatten it.
+	& &__field {
 		display: flex;
 		flex-direction: column;
 		gap: 0.45rem;
@@ -205,32 +224,32 @@
 			font-size: 0.85rem;
 			color: var(--jwt-text);
 		}
-	}
 
-	&__field input {
-		width: 100%;
-		font-family: var(--jwt-font-body);
-		font-size: 0.95rem;
-		color: var(--jwt-text);
-		background: var(--jwt-surface);
-		border: 1px solid var(--jwt-line);
-		border-radius: var(--jwt-radius-sm);
-		padding: 0.9rem 1.05rem;
-		transition: border-color 0.2s, box-shadow 0.2s;
+		input {
+			width: 100%;
+			font-family: var(--jwt-font-body);
+			font-size: 0.95rem;
+			color: var(--jwt-text);
+			background: var(--jwt-surface);
+			border: 1px solid var(--jwt-line-strong);
+			border-radius: var(--jwt-radius-sm);
+			padding: 0.9rem 1.05rem;
+			transition: border-color 0.2s, box-shadow 0.2s;
 
-		&::placeholder {
-			color: var(--jwt-muted);
-		}
+			&::placeholder {
+				color: var(--jwt-muted);
+			}
 
-		&:focus {
-			outline: none;
-			border-color: var(--jwt-accent);
-			box-shadow: 0 0 0 3px rgb(124 77 255 / 0.18);
-		}
+			&:focus {
+				outline: none;
+				border-color: var(--jwt-accent);
+				box-shadow: 0 0 0 3px rgb(124 77 255 / 0.18);
+			}
 
-		&.is-invalid {
-			border-color: #ff6b6b;
-			box-shadow: 0 0 0 3px rgb(255 107 107 / 0.16);
+			&.is-invalid {
+				border-color: #ff6b6b;
+				box-shadow: 0 0 0 3px rgb(255 107 107 / 0.16);
+			}
 		}
 	}
 

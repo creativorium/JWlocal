@@ -32,8 +32,15 @@ defined( 'ABSPATH' ) || exit;
 <!-- wp:jwt/faq-video-item {"question":"Bagaimana kalau aku punya pertanyaan lain?"} /-->
 <!-- /wp:jwt/faq-videos -->
 
-<!-- Slider intentionally EMPTY until the real payout screenshots land. -->
-<!-- wp:jwt/proof {"align":"full","eyebrow":"Hasil Payout","title":"Payout member kami.","lead":"Hasil nyata dari member yang sudah menjalankan prosesnya."} /-->
+<!-- Blank placeholder cards until the real payout screenshots land. -->
+<!-- wp:jwt/proof {"align":"full","eyebrow":"Hasil Payout","title":"Payout member kami.","lead":"Hasil nyata dari member yang sudah menjalankan prosesnya."} -->
+<!-- wp:jwt/proof-item /-->
+<!-- wp:jwt/proof-item /-->
+<!-- wp:jwt/proof-item /-->
+<!-- wp:jwt/proof-item /-->
+<!-- wp:jwt/proof-item /-->
+<!-- wp:jwt/proof-item /-->
+<!-- /wp:jwt/proof -->
 
 <!-- wp:jwt/testimonials {"align":"full","eyebrow":"Kata Member","title":"Testimoni dari member lain."} -->
 <!-- wp:jwt/testimonial-item /-->

@@ -16,8 +16,15 @@ defined( 'ABSPATH' ) || exit;
 <!-- wp:jwt/optin-form {"align":"full","anchor":"mulai","title":"Langkah pertama untuk trading dengan sistem konsisten","submitText":"Mulai Sekarang","note":"Data kamu 100% aman &amp; tidak akan dibagikan ke siapa pun."} /-->
 
 <!-- Same section header shape as the Testimonials page (eyebrow / title / lead).
-     Slider intentionally EMPTY — a different slider is coming, and the block
-     drops the marquee entirely when it has no cards. -->
-<!-- wp:jwt/proof {"align":"full","eyebrow":"Hasil Payout","title":"Cerita nyata dari <mark>komunitas kami</mark>","lead":"Langsung dari member — tanpa disaring."} /-->
+     Cards are blank placeholders so the slider's layout is visible — the real
+     slider is coming and will be a different component. -->
+<!-- wp:jwt/proof {"align":"full","eyebrow":"Hasil Payout","title":"Cerita nyata dari <mark>komunitas kami</mark>","lead":"Langsung dari member — tanpa disaring."} -->
+<!-- wp:jwt/proof-item /-->
+<!-- wp:jwt/proof-item /-->
+<!-- wp:jwt/proof-item /-->
+<!-- wp:jwt/proof-item /-->
+<!-- wp:jwt/proof-item /-->
+<!-- wp:jwt/proof-item /-->
+<!-- /wp:jwt/proof -->
 
 <!-- wp:jwt/funnel-cta {"align":"full","buttonText":"Mulai Sekarang","buttonUrl":"#mulai"} /-->
