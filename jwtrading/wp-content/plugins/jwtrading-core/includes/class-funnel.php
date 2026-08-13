@@ -78,6 +78,10 @@ class JWT_Funnel {
 			'sheets_secret'    => '',
 			'notify_email'     => '',
 			'kit_tags'         => 'Mentorship_Optin, Stage_Warm',
+			// Ships GATED (1). Turn off only to review the design; an open
+			// thank-you page is shareable, which breaks the URL-based
+			// conversion trigger in GTM.
+			'thankyou_gate'    => 1,
 		);
 		$saved = get_option( self::OPT, array() );
 		return wp_parse_args( is_array( $saved ) ? $saved : array(), $defaults );
@@ -94,8 +98,9 @@ class JWT_Funnel {
 					foreach ( array( 'optin_slug', 'application_slug', 'thankyou_slug', 'turnstile_site', 'turnstile_secret', 'sheets_secret', 'kit_tags' ) as $k ) {
 						$out[ $k ] = sanitize_text_field( $in[ $k ] ?? '' );
 					}
-					$out['sheets_url']   = esc_url_raw( $in['sheets_url'] ?? '' );
-					$out['notify_email'] = sanitize_email( $in['notify_email'] ?? '' );
+					$out['sheets_url']    = esc_url_raw( $in['sheets_url'] ?? '' );
+					$out['notify_email']  = sanitize_email( $in['notify_email'] ?? '' );
+					$out['thankyou_gate'] = empty( $in['thankyou_gate'] ) ? 0 : 1;
 					return $out;
 				},
 			)
@@ -521,6 +526,11 @@ class JWT_Funnel {
 			return;
 		}
 
+		// Temporarily open for design review (Mentorship → Pengaturan).
+		if ( empty( self::settings()['thankyou_gate'] ) ) {
+			return;
+		}
+
 		$parts = explode( '/', trim( (string) self::settings()['thankyou_slug'], '/' ) );
 		$slug  = end( $parts );
 		if ( '' === $slug || ! is_page( $slug ) ) {
@@ -700,6 +710,16 @@ class JWT_Funnel {
 							<p><label>Application<br><input type="text" class="regular-text" name="<?php echo esc_attr( self::OPT ); ?>[application_slug]" value="<?php echo esc_attr( $s['application_slug'] ); ?>"></label></p>
 							<p><label>Thank you<br><input type="text" class="regular-text" name="<?php echo esc_attr( self::OPT ); ?>[thankyou_slug]" value="<?php echo esc_attr( $s['thankyou_slug'] ); ?>"></label></p>
 							<p class="description"><?php esc_html_e( 'Path halaman tanpa slash awal, mis. mentorship/application', 'jwtrading' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Kunci halaman Thank You', 'jwtrading' ); ?></th>
+						<td>
+							<label>
+								<input type="checkbox" name="<?php echo esc_attr( self::OPT ); ?>[thankyou_gate]" value="1" <?php checked( ! empty( $s['thankyou_gate'] ) ); ?>>
+								<?php esc_html_e( 'Hanya bisa dibuka setelah kirim aplikasi', 'jwtrading' ); ?>
+							</label>
+							<p class="description"><?php esc_html_e( 'Matikan sementara kalau mau lihat desainnya langsung. WAJIB dinyalakan lagi sebelum live — halaman thank you yang terbuka bisa di-share, dan itu merusak conversion trigger berbasis URL di GTM.', 'jwtrading' ); ?></p>
 						</td>
 					</tr>
 					<tr>

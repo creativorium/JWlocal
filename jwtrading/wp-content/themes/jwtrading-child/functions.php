@@ -94,6 +94,11 @@ add_filter( 'body_class', function ( $classes ) {
 	if ( is_singular() && has_block( 'jwt/roadmap-hero', $id ) ) {
 		$classes[] = 'jwt-landing';
 	}
+	// Mentorship funnel steps — wider headlines + the neon treatment, scoped so
+	// the rest of the site keeps its own hero proportions.
+	if ( apply_filters( 'jwt/funnel_chrome', false ) ) {
+		$classes[] = 'jwt-funnel-page';
+	}
 	return $classes;
 } );
 

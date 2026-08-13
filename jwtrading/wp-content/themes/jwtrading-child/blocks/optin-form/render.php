@@ -27,15 +27,15 @@ $jwt_sec  = class_exists( 'JWT_Funnel' ) ? JWT_Funnel::form_security_html() : ''
 
 			<div class="jwt-optin__fields">
 				<label class="jwt-optin__field">
-					<span class="screen-reader-text"><?php esc_html_e( 'Nama lengkap', 'jwtrading' ); ?></span>
+					<span class="jwt-optin__label"><?php esc_html_e( 'Nama Lengkap', 'jwtrading' ); ?></span>
 					<input type="text" name="name" autocomplete="name" required placeholder="<?php echo esc_attr( $attributes['namePlaceholder'] ); ?>">
 				</label>
 				<label class="jwt-optin__field">
-					<span class="screen-reader-text"><?php esc_html_e( 'Email aktif', 'jwtrading' ); ?></span>
+					<span class="jwt-optin__label"><?php esc_html_e( 'Email Aktif', 'jwtrading' ); ?></span>
 					<input type="email" name="email" autocomplete="email" required placeholder="<?php echo esc_attr( $attributes['emailPlaceholder'] ); ?>">
 				</label>
 				<label class="jwt-optin__field">
-					<span class="screen-reader-text"><?php esc_html_e( 'Nomor WhatsApp', 'jwtrading' ); ?></span>
+					<span class="jwt-optin__label"><?php esc_html_e( 'Nomor WhatsApp', 'jwtrading' ); ?></span>
 					<input type="tel" name="phone" autocomplete="tel" inputmode="tel" required placeholder="<?php echo esc_attr( $attributes['phonePlaceholder'] ); ?>">
 				</label>
 			</div>

@@ -137,8 +137,14 @@
 		animation: jwt-proof-scroll var(--jwt-proof-speed, 45s) linear infinite;
 	}
 
-	&:hover {
-		animation-play-state: paused;
+	// Pause-on-hover ONLY where a real pointer exists. On touch devices :hover
+	// latches after a tap and does not clear until you tap elsewhere — so one
+	// stray touch froze the marquee for the rest of the visit, which read as
+	// "the slider doesn't move on mobile".
+	@media (hover: hover) and (pointer: fine) {
+		&:hover {
+			animation-play-state: paused;
+		}
 	}
 }
 

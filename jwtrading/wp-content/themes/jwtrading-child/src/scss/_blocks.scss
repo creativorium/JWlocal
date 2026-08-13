@@ -1812,8 +1812,12 @@
 	}
 }
 
-.jwt-gallery__viewport:hover .jwt-gallery__track {
-	animation-play-state: paused;
+// Real pointers only — on touch, :hover latches after a tap and would freeze
+// the marquee for the rest of the visit (same bug as .jwt-proof__track).
+@media (hover: hover) and (pointer: fine) {
+	.jwt-gallery__viewport:hover .jwt-gallery__track {
+		animation-play-state: paused;
+	}
 }
 
 .jwt-gallery__group {
