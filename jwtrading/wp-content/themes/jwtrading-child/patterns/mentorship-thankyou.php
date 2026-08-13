@@ -16,7 +16,9 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <!-- wp:jwt/hero {"align":"full","compact":true,"titleTag":"h1","eyebrow":"Langkah 3 dari 3 · Aplikasi terkirim","title":"Tunggu, belum selesai! Tim kami akan <mark>menghubungi kamu</mark> lewat WhatsApp untuk proses onboarding.","lead":"Pastikan nomor WhatsApp kamu aktif — kami hubungi dalam 1×24 jam."} /-->
 
-<!-- wp:jwt/video-embed {"align":"full","narrow":true,"label":"video onboarding"} /-->
+<!-- Main VSL runs at the wide measure; the FAQ answers below stay narrow and
+     uniform, so the hierarchy reads at a glance. -->
+<!-- wp:jwt/video-embed {"align":"full","narrow":false,"redPlay":true,"label":"video onboarding"} /-->
 
 <!-- wp:jwt/faq-videos {"align":"full","eyebrow":"FAQ","title":"Tonton <mark>Frequently Asked Questions</mark> kami di bawah ini."} -->
 <!-- wp:jwt/faq-video-item {"question":"Apa yang aku dapat di mentorship ini?"} /-->
@@ -42,7 +44,12 @@ defined( 'ABSPATH' ) || exit;
 <!-- wp:jwt/proof-item /-->
 <!-- /wp:jwt/proof -->
 
-<!-- wp:jwt/testimonials {"align":"full","eyebrow":"Kata Member","title":"Testimoni dari member lain."} -->
+<!-- Auto-scrolling slider like the payout section above, but text cards:
+     quote + avatar + name/role. Blank placeholders until the real ones land. -->
+<!-- wp:jwt/testimonials {"align":"full","marquee":true,"speed":70,"eyebrow":"Kata Member","title":"Testimoni dari member lain.","lead":"Cerita langsung dari yang sudah jalan bareng kami."} -->
+<!-- wp:jwt/testimonial-item /-->
+<!-- wp:jwt/testimonial-item /-->
+<!-- wp:jwt/testimonial-item /-->
 <!-- wp:jwt/testimonial-item /-->
 <!-- wp:jwt/testimonial-item /-->
 <!-- wp:jwt/testimonial-item /-->

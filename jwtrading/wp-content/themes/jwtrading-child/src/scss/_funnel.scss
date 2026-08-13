@@ -66,11 +66,24 @@
 }
 
 .jwt-optin,
-.jwt-ytembed-section.is-narrow,
-.jwt-faqvid {
+.jwt-ytembed-section.is-narrow {
 	.jwt-container {
 		@extend %jwt-funnel-column;
 	}
+}
+
+// `--jwt-wide-col` is a CONTENT width, but .jwt-container adds --jwt-gutter of
+// padding on each side — so setting max-width to it directly yields a narrower
+// column than a grid that is capped at the same number. Adding the gutters back
+// is what makes the page VSL, the FAQ answers and the partner grids all line up
+// on the same edges.
+%jwt-wide-container {
+	max-width: calc(var(--jwt-wide-col) + var(--jwt-gutter) * 2);
+	margin-inline: auto;
+}
+
+.jwt-faqvid .jwt-container {
+	@extend %jwt-wide-container;
 }
 
 // The quiz section's heading is a full sentence ("Relate? Apply sekarang untuk
@@ -613,8 +626,7 @@
 	// Non-narrow (page VSL): the full 1440px container was far wider than the
 	// content under it. Pin it to the shared measure instead.
 	&:not(.is-narrow) .jwt-container {
-		max-width: var(--jwt-wide-col);
-		margin-inline: auto;
+		@extend %jwt-wide-container;
 	}
 }
 
@@ -716,8 +728,12 @@
 		gap: 1rem;
 	}
 
+	// No horizontal padding on the card: the answer video runs edge to edge so
+	// it matches the width of the page VSL above exactly, rather than sitting
+	// ~34px narrower inside a padded box.
 	&__item {
-		padding: 1rem;
+		padding: 0;
+		overflow: hidden;
 		border: 1px solid var(--jwt-line);
 		border-radius: var(--jwt-radius);
 		background: var(--jwt-surface-2);
@@ -727,7 +743,8 @@
 		display: flex;
 		align-items: flex-start;
 		gap: 0.6rem;
-		margin: 0 0 0.85rem;
+		padding: 1.1rem 1.25rem;
+		margin: 0;
 		font-family: var(--jwt-font-heading);
 		font-size: 0.98rem;
 		font-weight: 600;
@@ -748,6 +765,138 @@
 		font-size: 0.7rem;
 		font-weight: 700;
 	}
+
+	// The card already draws the border + radius; the frame inside would
+	// otherwise double them up along the card's edges.
+	&__video .jwt-ytembed__frame {
+		border: 0;
+		border-radius: 0;
+	}
+}
+
+// --- Testimonials as an auto-scrolling marquee -------------------------------
+// Same mechanism as .jwt-proof: two identical groups, translateX(-50%) loop.
+// Unlike proof (fixed-height image cards) these are text cards, so the row
+// height comes from the tallest card and every card stretches to match.
+
+.jwt-testimonials--marquee {
+	--jwt-tmarquee-gap: clamp(1rem, 2vw, 1.5rem);
+	// Fixed row height, copied from .jwt-proof's approach: relying on
+	// align-items:stretch let one card's content set the row height and the
+	// others looked mismatched. A fixed height makes every card identical and
+	// guarantees both loop groups measure the same.
+	--jwt-tcard-h: clamp(250px, 24vw, 310px);
+
+	.jwt-testimonials__viewport {
+		// `clip`, not `hidden` — never becomes a scroll container that could be
+		// dragged sideways on touch.
+		overflow: clip;
+		max-width: 100%;
+		height: var(--jwt-tcard-h);
+		margin-top: clamp(2rem, 5vw, 3.5rem);
+		-webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+		mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+	}
+
+	.jwt-testimonials__mtrack {
+		display: flex;
+		width: max-content;
+		height: var(--jwt-tcard-h);
+
+		@media (prefers-reduced-motion: no-preference) {
+			animation: jwt-testimonials-scroll var(--jwt-tmarquee-speed, 60s) linear infinite;
+		}
+
+		// Real pointers only — on touch, :hover latches after a tap and would
+		// freeze the marquee for the rest of the visit.
+		@media (hover: hover) and (pointer: fine) {
+			&:hover {
+				animation-play-state: paused;
+			}
+		}
+	}
+
+	// Each group carries a trailing gap equal to its internal gap, so the
+	// -50% translate lands exactly one group forward and the loop is seamless.
+	.jwt-testimonials__group {
+		display: flex;
+		flex-wrap: nowrap;
+		flex-shrink: 0;
+		height: var(--jwt-tcard-h);
+		gap: var(--jwt-tmarquee-gap);
+		margin-right: var(--jwt-tmarquee-gap);
+	}
+
+	.jwt-testimonial {
+		flex: none;
+		width: min(360px, 82vw);
+		height: var(--jwt-tcard-h);
+		overflow: hidden;
+	}
+
+	// Long quotes are trimmed rather than allowed to push the card taller —
+	// the row height is fixed, so overflow would otherwise be clipped mid-word.
+	.jwt-testimonial__quote {
+		flex: 1;
+		min-height: 0;
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 5;
+	}
+}
+
+@keyframes jwt-testimonials-scroll {
+	to {
+		transform: translateX(-50%);
+	}
+}
+
+// Quote + avatar/name/role footer, shared by both testimonial modes.
+.jwt-testimonial__who {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.jwt-testimonial__avatar {
+	flex: none;
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 1px solid var(--jwt-line-strong);
+}
+
+.jwt-testimonial__avatar--placeholder {
+	display: grid;
+	place-items: center;
+	background: rgb(124 77 255 / 0.16);
+	color: var(--jwt-accent-light);
+	font-family: var(--jwt-font-heading);
+	font-weight: 700;
+	font-size: 1rem;
+}
+
+.jwt-testimonial__meta {
+	display: flex;
+	flex-direction: column;
+	gap: 0.15rem;
+	min-width: 0;
+}
+
+// Placeholder card: keeps the slider's shape readable before the real
+// testimonials arrive, without showing dangling quote marks.
+.jwt-testimonial.is-blank {
+	.jwt-testimonial__quote {
+		flex: 1;
+		border-radius: var(--jwt-radius-sm);
+		background: rgb(255 255 255 / 0.03);
+
+		&::before {
+			content: none;
+		}
+	}
 }
 
 // --- Partner sections (prop firms / brokers / tools) ------------------------
@@ -764,20 +913,16 @@
 		max-width: var(--jwt-wide-col);
 		margin-inline: auto;
 
-		// A single-card section (Broker, Tools) keeps one column but stays as
-		// wide as one column of the 2-up grid.
+		// A single-card section (Broker, Tools) runs the FULL width rather than
+		// one grid column, so its guide video matches the page VSL instead of
+		// being half the size of it.
 		&.is-single {
 			grid-template-columns: minmax(0, 1fr);
-			max-width: calc((var(--jwt-wide-col) - 1.5rem) / 2);
 		}
 
 		@media (max-width: 720px) {
 			grid-template-columns: minmax(0, 1fr);
 			max-width: 460px;
-
-			&.is-single {
-				max-width: 460px;
-			}
 		}
 	}
 
@@ -812,10 +957,6 @@
 		border-radius: var(--jwt-radius-sm);
 		text-align: center;
 		background: linear-gradient(180deg, rgb(124 77 255 / 0.16), transparent);
-	}
-
-	&.is-green &__head {
-		background: linear-gradient(180deg, rgb(62 207 142 / 0.16), transparent);
 	}
 
 	&.is-blue &__head {

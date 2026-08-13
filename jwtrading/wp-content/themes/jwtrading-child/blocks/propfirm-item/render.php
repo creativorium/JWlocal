@@ -21,7 +21,7 @@ $jwt_url     = trim( (string) ( $attributes['url'] ?? '' ) );
 $jwt_blurb   = trim( (string) ( $attributes['blurb'] ?? '' ) );
 $jwt_code    = trim( (string) ( $attributes['code'] ?? '' ) );
 $jwt_guide   = trim( (string) ( $attributes['guideLabel'] ?? '' ) );
-$jwt_variant = in_array( $attributes['variant'] ?? 'default', array( 'default', 'green', 'blue' ), true )
+$jwt_variant = in_array( $attributes['variant'] ?? 'default', array( 'default', 'blue' ), true )
 	? $attributes['variant']
 	: 'default';
 ?>

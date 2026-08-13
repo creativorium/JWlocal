@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
 
 <!-- wp:jwt/propfirm {"align":"full","eyebrow":"Section 01","title":"Prop Firm Terpercaya","lead":"Modal dari prop firm, profit untuk kamu. Ini partner yang kami gunakan dan rekomendasikan sendiri."} -->
 <!-- wp:jwt/propfirm-item {"name":"WeMasterTrade","blurb":"CFD prop firm dengan aturan yang jelas dan payout yang konsisten.","code":"JW","guideLabel":"WMT Full Guide"} /-->
-<!-- wp:jwt/propfirm-item {"name":"Alpha Futures","variant":"green","blurb":"Futures prop firm untuk trader yang fokus di NQ dan futures market.","code":"JW","guideLabel":"Alpha Futures Guide"} /-->
+<!-- wp:jwt/propfirm-item {"name":"Alpha Futures","blurb":"Futures prop firm untuk trader yang fokus di NQ dan futures market.","code":"JW","guideLabel":"Alpha Futures Guide"} /-->
 <!-- wp:jwt/propfirm-item {"name":"The 5%ers","blurb":"CFD prop firm dengan program scaling — cocok kalau mau tumbuh perlahan.","code":"JW","guideLabel":"The 5%ers Guide"} /-->
 <!-- wp:jwt/propfirm-item {"name":"FundedNext","blurb":"Opsi futures dan CFD dalam satu platform — fleksibel untuk semua jenis trader.","code":"JW","guideLabel":"FundedNext Full Guide"} /-->
 <!-- /wp:jwt/propfirm -->

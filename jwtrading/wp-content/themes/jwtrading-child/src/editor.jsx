@@ -511,6 +511,26 @@ registerBlockType('jwt/testimonials', {
     innerClass: 'jwt-testimonials__track',
     allowed: ['jwt/testimonial-item'],
     template: [['jwt/testimonial-item'], ['jwt/testimonial-item'], ['jwt/testimonial-item']],
+    panelExtras: ({ attributes, setAttributes }) => (
+      <>
+        <ToggleControl
+          label={__('Jalan otomatis (slider)', 'jwtrading')}
+          help={__('Kartu bergerak sendiri seperti section payout. Kalau mati, tetap bisa digeser manual.', 'jwtrading')}
+          checked={!!attributes.marquee}
+          onChange={(marquee) => setAttributes({ marquee })}
+        />
+        {attributes.marquee ? (
+          <RangeControl
+            label={__('Kecepatan scroll (detik/putaran)', 'jwtrading')}
+            help={__('Angka lebih besar = lebih lambat.', 'jwtrading')}
+            min={15}
+            max={160}
+            value={attributes.speed}
+            onChange={(speed) => setAttributes({ speed })}
+          />
+        ) : null}
+      </>
+    ),
   }),
   save: saveInner,
 });
@@ -553,6 +573,20 @@ registerBlockType('jwt/testimonial-item', {
               />
             </MediaUploadCheck>
           </PanelBody>
+          {!imageId ? (
+            <PanelBody title={__('Avatar (opsional)', 'jwtrading')}>
+              <p style={{ fontSize: 12, opacity: 0.8 }}>
+                {__('Foto bulat kecil di samping nama. Kalau kosong, tampil inisial.', 'jwtrading')}
+              </p>
+              <MediaPicker
+                id={attributes.avatarId}
+                onPick={(media) => setAttributes({ avatarId: media.id, avatarUrl: media.url })}
+                onClear={() => setAttributes({ avatarId: 0, avatarUrl: '' })}
+                pickLabel={__('Upload avatar', 'jwtrading')}
+                changeLabel={__('Ganti avatar', 'jwtrading')}
+              />
+            </PanelBody>
+          ) : null}
         </InspectorControls>
 
         <figure {...blockProps}>
@@ -568,22 +602,31 @@ registerBlockType('jwt/testimonial-item', {
                 onChange={(quote) => setAttributes({ quote })}
               />
               <figcaption className="jwt-testimonial__who">
-                <RichText
-                  tagName="span"
-                  className="jwt-testimonial__name"
-                  allowedFormats={[]}
-                  placeholder={__('Nama', 'jwtrading')}
-                  value={attributes.name}
-                  onChange={(name) => setAttributes({ name })}
-                />
-                <RichText
-                  tagName="span"
-                  className="jwt-testimonial__role"
-                  allowedFormats={[]}
-                  placeholder={__('Peran — mis. Member Bootcamp', 'jwtrading')}
-                  value={attributes.role}
-                  onChange={(role) => setAttributes({ role })}
-                />
+                {attributes.avatarId ? (
+                  <img className="jwt-testimonial__avatar" src={attributes.avatarUrl} alt={attributes.name} />
+                ) : (
+                  <span className="jwt-testimonial__avatar jwt-testimonial__avatar--placeholder" aria-hidden="true">
+                    {(attributes.name || '').trim().charAt(0).toUpperCase()}
+                  </span>
+                )}
+                <span className="jwt-testimonial__meta">
+                  <RichText
+                    tagName="span"
+                    className="jwt-testimonial__name"
+                    allowedFormats={[]}
+                    placeholder={__('Nama', 'jwtrading')}
+                    value={attributes.name}
+                    onChange={(name) => setAttributes({ name })}
+                  />
+                  <RichText
+                    tagName="span"
+                    className="jwt-testimonial__role"
+                    allowedFormats={[]}
+                    placeholder={__('Peran — mis. Member Bootcamp', 'jwtrading')}
+                    value={attributes.role}
+                    onChange={(role) => setAttributes({ role })}
+                  />
+                </span>
               </figcaption>
             </>
           )}
@@ -2505,7 +2548,6 @@ registerBlockType('jwt/propfirm-item', {
               value={attributes.variant}
               options={[
                 { label: __('Ungu (default)', 'jwtrading'), value: 'default' },
-                { label: __('Hijau (unggulan)', 'jwtrading'), value: 'green' },
                 { label: __('Biru', 'jwtrading'), value: 'blue' },
               ]}
               onChange={(variant) => setAttributes({ variant })}
