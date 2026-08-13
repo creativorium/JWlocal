@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 ?>
-<!-- wp:jwt/hero {"align":"full","compact":true,"titleTag":"h1","eyebrow":"Langkah 1 dari 3 · Mentorship 1:1","title":"Masih terus blow akun prop firm?<br>Saatnya ada yang <mark>bimbing langsung.</mark>","lead":"Belajar sistem ICT untuk lolos prop firm dan dapet payout — 1:1 langsung dengan Jack &amp; William."} /-->
+<!-- wp:jwt/hero {"align":"full","compact":true,"titleTag":"h1","eyebrow":"Langkah 1 dari 3 · Mentorship 1:1","title":"Masih terus blow akun prop firm?<br>Saatnya ada yang <mark>bimbing langsung.</mark>","lead":"Belajar sistem ICT untuk lolos prop firm dan dapet payout — 1:1 langsung dengan <strong>Jack &amp; William.</strong>"} /-->
 
 <!-- wp:jwt/optin-form {"align":"full","anchor":"mulai","title":"Langkah pertama untuk trading dengan sistem konsisten","submitText":"Mulai Sekarang","note":"Data kamu 100% aman &amp; tidak akan dibagikan ke siapa pun."} /-->
 

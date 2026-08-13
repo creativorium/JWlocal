@@ -113,6 +113,13 @@
 
 	.jwt-hero__lead {
 		max-width: 640px;
+
+		// Lift a phrase out of the muted lead (e.g. the mentors' names) to full
+		// text white without making it shout.
+		strong {
+			color: var(--jwt-text);
+			font-weight: 600;
+		}
 	}
 
 	// Neon: the highlighted phrase gets a gradient fill plus a soft bloom.
@@ -322,7 +329,9 @@
 		position: absolute;
 		left: 50%;
 		width: min(520px, 80vw);
-		height: 180px;
+		// Kept shallow on purpose — a taller haze reads as a second glow
+		// stacked behind the button's own shadow.
+		height: 50px;
 		transform: translateX(-50%);
 		background: radial-gradient(closest-side, var(--jwt-haze), transparent 70%);
 		filter: blur(20px);
