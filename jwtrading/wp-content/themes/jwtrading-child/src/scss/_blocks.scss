@@ -2436,12 +2436,17 @@
 // Landing + funnel pages: kill Kadence's .content-area top margin so the hero
 // sits right under the minimal header instead of ~80px below it.
 .jwt-landing .content-area,
-.jwt-funnel-page .content-area {
+.jwt-tight-hero .content-area {
 	margin-top: 0 !important;
 }
 
 // --- Sleek "waterfall" scroll-down cue (landing hero) ------------------------
 .jwt-scrollcue {
+	// Track length lives in a custom property because the drop's keyframes have
+	// to travel exactly one track-height — hard-coding it in two places is how
+	// they drift apart. Phase 2 pages override it below.
+	--jwt-cue-h: 64px;
+
 	position: fixed;
 	// Sit above the floating WhatsApp button (bottom:28px + 58px circle ≈ 86px).
 	right: clamp(1.75rem, 3.5vw, 3.1rem);
@@ -2472,7 +2477,7 @@
 	&__track {
 		position: relative;
 		width: 2px;
-		height: 64px;
+		height: var(--jwt-cue-h);
 		border-radius: 2px;
 		overflow: hidden;
 		background: linear-gradient(to bottom, transparent, rgb(124 77 255 / 0.25), transparent);
@@ -2503,5 +2508,16 @@
 @keyframes jwt-waterfall {
 	0%   { top: -16px; opacity: 0; }
 	25%  { opacity: 1; }
-	100% { top: 64px; opacity: 0; }
+	100% { top: var(--jwt-cue-h); opacity: 0; }
+}
+
+// Phase 2 pages: a longer waterfall. The funnel steps carry no floating
+// WhatsApp button, so the cue can also sit lower without colliding with it —
+// prop firm keeps the standard offset because it does have the button.
+.jwt-tight-hero .jwt-scrollcue {
+	--jwt-cue-h: 132px;
+}
+
+.jwt-funnel-page .jwt-scrollcue {
+	bottom: clamp(2.5rem, 5vw, 3.5rem);
 }

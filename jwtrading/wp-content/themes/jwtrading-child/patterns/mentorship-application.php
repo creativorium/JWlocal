@@ -13,7 +13,7 @@
 
 defined( 'ABSPATH' ) || exit;
 ?>
-<!-- wp:jwt/hero {"align":"full","compact":true,"titleTag":"h1","title":"Masih trading pakai <mark>emosi</mark> dan progressnya jalan di tempat?","lead":"Video ini jelasin kenapa kamu masih stuck — dan gimana keluarnya."} /-->
+<!-- wp:jwt/hero {"align":"full","compact":true,"titleTag":"h1","eyebrow":"Langkah 2 dari 3 · Aplikasi","title":"Masih trading pakai <mark>emosi</mark> dan progressnya jalan di tempat?","lead":"Video ini jelasin kenapa kamu masih stuck — dan gimana keluarnya."} /-->
 
 <!-- wp:jwt/video-embed {"align":"full","narrow":false,"label":"video aplikasi mentorship"} /-->
 

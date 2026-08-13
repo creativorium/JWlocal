@@ -66,7 +66,6 @@
 }
 
 .jwt-optin,
-.jwt-quiz-section,
 .jwt-ytembed-section.is-narrow,
 .jwt-faqvid {
 	.jwt-container {
@@ -74,13 +73,21 @@
 	}
 }
 
+// The quiz section's heading is a full sentence ("Relate? Apply sekarang untuk
+// cek apakah kamu cocok…") and needs a wider measure than the card below it,
+// so the container is wide and the card constrains itself.
+.jwt-quiz-section .jwt-container {
+	max-width: 940px;
+	margin-inline: auto;
+}
+
 // --- Funnel headline treatment ----------------------------------------------
 // Scoped to .jwt-funnel-page (set in functions.php) so the homepage and
 // bootcamp heroes keep their own 880px measure and flat accent colour.
 
-.jwt-funnel-page {
-	// Funnel steps open straight into the headline — no need for the marketing
-	// hero's generous lead-in above it.
+// Applies to every Phase 2 page (funnel steps AND prop firm) — they all open
+// straight into the headline instead of the marketing hero's tall lead-in.
+.jwt-tight-hero {
 	.jwt-hero {
 		padding-block: clamp(1.25rem, 3vw, 2.25rem) clamp(2rem, 5vw, 3rem);
 		min-height: 0;
@@ -89,7 +96,9 @@
 	.jwt-hero .jwt-hero__title {
 		margin-top: 0.25em;
 	}
+}
 
+.jwt-funnel-page {
 	.jwt-hero__title {
 		// The funnel headlines are long two-liners with their own <br>, so each
 		// authored line has to survive on one visual line. Two changes get
@@ -253,18 +262,19 @@
 		}
 	}
 
+	// Toned down from the earlier gradient + heavy bloom: flat brand purple with
+	// a modest lift. The halo was competing with the card itself.
 	&__submit {
 		width: 100%;
 		margin-top: 1.6rem;
 		border-radius: 999px;
 		padding: 1.05rem 1.5rem;
-		background: linear-gradient(100deg, #8f66ff, #7c4dff 60%, #6a35ff);
-		box-shadow:
-			0 12px 34px rgb(124 77 255 / 0.38),
-			inset 0 1px 0 rgb(255 255 255 / 0.2);
+		background: var(--jwt-accent);
+		box-shadow: 0 8px 20px rgb(124 77 255 / 0.22);
 
 		&:hover {
-			background: linear-gradient(100deg, #9d79ff, #8f66ff 60%, #7c4dff);
+			background: var(--jwt-accent-hover);
+			box-shadow: 0 10px 24px rgb(124 77 255 / 0.28);
 		}
 	}
 
@@ -344,12 +354,21 @@
 .jwt-quiz-section {
 	padding-block: clamp(2rem, 6vw, 3.5rem);
 
-	&__cue,
+	// `.jwt-section-header` is capped at 700px sitewide (_base.scss), which
+	// forced this section's full-sentence heading onto three lines. Widened
+	// here only; the section's own bottom margin also shrinks because the cue
+	// arrow sits between the header and the card and adds its own gap.
+	.jwt-section-header {
+		max-width: 880px;
+		margin-bottom: 1.1rem;
+	}
+
 	.jwt-quiz__cue {
-		margin: 0.5rem 0 1.25rem;
+		margin: 0 0 1.35rem;
 		text-align: center;
 		color: var(--jwt-accent);
 		font-size: 1.1rem;
+		line-height: 1;
 	}
 }
 
@@ -359,15 +378,22 @@
 	margin-inline: auto;
 	padding: clamp(1.75rem, 4vw, 2.5rem);
 	padding-top: clamp(2rem, 4vw, 2.75rem);
-	border: 1px solid var(--jwt-line-strong);
+	// Accent-lifted card, the treatment the bootcamp/homepage boxes use: purple
+	// border + purple-tinted surface + haze, so the form reads as the focal
+	// point of the section rather than another flat panel.
+	border: 1px solid rgb(124 77 255 / 0.42);
 	border-radius: 26px;
 	background:
+		radial-gradient(120% 80% at 50% 0%, rgb(124 77 255 / 0.16), transparent 60%),
 		linear-gradient(180deg, rgb(255 255 255 / 0.045), rgb(255 255 255 / 0.012)),
 		var(--jwt-surface-2);
-	box-shadow: var(--jwt-shadow), 0 0 60px rgb(124 77 255 / 0.12);
+	box-shadow:
+		var(--jwt-shadow),
+		0 0 70px rgb(124 77 255 / 0.22),
+		inset 0 1px 0 rgb(255 255 255 / 0.06);
 	// Clips the progress bar to the rounded top edge — so the card cannot use
 	// the masked-gradient ring trick the opt-in card uses (a ::after ring would
-	// be clipped too); the solid border above stands in for it.
+	// be clipped too); the accent border above stands in for it.
 	overflow: hidden;
 
 	&__progress {
@@ -515,17 +541,33 @@
 		margin-top: 1.5rem;
 	}
 
-	&__back {
+	// Double-scoped and background forced on every state: Kadence styles bare
+	// <button> elements, and its hover painted a solid purple block behind this
+	// text link. It is a quiet tertiary action, not a button.
+	& &__back {
 		background: none;
 		border: 0;
-		padding: 0.5rem 0;
+		box-shadow: none;
+		padding: 0.5rem 0.15rem;
 		color: var(--jwt-muted);
 		font-family: var(--jwt-font-body);
 		font-size: 0.92rem;
 		cursor: pointer;
+		transition: color 0.2s;
 
-		&:hover {
+		&:hover,
+		&:focus,
+		&:focus-visible,
+		&:active {
+			background: none;
+			box-shadow: none;
 			color: var(--jwt-text);
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--jwt-accent);
+			outline-offset: 3px;
+			border-radius: 6px;
 		}
 
 		&[hidden] {
@@ -533,17 +575,17 @@
 		}
 	}
 
+	// Matches the opt-in submit — flat purple, modest lift, no bloom.
 	&__next {
 		margin-left: auto;
 		border-radius: 999px;
 		padding: 0.95rem 1.75rem;
-		background: linear-gradient(100deg, #8f66ff, #7c4dff 60%, #6a35ff);
-		box-shadow:
-			0 14px 40px rgb(124 77 255 / 0.45),
-			inset 0 1px 0 rgb(255 255 255 / 0.22);
+		background: var(--jwt-accent);
+		box-shadow: 0 8px 20px rgb(124 77 255 / 0.22);
 
 		&:hover {
-			background: linear-gradient(100deg, #9d79ff, #8f66ff 60%, #7c4dff);
+			background: var(--jwt-accent-hover);
+			box-shadow: 0 10px 24px rgb(124 77 255 / 0.28);
 		}
 	}
 }

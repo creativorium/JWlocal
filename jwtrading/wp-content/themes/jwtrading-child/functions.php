@@ -96,11 +96,43 @@ add_filter( 'body_class', function ( $classes ) {
 	}
 	// Mentorship funnel steps — wider headlines + the neon treatment, scoped so
 	// the rest of the site keeps its own hero proportions.
-	if ( apply_filters( 'jwt/funnel_chrome', false ) ) {
+	$jwt_is_funnel = apply_filters( 'jwt/funnel_chrome', false );
+	if ( $jwt_is_funnel ) {
 		$classes[] = 'jwt-funnel-page';
+	}
+
+	// Every Phase 2 page (funnel steps + the standalone prop-firm page) opens
+	// straight into its headline, so they all drop the marketing hero's tall
+	// lead-in.
+	if ( jwt_is_phase2_page() ) {
+		$classes[] = 'jwt-tight-hero';
 	}
 	return $classes;
 } );
+
+/**
+ * True on any Phase 2 page — the three mentorship funnel steps and the
+ * standalone prop-firm page.
+ *
+ * Detected from the blocks the page actually uses rather than a slug list, so
+ * a new Phase 2 page picks up the shared hero spacing and scroll cue without
+ * anyone remembering to register it here.
+ */
+function jwt_is_phase2_page(): bool {
+	if ( ! is_singular() ) {
+		return false;
+	}
+
+	$id = get_queried_object_id();
+
+	foreach ( array( 'jwt/optin-form', 'jwt/quiz', 'jwt/propfirm', 'jwt/faq-videos' ) as $jwt_block ) {
+		if ( has_block( $jwt_block, $id ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
 
 /**
  * Sleek "waterfall" scroll-down cue on key landing/marketing pages.
@@ -108,7 +140,9 @@ add_filter( 'body_class', function ( $classes ) {
  * via main.js / _blocks.scss.
  */
 add_action( 'wp_footer', function () {
-	$show = is_front_page() || ( function_exists( 'is_page' ) && is_page( array( 'bootcamp', 'testimonials', 'trader-roadmap', 'ifvg-strategy' ) ) );
+	$show = is_front_page()
+		|| ( function_exists( 'is_page' ) && is_page( array( 'bootcamp', 'testimonials', 'trader-roadmap', 'ifvg-strategy' ) ) )
+		|| jwt_is_phase2_page();
 	if ( ! apply_filters( 'jwt/show_scrollcue', $show ) ) {
 		return;
 	}
