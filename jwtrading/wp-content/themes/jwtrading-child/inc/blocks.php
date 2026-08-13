@@ -186,7 +186,7 @@ function jwt_ytembed_html( array $args ): string {
 		);
 	}
 
-	$html .= '<button type="button" class="jwt-ytembed__play' . ( ! empty( $args['red'] ) ? ' is-yt' : '' ) . '"'
+	$html .= '<button type="button" class="jwt-ytembed__play"'
 		. ' data-jwt-ytembed-play aria-label="' . esc_attr( $alt ) . '"' . ( $is_empty ? ' disabled' : '' ) . '>'
 		. '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>';
 

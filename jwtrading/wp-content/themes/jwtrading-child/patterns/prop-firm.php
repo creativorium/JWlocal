@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <!-- wp:jwt/hero {"align":"full","compact":true,"titleTag":"h1","eyebrow":"Partner &amp; Kode Diskon","title":"Cara Mulai Trading Dengan <mark>Prop Firm</mark>","lead":"Tonton video di bawah ini — biar kamu paham cara kerja prop firm sebelum pilih yang paling cocok buat kamu."} /-->
 
-<!-- wp:jwt/video-embed {"align":"full","narrow":false,"redPlay":true,"label":"video cara kerja prop firm"} /-->
+<!-- wp:jwt/video-embed {"align":"full","narrow":false,"label":"video cara kerja prop firm"} /-->
 
 <!-- wp:jwt/propfirm {"align":"full","eyebrow":"Section 01","title":"Prop Firm Terpercaya","lead":"Modal dari prop firm, profit untuk kamu. Ini partner yang kami gunakan dan rekomendasikan sendiri."} -->
 <!-- wp:jwt/propfirm-item {"name":"WeMasterTrade","blurb":"CFD prop firm dengan aturan yang jelas dan payout yang konsisten.","code":"JW","guideLabel":"WMT Full Guide"} /-->

@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 
 <!-- Main VSL runs at the wide measure; the FAQ answers below stay narrow and
      uniform, so the hierarchy reads at a glance. -->
-<!-- wp:jwt/video-embed {"align":"full","narrow":false,"redPlay":true,"label":"video onboarding"} /-->
+<!-- wp:jwt/video-embed {"align":"full","narrow":false,"label":"video onboarding"} /-->
 
 <!-- wp:jwt/faq-videos {"align":"full","eyebrow":"FAQ","title":"Tonton <mark>Frequently Asked Questions</mark> kami di bawah ini."} -->
 <!-- wp:jwt/faq-video-item {"question":"Apa yang aku dapat di mentorship ini?"} /-->

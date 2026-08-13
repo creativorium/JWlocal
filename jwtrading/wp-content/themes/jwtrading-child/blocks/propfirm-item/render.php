@@ -63,7 +63,6 @@ $jwt_variant = in_array( $attributes['variant'] ?? 'default', array( 'default', 
 				'label'       => '' !== $jwt_guide ? $jwt_guide : $jwt_name,
 				'class'       => 'jwt-pfcard__video',
 				'placeholder' => __( 'video menyusul', 'jwtrading' ),
-				'red'         => true,
 			)
 		);
 		?>

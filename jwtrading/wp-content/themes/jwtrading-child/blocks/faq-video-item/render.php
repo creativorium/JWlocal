@@ -28,7 +28,6 @@ $jwt_question = trim( (string) ( $attributes['question'] ?? '' ) );
 			'label'       => $jwt_question,
 			'class'       => 'jwt-faqvid__video',
 			'placeholder' => __( 'video menyusul', 'jwtrading' ),
-			'red'         => true,
 		)
 	);
 	?>

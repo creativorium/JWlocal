@@ -28,7 +28,6 @@ $jwt_wrap = get_block_wrapper_attributes(
 				'posterId'    => $attributes['posterId'] ?? 0,
 				'label'       => $jwt_label,
 				'placeholder' => $jwt_label,
-				'red'         => ! empty( $attributes['redPlay'] ),
 				'maxres'      => true,
 			)
 		);

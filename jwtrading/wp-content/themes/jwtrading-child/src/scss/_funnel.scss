@@ -82,6 +82,20 @@
 	margin-inline: auto;
 }
 
+// The bootcamp VSL's framing (_blocks.scss .jwt-vsl__frame) — a purple hairline
+// plus a soft glow that lifts the box off the dark canvas. Shared by the page
+// VSLs, the opt-in form card and the FAQ answer cards so the whole of Phase 2
+// uses one treatment; keep the two values here only.
+// Declares the FULL border shorthand on purpose: @extend hoists these rules to
+// this point in the file, so a consumer that also wrote its own `border:`
+// shorthand would override the colour from further down (a bare
+// `border: 1px solid` resets the colour to currentColor — that is exactly how
+// this first went out white). Consumers must not redeclare `border`.
+%jwt-glow-frame {
+	border: 1px solid rgb(124 77 255 / 0.5);
+	box-shadow: 0 24px 70px -30px rgb(124 77 255 / 0.55);
+}
+
 .jwt-faqvid .jwt-container {
 	@extend %jwt-wide-container;
 }
@@ -193,12 +207,14 @@
 		max-width: 720px;
 		margin-inline: auto;
 		padding: clamp(1.75rem, 4vw, 2.75rem);
-		// A touch stronger than the site's --jwt-line: the card sits on the bare
-		// near-black canvas (not a lighter section), where 7% white vanishes.
-		border: 1px solid rgb(255 255 255 / 0.16);
 		border-radius: var(--jwt-radius);
 		background: var(--jwt-surface-2);
-		box-shadow: var(--jwt-shadow), 0 0 70px rgb(124 77 255 / 0.1);
+		// Shared glow frame (purple hairline + lift); box-shadow is re-declared
+		// below to keep the card's own depth shadow underneath the glow.
+		@extend %jwt-glow-frame;
+		box-shadow:
+			var(--jwt-shadow),
+			0 24px 70px -30px rgb(124 77 255 / 0.55);
 
 		// Purple haze behind the card, same recipe as the hero. Sized to bleed
 		// past the card edges — that bleed is the whole visible effect, since
@@ -629,13 +645,10 @@
 		@extend %jwt-wide-container;
 	}
 
-	// Big page videos get the bootcamp VSL's framing (_blocks.scss .jwt-vsl__frame):
-	// purple hairline + a soft glow that lifts it off the dark canvas. Kept to
-	// the full-width videos — the FAQ answers and partner guide videos already
-	// sit inside their own bordered cards, so they would double up.
+	// Big page videos carry the shared glow frame. The partner guide videos are
+	// deliberately left plain — their card already draws a frame around them.
 	&:not(.is-narrow) .jwt-ytembed__frame {
-		border-color: rgb(124 77 255 / 0.5);
-		box-shadow: 0 24px 70px -30px rgb(124 77 255 / 0.55);
+		@extend %jwt-glow-frame;
 	}
 }
 
@@ -671,46 +684,51 @@
 		border: 0;
 	}
 
+	// Matches the bootcamp VSL button (_blocks.scss .jwt-vsl__play): glass
+	// circle, white hairline, purple on hover.
+	//
+	// Sized as a PERCENTAGE of the frame rather than the bootcamp's viewport
+	// clamp, because Phase 2 reuses this button at very different sizes — a
+	// 1120px page VSL down to a ~490px guide video inside a two-column card. A
+	// vw-based size would render the same button on both. The min/max keep it
+	// tappable on the smallest and from ballooning on the largest.
 	&__play {
 		position: relative;
-		display: grid;
-		place-items: center;
-		width: 62px;
-		height: 62px;
-		border: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: clamp(46px, 7%, 78px);
+		aspect-ratio: 1;
+		height: auto;
+		padding: 0;
+		border: 2px solid rgb(255 255 255 / 0.9);
 		border-radius: 50%;
-		background: var(--jwt-accent);
+		background: rgb(0 0 0 / 0.35);
 		color: #fff;
+		-webkit-backdrop-filter: blur(4px);
+		backdrop-filter: blur(4px);
 		cursor: pointer;
-		box-shadow: 0 12px 36px rgb(124 77 255 / 0.45);
-		transition: transform 0.2s var(--jwt-ease), background 0.2s;
+		transition: background 0.2s var(--jwt-ease), transform 0.2s var(--jwt-ease), border-color 0.2s;
 
 		svg {
-			width: 26px;
-			height: 26px;
-			margin-left: 3px;
+			width: 42%;
+			height: 42%;
+			// Explicit 0, not just omitted: the bootcamp button nudges its
+			// triangle 6% right to optically centre it, and this button is
+			// otherwise a copy of that one.
+			margin-left: 0;
 		}
 
-		&:hover:not(:disabled) {
+		&:hover:not(:disabled),
+		&:focus-visible:not(:disabled) {
+			background: var(--jwt-accent);
+			border-color: var(--jwt-accent);
 			transform: scale(1.06);
-			background: var(--jwt-accent-hover);
 		}
 
 		&:disabled {
 			cursor: default;
 			opacity: 0.85;
-		}
-
-		// FAQ answers use YouTube's own red so the list reads as "videos".
-		&.is-yt {
-			width: 52px;
-			height: 52px;
-			background: #ff0033;
-			box-shadow: 0 10px 28px rgb(255 0 51 / 0.35);
-
-			&:hover:not(:disabled) {
-				background: #ff2b53;
-			}
 		}
 	}
 
@@ -743,9 +761,9 @@
 	&__item {
 		padding: 0;
 		overflow: hidden;
-		border: 1px solid var(--jwt-line);
 		border-radius: var(--jwt-radius);
 		background: var(--jwt-surface-2);
+		@extend %jwt-glow-frame;
 	}
 
 	&__q {
@@ -1023,7 +1041,7 @@
 		min-width: 66px;
 		padding: 0.42rem 0.9rem;
 		border: 0;
-		border-radius: 999px;
+		border-radius: 10px;
 		background: var(--jwt-accent);
 		color: #fff;
 		font-family: var(--jwt-font-heading);
