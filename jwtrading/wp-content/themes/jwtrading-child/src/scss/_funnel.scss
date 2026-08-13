@@ -80,10 +80,15 @@
 
 .jwt-funnel-page {
 	.jwt-hero__title {
-		// Wider measure: the funnel headlines are long two-liners and were
-		// wrapping into three cramped lines at the site default.
-		max-width: 1100px;
-		text-wrap: balance;
+		// The funnel headlines are long two-liners with their own <br>, so each
+		// authored line has to survive on one visual line. Two changes get
+		// there: a wider measure than the site's 880px, and a smaller top end
+		// than --jwt-size-2xl's 70px (which alone would need ~1240px for
+		// "Saatnya ada yang bimbing langsung." and overflow the container).
+		// text-wrap: balance is deliberately NOT used here — it would re-break
+		// the authored lines into its own balanced pair.
+		max-width: 1200px;
+		font-size: clamp(2rem, 1.5rem + 2.3vw, 3.4rem);
 	}
 
 	.jwt-hero__lead {
@@ -129,42 +134,33 @@
 
 // --- Opt-in form card -------------------------------------------------------
 
+// Deliberately mirrors the contact form (_blocks.scss .jwt-contact__field):
+// same surface fill, same subtle --jwt-line border, same radius, same label
+// rhythm. The earlier version used a near-black fill with the brighter
+// --jwt-line-strong plus a gradient ring, which read as harsh next to it.
 .jwt-optin {
-	padding-block: clamp(1.5rem, 4vw, 2.5rem) 0;
+	// Real bottom padding: this was `… 0`, which let the next section's heading
+	// crowd straight up against the form card.
+	padding-block: clamp(1.5rem, 4vw, 2.5rem) clamp(3.5rem, 8vw, 6rem);
+
+	// Wider than the shared funnel column so the card's title sits on one line.
+	.jwt-container {
+		max-width: 860px;
+	}
 
 	&__card {
 		position: relative;
-		max-width: 560px;
+		max-width: 720px;
 		margin-inline: auto;
 		padding: clamp(1.75rem, 4vw, 2.75rem);
-		border-radius: 26px;
-		background:
-			linear-gradient(180deg, rgb(255 255 255 / 0.045), rgb(255 255 255 / 0.012)),
-			var(--jwt-surface-2);
-		box-shadow: var(--jwt-shadow), 0 0 60px rgb(124 77 255 / 0.12);
+		border: 1px solid var(--jwt-line);
+		border-radius: var(--jwt-radius);
+		background: var(--jwt-surface-2);
+		box-shadow: var(--jwt-shadow), 0 0 70px rgb(124 77 255 / 0.1);
 
-		// Neon gradient border. A plain 1px border cannot hold a gradient, so
-		// the ring is a masked pseudo-element: paint the gradient, then punch
-		// out everything except the 1px edge.
-		&::after {
-			content: '';
-			position: absolute;
-			inset: 0;
-			border-radius: inherit;
-			padding: 1px;
-			background: linear-gradient(150deg, rgb(124 77 255 / 0.85), rgb(255 255 255 / 0.1) 45%, rgb(124 77 255 / 0.5));
-			-webkit-mask:
-				linear-gradient(#000 0 0) content-box,
-				linear-gradient(#000 0 0);
-			mask:
-				linear-gradient(#000 0 0) content-box,
-				linear-gradient(#000 0 0);
-			-webkit-mask-composite: xor;
-			mask-composite: exclude;
-			pointer-events: none;
-		}
-
-		// Purple haze behind the card, same recipe as the hero.
+		// Purple haze behind the card, same recipe as the hero. Sized to bleed
+		// past the card edges — that bleed is the whole visible effect, since
+		// the card's own surface is opaque.
 		&::before {
 			content: '';
 			position: absolute;
@@ -177,62 +173,59 @@
 		}
 	}
 
-	&__title {
-		margin: 0 0 1.6rem;
+	// Both of these are <p>. The base reset `[class*=wp-block-jwt-] p` and
+	// Kadence's own `p` rules are (0,1,1) and silently beat a bare
+	// `.jwt-optin__note` (0,1,0) — the note's margin-top was landing at 0, so
+	// it sat flush against the button. `.jwt-optin &` is (0,2,0) and wins.
+	// Same trap as `.jwt-hero .jwt-hero__lead` in _blocks.scss.
+	& &__title {
+		margin: 0 0 1.75rem;
 		font-family: var(--jwt-font-heading);
-		font-size: 1.2rem;
+		font-size: clamp(1.05rem, 0.9rem + 0.6vw, 1.3rem);
 		font-weight: 700;
 		line-height: 1.4;
 		text-align: center;
+		text-wrap: balance;
 		color: var(--jwt-text);
 	}
 
+	// One gap governs the whole form — no stray margins (contact's pattern).
 	&__fields {
-		display: grid;
-		gap: 1.05rem;
+		display: flex;
+		flex-direction: column;
+		gap: 1.1rem;
 	}
 
-	// Floating-ish label above each input (the contact form's pattern), so the
-	// fields still read once a value replaces the placeholder.
 	&__field {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
+		gap: 0.45rem;
 
 		> .jwt-optin__label {
-			font-size: 0.82rem;
-			font-weight: 600;
+			font-size: 0.85rem;
 			color: var(--jwt-text);
-			padding-left: 0.15rem;
 		}
 	}
 
 	&__field input {
 		width: 100%;
-		padding: 1.05rem 1.25rem;
-		border-radius: 14px;
-		border: 1px solid var(--jwt-line-strong);
-		background: rgb(0 0 0 / 0.32);
-		color: var(--jwt-text);
 		font-family: var(--jwt-font-body);
-		font-size: 0.98rem;
-		transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+		font-size: 0.95rem;
+		color: var(--jwt-text);
+		background: var(--jwt-surface);
+		border: 1px solid var(--jwt-line);
+		border-radius: var(--jwt-radius-sm);
+		padding: 0.9rem 1.05rem;
+		transition: border-color 0.2s, box-shadow 0.2s;
 
 		&::placeholder {
-			color: var(--jwt-dim);
-		}
-
-		&:hover {
-			border-color: rgb(255 255 255 / 0.2);
+			color: var(--jwt-muted);
 		}
 
 		&:focus {
 			outline: none;
 			border-color: var(--jwt-accent);
-			background: rgb(124 77 255 / 0.06);
-			box-shadow:
-				0 0 0 3px rgb(124 77 255 / 0.2),
-				0 0 22px rgb(124 77 255 / 0.25);
+			box-shadow: 0 0 0 3px rgb(124 77 255 / 0.18);
 		}
 
 		&.is-invalid {
@@ -243,14 +236,13 @@
 
 	&__submit {
 		width: 100%;
-		margin-top: 1.5rem;
+		margin-top: 1.6rem;
 		border-radius: 999px;
-		padding: 1.1rem 1.5rem;
-		font-size: 1.02rem;
+		padding: 1.05rem 1.5rem;
 		background: linear-gradient(100deg, #8f66ff, #7c4dff 60%, #6a35ff);
 		box-shadow:
-			0 14px 40px rgb(124 77 255 / 0.45),
-			inset 0 1px 0 rgb(255 255 255 / 0.22);
+			0 12px 34px rgb(124 77 255 / 0.38),
+			inset 0 1px 0 rgb(255 255 255 / 0.2);
 
 		&:hover {
 			background: linear-gradient(100deg, #9d79ff, #8f66ff 60%, #7c4dff);
@@ -258,7 +250,7 @@
 	}
 
 	&__msg {
-		margin-top: 0.75rem;
+		margin-top: 0.85rem;
 		font-size: 0.9rem;
 		color: #ff8b8b;
 		text-align: center;
@@ -268,20 +260,21 @@
 		}
 	}
 
-	&__note {
+	& &__note {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: 0.4rem;
-		margin: 0.9rem 0 0;
-		color: var(--jwt-dim);
-		font-size: 0.75rem;
+		gap: 0.45rem;
+		margin: 1.35rem 0 0;
+		color: var(--jwt-muted);
+		font-size: 0.85rem;
 		text-align: center;
 
 		svg {
-			width: 12px;
-			height: 12px;
+			width: 13px;
+			height: 13px;
 			flex: none;
+			color: var(--jwt-dim);
 		}
 	}
 }

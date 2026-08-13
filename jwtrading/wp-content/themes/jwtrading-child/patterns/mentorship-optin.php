@@ -15,13 +15,9 @@ defined( 'ABSPATH' ) || exit;
 
 <!-- wp:jwt/optin-form {"align":"full","anchor":"mulai","title":"Langkah pertama untuk trading dengan sistem konsisten","submitText":"Mulai Sekarang","note":"Data kamu 100% aman &amp; tidak akan dibagikan ke siapa pun."} /-->
 
-<!-- wp:jwt/proof {"align":"full","title":"Cerita nyata dari <mark>komunitas kami</mark>","lead":"Langsung dari member — tanpa disaring."} -->
-<!-- wp:jwt/proof-item {"label":"Payout · $1,240"} /-->
-<!-- wp:jwt/proof-item {"label":"Lolos Challenge · $50K"} /-->
-<!-- wp:jwt/proof-item {"label":"Payout · $860"} /-->
-<!-- wp:jwt/proof-item {"label":"Funded · $25K"} /-->
-<!-- wp:jwt/proof-item {"label":"Payout · $2,150"} /-->
-<!-- wp:jwt/proof-item {"label":"Lolos Challenge · $100K"} /-->
-<!-- /wp:jwt/proof -->
+<!-- Same section header shape as the Testimonials page (eyebrow / title / lead).
+     Slider intentionally EMPTY — a different slider is coming, and the block
+     drops the marquee entirely when it has no cards. -->
+<!-- wp:jwt/proof {"align":"full","eyebrow":"Hasil Payout","title":"Cerita nyata dari <mark>komunitas kami</mark>","lead":"Langsung dari member — tanpa disaring."} /-->
 
 <!-- wp:jwt/funnel-cta {"align":"full","buttonText":"Mulai Sekarang","buttonUrl":"#mulai"} /-->

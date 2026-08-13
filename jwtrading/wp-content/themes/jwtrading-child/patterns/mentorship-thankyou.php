@@ -32,14 +32,8 @@ defined( 'ABSPATH' ) || exit;
 <!-- wp:jwt/faq-video-item {"question":"Bagaimana kalau aku punya pertanyaan lain?"} /-->
 <!-- /wp:jwt/faq-videos -->
 
-<!-- wp:jwt/proof {"align":"full","eyebrow":"Bukti Nyata","title":"Payout member kami."} -->
-<!-- wp:jwt/proof-item {"label":"Payout · $1,240"} /-->
-<!-- wp:jwt/proof-item {"label":"Lolos Challenge · $100K"} /-->
-<!-- wp:jwt/proof-item {"label":"Payout · $860"} /-->
-<!-- wp:jwt/proof-item {"label":"Funded · $25K"} /-->
-<!-- wp:jwt/proof-item {"label":"Payout · $2,150"} /-->
-<!-- wp:jwt/proof-item {"label":"Lolos Challenge · $50K"} /-->
-<!-- /wp:jwt/proof -->
+<!-- Slider intentionally EMPTY until the real payout screenshots land. -->
+<!-- wp:jwt/proof {"align":"full","eyebrow":"Hasil Payout","title":"Payout member kami.","lead":"Hasil nyata dari member yang sudah menjalankan prosesnya."} /-->
 
 <!-- wp:jwt/testimonials {"align":"full","eyebrow":"Kata Member","title":"Testimoni dari member lain."} -->
 <!-- wp:jwt/testimonial-item /-->

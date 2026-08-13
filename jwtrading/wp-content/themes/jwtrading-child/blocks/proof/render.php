@@ -16,22 +16,29 @@ defined( 'ABSPATH' ) || exit;
 
 $jwt_wrapper = get_block_wrapper_attributes( array( 'class' => 'jwt-proof' ) );
 $jwt_speed   = max( 15, min( 120, (int) ( $attributes['speed'] ?? 45 ) ) );
+
+// The viewport is a fixed-height box (up to 420px). With no cards yet that
+// would render as a large empty hole under the heading, so drop the marquee
+// entirely and let the section stand as heading-only until the images land.
+$jwt_has_cards = '' !== trim( (string) $content );
 ?>
 <section <?php echo $jwt_wrapper; // phpcs:ignore WordPress.Security.EscapeOutput ?>>
 	<div class="jwt-container">
 		<?php echo jwt_section_header_html( $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper. ?>
 	</div>
 
-	<div class="jwt-proof__viewport">
-		<div class="jwt-proof__track" style="--jwt-proof-speed:<?php echo esc_attr( $jwt_speed ); ?>s">
-			<div class="jwt-proof__group">
-				<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput -- pre-rendered inner blocks. ?>
-			</div>
-			<div class="jwt-proof__group" aria-hidden="true">
-				<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput -- duplicate for seamless loop. ?>
+	<?php if ( $jwt_has_cards ) : ?>
+		<div class="jwt-proof__viewport">
+			<div class="jwt-proof__track" style="--jwt-proof-speed:<?php echo esc_attr( $jwt_speed ); ?>s">
+				<div class="jwt-proof__group">
+					<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput -- pre-rendered inner blocks. ?>
+				</div>
+				<div class="jwt-proof__group" aria-hidden="true">
+					<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput -- duplicate for seamless loop. ?>
+				</div>
 			</div>
 		</div>
-	</div>
+	<?php endif; ?>
 	<?php if ( '' !== trim( (string) ( $attributes['buttonText'] ?? '' ) ) ) : ?>
 		<div class="jwt-container">
 			<div class="jwt-proof__cta">
