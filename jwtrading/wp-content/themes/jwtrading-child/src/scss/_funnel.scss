@@ -628,6 +628,15 @@
 	&:not(.is-narrow) .jwt-container {
 		@extend %jwt-wide-container;
 	}
+
+	// Big page videos get the bootcamp VSL's framing (_blocks.scss .jwt-vsl__frame):
+	// purple hairline + a soft glow that lifts it off the dark canvas. Kept to
+	// the full-width videos — the FAQ answers and partner guide videos already
+	// sit inside their own bordered cards, so they would double up.
+	&:not(.is-narrow) .jwt-ytembed__frame {
+		border-color: rgb(124 77 255 / 0.5);
+		box-shadow: 0 24px 70px -30px rgb(124 77 255 / 0.55);
+	}
 }
 
 .jwt-ytembed {
