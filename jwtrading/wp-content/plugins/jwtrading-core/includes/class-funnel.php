@@ -63,6 +63,106 @@ class JWT_Funnel {
 
 		add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ) );
 		add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
+
+		// Reachable by URL only — see hide_from_discovery() below.
+		add_filter( 'wp_robots', array( __CLASS__, 'robots_noindex' ) );
+		add_filter( 'rank_math/frontend/robots', array( __CLASS__, 'rank_math_robots' ) );
+		add_filter( 'rank_math/sitemap/exclude_post', array( __CLASS__, 'exclude_from_sitemap' ), 10, 2 );
+		add_action( 'pre_get_posts', array( __CLASS__, 'exclude_from_search' ) );
+		add_filter( 'wp_list_pages_excludes', array( __CLASS__, 'exclude_from_page_lists' ) );
+	}
+
+	// --- Keep the Phase 2 pages out of navigation and search --------------------
+
+	/**
+	 * IDs of the pages that should only ever be reached by their direct URL:
+	 * the three funnel steps plus the prop-firm page.
+	 *
+	 * These never appear in a menu on their own (all four menus are hand-built
+	 * in Appearance → Menus), but WordPress would still surface them in site
+	 * search, wp_list_pages() output and the XML sitemap — so they are excluded
+	 * from all three and marked noindex.
+	 *
+	 * Filter `jwt/hidden_page_slugs` to change the list, e.g. to let the
+	 * prop-firm page be indexed once its affiliate content is final.
+	 */
+	public static function hidden_page_ids(): array {
+		static $ids = null;
+
+		if ( null !== $ids ) {
+			return $ids;
+		}
+
+		$s     = self::settings();
+		$slugs = apply_filters(
+			'jwt/hidden_page_slugs',
+			array(
+				$s['optin_slug'],
+				$s['application_slug'],
+				$s['thankyou_slug'],
+				'prop-firm',
+			)
+		);
+
+		$ids = array();
+		foreach ( array_filter( array_map( 'trim', (array) $slugs ) ) as $slug ) {
+			$page = get_page_by_path( trim( $slug, '/' ) );
+			if ( $page ) {
+				$ids[] = (int) $page->ID;
+			}
+		}
+
+		return $ids;
+	}
+
+	protected static function is_hidden_page(): bool {
+		if ( ! is_singular( 'page' ) ) {
+			return false;
+		}
+		return in_array( get_queried_object_id(), self::hidden_page_ids(), true );
+	}
+
+	/** Core robots meta (used when Rank Math is inactive). */
+	public static function robots_noindex( $robots ) {
+		if ( self::is_hidden_page() ) {
+			$robots['noindex']  = true;
+			$robots['nofollow'] = true;
+			unset( $robots['index'], $robots['follow'] );
+		}
+		return $robots;
+	}
+
+	/** Rank Math prints its own robots tag and ignores wp_robots, so set it too. */
+	public static function rank_math_robots( $robots ) {
+		if ( self::is_hidden_page() ) {
+			$robots['index']  = 'noindex';
+			$robots['follow'] = 'nofollow';
+		}
+		return $robots;
+	}
+
+	/**
+	 * @param bool $exclude Current state.
+	 * @param int  $post_id Post being considered for the sitemap.
+	 */
+	public static function exclude_from_sitemap( $exclude, $post_id ) {
+		return in_array( (int) $post_id, self::hidden_page_ids(), true ) ? true : $exclude;
+	}
+
+	/** Keep them out of on-site search results. */
+	public static function exclude_from_search( $query ) {
+		if ( is_admin() || ! $query->is_main_query() || ! $query->is_search() ) {
+			return;
+		}
+		$ids = self::hidden_page_ids();
+		if ( $ids ) {
+			$query->set( 'post__not_in', array_merge( (array) $query->get( 'post__not_in' ), $ids ) );
+		}
+	}
+
+	/** Keep them out of wp_list_pages() / Page List blocks. */
+	public static function exclude_from_page_lists( $excludes ) {
+		return array_merge( (array) $excludes, self::hidden_page_ids() );
 	}
 
 	// --- Settings ---------------------------------------------------------------
@@ -78,10 +178,13 @@ class JWT_Funnel {
 			'sheets_secret'    => '',
 			'notify_email'     => '',
 			'kit_tags'         => 'Mentorship_Optin, Stage_Warm',
-			// Ships GATED (1). Turn off only to review the design; an open
-			// thank-you page is shareable, which breaks the URL-based
-			// conversion trigger in GTM.
-			'thankyou_gate'    => 1,
+			// ⚠️ TEMPORARILY 0 so the client can review the thank-you design
+			// without submitting the funnel. LOCK THIS BEFORE LAUNCH — tick
+			// "Kunci halaman Thank You" in Mentorship → Pengaturan (that writes
+			// the option, so this default stops mattering). An open thank-you
+			// page is shareable, which breaks the URL-based conversion trigger
+			// in GTM. Tracked in PHASE2-PLAN.md §7b.
+			'thankyou_gate'    => 0,
 		);
 		$saved = get_option( self::OPT, array() );
 		return wp_parse_args( is_array( $saved ) ? $saved : array(), $defaults );
