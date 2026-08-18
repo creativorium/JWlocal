@@ -5,7 +5,7 @@
 	"title": "JWT Funnel CTA",
 	"category": "jwtrading",
 	"icon": "button",
-	"description": "Satu tombol besar di tengah dengan glow ungu — penutup halaman funnel.",
+	"description": "Satu tombol besar di tengah dengan glow ungu, plus baris social proof opsional (avatar + jumlah member).",
 	"textdomain": "jwtrading",
 	"editorScript": "jwt-blocks-editor",
 	"render": "file:./render.php",
@@ -17,6 +17,8 @@
 	"attributes": {
 		"buttonText": { "type": "string", "default": "Mulai Sekarang" },
 		"buttonUrl": { "type": "string", "default": "" },
-		"note": { "type": "string", "default": "" }
+		"note": { "type": "string", "default": "" },
+		"proofText": { "type": "string", "default": "" },
+		"proofAvatars": { "type": "string", "default": "" }
 	}
 }

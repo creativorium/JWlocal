@@ -32,6 +32,7 @@ require_once JWT_CORE_PATH . 'includes/class-promo-banner.php';
 require_once JWT_CORE_PATH . 'includes/class-journal-sync.php';
 require_once JWT_CORE_PATH . 'includes/class-manual-payment.php';
 require_once JWT_CORE_PATH . 'includes/class-funnel.php';
+require_once JWT_CORE_PATH . 'includes/class-webinar.php';
 
 // WooCommerce-independent features — boot immediately.
 JWT_Plugin_Guard::init();
@@ -44,6 +45,7 @@ JWT_Promo_Banner::init();
 JWT_Journal_Sync::init();
 JWT_Manual_Payment::init();
 JWT_Funnel::init();
+JWT_Webinar::init();
 
 /**
  * Activation: create log table + schedule retry cron.

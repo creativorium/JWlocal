@@ -123,6 +123,13 @@ function jwt_is_phase2_page(): bool {
 		return false;
 	}
 
+	// Webinar landing pages reuse plain hero/video/CTA blocks, so there is no
+	// distinctive block to look for — they announce themselves via the chrome
+	// filter instead.
+	if ( apply_filters( 'jwt/bare_footer', false ) ) {
+		return true;
+	}
+
 	$id = get_queried_object_id();
 
 	foreach ( array( 'jwt/optin-form', 'jwt/quiz', 'jwt/propfirm', 'jwt/faq-videos' ) as $jwt_block ) {
@@ -142,7 +149,7 @@ function jwt_is_phase2_page(): bool {
 add_action( 'wp_footer', function () {
 	$show = is_front_page()
 		|| ( function_exists( 'is_page' ) && is_page( array( 'bootcamp', 'testimonials', 'trader-roadmap', 'ifvg-strategy' ) ) )
-		|| jwt_is_phase2_page();
+		|| ( jwt_is_phase2_page() && ! apply_filters( 'jwt/bare_footer', false ) );
 	if ( ! apply_filters( 'jwt/show_scrollcue', $show ) ) {
 		return;
 	}

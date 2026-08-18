@@ -2262,6 +2262,20 @@ registerBlockType('jwt/funnel-cta', {
               onChange={(note) => setAttributes({ note })}
             />
           </PanelBody>
+          <PanelBody title={__('Social Proof', 'jwtrading')} initialOpen={false}>
+            <TextControl
+              label={__('Teks', 'jwtrading')}
+              help={__('Contoh: +17.000 Member Komunitas. Kosong = baris ini disembunyikan.', 'jwtrading')}
+              value={attributes.proofText}
+              onChange={(proofText) => setAttributes({ proofText })}
+            />
+            <TextControl
+              label={__('ID avatar', 'jwtrading')}
+              help={__('ID media dipisah koma (maks 5). Kosong = lingkaran placeholder.', 'jwtrading')}
+              value={attributes.proofAvatars}
+              onChange={(proofAvatars) => setAttributes({ proofAvatars })}
+            />
+          </PanelBody>
         </InspectorControls>
         <section {...blockProps}>
           <div className="jwt-container">
@@ -2273,6 +2287,17 @@ registerBlockType('jwt/funnel-cta', {
               value={attributes.buttonText}
               onChange={(buttonText) => setAttributes({ buttonText })}
             />
+            {attributes.note ? <p className="jwt-funnel-cta__note">{attributes.note}</p> : null}
+            {attributes.proofText ? (
+              <div className="jwt-funnel-cta__proof">
+                <span className="jwt-funnel-cta__avatars" aria-hidden="true">
+                  <span className="jwt-funnel-cta__avatar is-placeholder" />
+                  <span className="jwt-funnel-cta__avatar is-placeholder" />
+                  <span className="jwt-funnel-cta__avatar is-placeholder" />
+                </span>
+                <span className="jwt-funnel-cta__proof-text">{attributes.proofText}</span>
+              </div>
+            ) : null}
           </div>
         </section>
       </>
