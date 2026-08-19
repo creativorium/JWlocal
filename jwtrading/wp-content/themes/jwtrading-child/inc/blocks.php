@@ -199,6 +199,20 @@ function jwt_ytembed_html( array $args ): string {
 }
 
 /**
+ * Discord wordmark glyph (fill = currentColor).
+ *
+ * NOTE: jwt/discord-cta and jwt/community each carry their own near-identical
+ * copy of this path with slightly different attributes — deliberately left
+ * alone rather than refactored blind. New callers should use this helper.
+ *
+ * @param string $class Optional class for the <svg>.
+ */
+function jwt_discord_mark( string $class = '' ): string {
+	return '<svg class="' . esc_attr( $class ) . '" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true" focusable="false">'
+		. '<path d="M20.33 1.5A19.8 19.8 0 0 0 15.4 0l-.25.5a14.6 14.6 0 0 1 4.37 1.4A17.6 17.6 0 0 0 12 1.06 17.6 17.6 0 0 0 4.48 1.9 14.6 14.6 0 0 1 8.85.5L8.6 0A19.8 19.8 0 0 0 3.67 1.5 22.9 22.9 0 0 0 .1 16.2a19.5 19.5 0 0 0 5.9 3 14.4 14.4 0 0 0 1.26-2.06 12.7 12.7 0 0 1-1.99-.96l.49-.36a13.9 13.9 0 0 0 12.48 0l.49.36c-.63.38-1.3.7-1.99.96a14.4 14.4 0 0 0 1.26 2.06 19.4 19.4 0 0 0 5.9-3A22.9 22.9 0 0 0 20.33 1.5ZM8.03 12.9c-1.16 0-2.11-1.06-2.11-2.37 0-1.3.93-2.37 2.11-2.37 1.19 0 2.14 1.07 2.12 2.37 0 1.31-.94 2.37-2.12 2.37Zm7.94 0c-1.16 0-2.11-1.06-2.11-2.37 0-1.3.93-2.37 2.11-2.37 1.19 0 2.14 1.07 2.12 2.37 0 1.31-.93 2.37-2.12 2.37Z"/></svg>';
+}
+
+/**
  * Inline SVG icon set for feature cards (stroke = currentColor).
  *
  * @param string $name Icon key.

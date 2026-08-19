@@ -19,6 +19,7 @@
 		"buttonUrl": { "type": "string", "default": "" },
 		"note": { "type": "string", "default": "" },
 		"proofText": { "type": "string", "default": "" },
-		"proofAvatars": { "type": "string", "default": "" }
+		"proofAvatars": { "type": "string", "default": "" },
+		"proofIcon": { "type": "string", "default": "" }
 	}
 }

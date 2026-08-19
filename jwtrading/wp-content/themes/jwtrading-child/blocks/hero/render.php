@@ -31,7 +31,11 @@ $jwt_wrapper = get_block_wrapper_attributes( $jwt_wrap_attrs );
 				<strong>Trustpilot</strong>
 			</a>
 		<?php elseif ( '' !== trim( $attributes['eyebrow'] ) ) : ?>
-			<span class="jwt-badge jwt-hero__badge"><span class="jwt-eyebrow__dot"></span><?php echo esc_html( $attributes['eyebrow'] ); ?></span>
+			<span class="jwt-badge jwt-hero__badge"><span class="jwt-eyebrow__dot"></span><?php
+			// <br> only (with a class, so copy can mark a mobile-only break) —
+			// everything else is still stripped.
+			echo wp_kses( $attributes['eyebrow'], array( 'br' => array( 'class' => array() ) ) );
+			?></span>
 		<?php endif; ?>
 
 		<?php if ( '' !== trim( $attributes['title'] ) ) : ?>
