@@ -186,6 +186,32 @@
 	}
 }
 
+// Eyebrow pill on small screens. These pills carry a full sentence, so they
+// wrap — and `.jwt-badge`'s `align-items: center` then floats the dot into the
+// middle of a two-line pill instead of sitting with the first line.
+// `.jwt-brk` lets the COPY choose where the break falls (see the webinar
+// patterns) rather than leaving it to whatever width the phone happens to be.
+.jwt-brk {
+	display: none;
+}
+
+@media (max-width: 600px) {
+	.jwt-brk {
+		display: inline;
+	}
+
+	.jwt-tight-hero .jwt-hero__badge {
+		align-items: flex-start;
+		text-align: center;
+		padding: 12px 22px;
+
+		.jwt-eyebrow__dot {
+			// Optically centre the 7px dot on the first line (~14px tall).
+			margin-top: 4px;
+		}
+	}
+}
+
 // --- Opt-in form card -------------------------------------------------------
 
 // Deliberately mirrors the contact form (_blocks.scss .jwt-contact__field):
@@ -438,6 +464,24 @@
 		&.is-placeholder {
 			display: inline-block;
 		}
+	}
+
+	// Discord mark instead of avatars — used where the community lives on
+	// Discord and there are no member photos to show.
+	&__discord {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 34px;
+		height: 34px;
+		border-radius: 50%;
+		background: rgb(88 101 242 / 0.16); // Discord blurple, low alpha
+		color: #7d8cf8;
+	}
+
+	&__discord-icon {
+		width: 19px;
+		height: auto;
 	}
 
 	&__proof-text {

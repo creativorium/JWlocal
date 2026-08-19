@@ -48,6 +48,14 @@ $jwt_wrap = get_block_wrapper_attributes( array( 'class' => 'jwt-funnel-cta' ) )
 
 		<?php if ( '' !== $jwt_proof ) : ?>
 			<div class="jwt-funnel-cta__proof">
+				<?php if ( 'discord' === ( $attributes['proofIcon'] ?? '' ) ) : ?>
+					<?php /* Community lives on Discord and members have no site login, so
+					         there are no real avatars to show — the platform mark says
+					         "where" far better than three anonymous discs. */ ?>
+					<span class="jwt-funnel-cta__discord">
+						<?php echo jwt_discord_mark( 'jwt-funnel-cta__discord-icon' ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in helper. ?>
+					</span>
+				<?php else : ?>
 				<span class="jwt-funnel-cta__avatars" aria-hidden="true">
 					<?php if ( ! empty( $jwt_avatars ) ) : ?>
 						<?php foreach ( $jwt_avatars as $jwt_avatar_id ) : ?>
@@ -72,6 +80,7 @@ $jwt_wrap = get_block_wrapper_attributes( array( 'class' => 'jwt-funnel-cta' ) )
 						<span class="jwt-funnel-cta__avatar is-placeholder"></span>
 					<?php endif; ?>
 				</span>
+				<?php endif; ?>
 				<span class="jwt-funnel-cta__proof-text"><?php echo esc_html( $jwt_proof ); ?></span>
 			</div>
 		<?php endif; ?>
