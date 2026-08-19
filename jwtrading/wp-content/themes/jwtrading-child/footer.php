@@ -9,6 +9,27 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Bare footer (webinar / free-preview landing pages): one disclaimer line and
+ * nothing else — no legal menu, no copyright row. These pages deliberately
+ * offer no exit but the CTA, so even the funnel footer's policy links are more
+ * than they should carry.
+ */
+if ( apply_filters( 'jwt/bare_footer', false ) ) :
+	?>
+	</div><!-- #jwt-content -->
+
+	<footer class="jwt-bare-footer">
+		<p><?php echo esc_html( apply_filters( 'jwt/bare_footer_text', __( 'Bukan saran finansial. Hasil individu berbeda-beda.', 'jwtrading' ) ) ); ?></p>
+	</footer>
+
+	<?php wp_footer(); ?>
+	</body>
+	</html>
+	<?php
+	return;
+endif;
+
+/**
  * Funnel pages get a legal-only footer (refund + privacy + copyright) and no
  * floating WhatsApp button — same reason as the funnel header: no exit routes.
  * Menu `jwt-funnel` when set, otherwise the two policy links from the layout.

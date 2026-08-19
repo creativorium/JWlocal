@@ -344,6 +344,21 @@
 	}
 }
 
+// --- Webinar / free-preview chrome ------------------------------------------
+// Standalone landing pages: logo bar only (shared with the funnel header) and a
+// single disclaimer line instead of a footer.
+
+.jwt-bare-footer {
+	padding: clamp(2rem, 5vw, 3rem) var(--jwt-gutter) clamp(2.5rem, 5vw, 3.5rem);
+	text-align: center;
+
+	p {
+		margin: 0;
+		color: var(--jwt-dim);
+		font-size: 0.78rem;
+	}
+}
+
 // Lone closing CTA — the purple glow under it is the same haze recipe.
 .jwt-funnel-cta {
 	padding-block: clamp(2rem, 6vw, 3.5rem);
@@ -373,11 +388,62 @@
 		padding: 1rem 2.25rem;
 	}
 
-	&__note {
+	// Double-scoped (0,2,0): this is a <p>, and the (0,1,1) `p` resets zero the
+	// margin shorthand out from under a bare class. Same trap as
+	// .jwt-optin__note and .jwt-propfirm__disclosure — do not flatten.
+	& &__note {
 		position: relative;
-		margin: 0.9rem 0 0;
+		margin: 1.1rem 0 0;
 		color: var(--jwt-dim);
 		font-size: 0.85rem;
+	}
+
+	// Destination not decided yet: looks like the real button but is inert, so
+	// nobody clicks through to "#" while the page is in review.
+	&__btn.is-pending {
+		cursor: default;
+
+		&:hover {
+			transform: none;
+		}
+	}
+
+	// Overlapping avatar discs + member count (per the webinar layout).
+	&__proof {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.6rem;
+		margin-top: 1.6rem;
+	}
+
+	&__avatars {
+		display: inline-flex;
+		align-items: center;
+	}
+
+	&__avatar {
+		width: 28px;
+		height: 28px;
+		border-radius: 50%;
+		object-fit: cover;
+		border: 2px solid var(--jwt-bg);
+		background: linear-gradient(150deg, #2a2340, #1a1628);
+
+		& + & {
+			margin-left: -10px;
+		}
+
+		&.is-placeholder {
+			display: inline-block;
+		}
+	}
+
+	&__proof-text {
+		color: var(--jwt-text);
+		font-size: 0.9rem;
+		font-weight: 600;
 	}
 }
 
@@ -676,6 +742,21 @@
 		object-fit: cover;
 	}
 
+	// Scrim behind the play button. YouTube thumbnails are often bright (the
+	// Trader Roadmap one is mostly white TradingView charts), and the glass
+	// button's white hairline vanishes against them. Darkening the centre keeps
+	// the button legible whatever the video's thumbnail looks like.
+	// Skipped on the empty placeholder frame, and dropped once the iframe is in
+	// (`is-playing`) so it never dims the actual video.
+	&:not(.is-empty):not(.is-playing) &__frame::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: radial-gradient(closest-side, rgb(0 0 0 / 0.62), rgb(0 0 0 / 0.28) 65%, rgb(0 0 0 / 0.12));
+		pointer-events: none;
+		z-index: 1;
+	}
+
 	iframe {
 		position: absolute;
 		inset: 0;
@@ -694,6 +775,7 @@
 	// tappable on the smallest and from ballooning on the largest.
 	&__play {
 		position: relative;
+		z-index: 2; // above the poster scrim
 		display: flex;
 		align-items: center;
 		justify-content: center;
