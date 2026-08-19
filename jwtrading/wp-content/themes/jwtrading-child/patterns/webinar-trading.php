@@ -6,19 +6,18 @@
  * Viewport Width: 1400
  * Description: Halaman webinar/free preview setelah download ebook Trader Roadmap. Standalone — tanpa nav, hanya logo + disclaimer.
  *
- * Same layout as the Prop Firm webinar (that one's copy is approved in the
- * client's PDF). The copy HERE IS A DRAFT written to match that shape, aimed at
- * the Trader Roadmap audience — needs Jack's approval before ads run.
+ * Copy is verbatim from the client's "Webinar 1 Design" PDF (approved).
+ * Same layout as the Prop Firm webinar.
  *
  * Pending:
- *  - Copy approval.
- *  - (VSL link received 2026-08-19: https://youtu.be/3Vjp0Yt8qDI)
  *  - CTA destination — blank until confirmed; the button renders inert.
+ *
+ * VSL wired 2026-08-19: https://youtu.be/3Vjp0Yt8qDI
  */
 
 defined( 'ABSPATH' ) || exit;
 ?>
-<!-- wp:jwt/hero {"align":"full","compact":true,"titleTag":"h1","eyebrow":"Ebook baru kirim ke email,<br class=\"jwt-brk\"> tonton ini dulu ↓","title":"Ini Cara Kamu Bisa Trading dengan Sistem yang Jelas — Bukan Tebak-tebakan","lead":"Aku breakdown roadmap-nya dari nol: cara baca market, bangun winning model, dan langkah yang harus kamu ambil dulu sebelum masuk prop firm."} /-->
+<!-- wp:jwt/hero {"align":"full","compact":true,"titleTag":"h1","eyebrow":"Ebook baru kirim ke email,<br class=\"jwt-brk\"> tonton ini dulu ↓","title":"Kalau Aku Harus Mulai Trading dari Nol Lagi, Ini yang Akan Aku Lakukan Pertama Kali","lead":"Sudah trading berbulan-bulan tapi hasilnya masih tidak konsisten? Ini adalah cheat code yang membantu aku mendapatkan payout secara konsisten."} /-->
 
 <!-- wp:jwt/video-embed {"align":"full","narrow":false,"videoUrl":"https://youtu.be/3Vjp0Yt8qDI","label":"webinar · 7 menit"} /-->
 
