@@ -742,6 +742,21 @@
 		object-fit: cover;
 	}
 
+	// Scrim behind the play button. YouTube thumbnails are often bright (the
+	// Trader Roadmap one is mostly white TradingView charts), and the glass
+	// button's white hairline vanishes against them. Darkening the centre keeps
+	// the button legible whatever the video's thumbnail looks like.
+	// Skipped on the empty placeholder frame, and dropped once the iframe is in
+	// (`is-playing`) so it never dims the actual video.
+	&:not(.is-empty):not(.is-playing) &__frame::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: radial-gradient(closest-side, rgb(0 0 0 / 0.62), rgb(0 0 0 / 0.28) 65%, rgb(0 0 0 / 0.12));
+		pointer-events: none;
+		z-index: 1;
+	}
+
 	iframe {
 		position: absolute;
 		inset: 0;
@@ -760,6 +775,7 @@
 	// tappable on the smallest and from ballooning on the largest.
 	&__play {
 		position: relative;
+		z-index: 2; // above the poster scrim
 		display: flex;
 		align-items: center;
 		justify-content: center;
