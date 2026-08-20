@@ -117,21 +117,49 @@ class JWT_Ebook {
 			'jwt_ebook_group',
 			self::OPT,
 			array(
+				// NOTE: register_setting()'s sanitize callback runs on EVERY
+				// update_option() for this option, not just the settings form —
+				// so the admin actions (add / secure / delete) pass through here
+				// too. An earlier version iterated only the EXISTING e-books,
+				// which silently discarded a newly added one and reverted `file`
+				// straight after a PDF was secured.
+				//
+				// POSTED is therefore authoritative about which slugs exist (that
+				// is what makes delete work), while each slug's values merge over
+				// what is already stored (that is what stops the settings form,
+				// which has no file fields, from wiping the secured file).
 				'sanitize_callback' => static function ( $in ) {
 					$current = self::all();
 					$posted  = ( is_array( $in ) && isset( $in['ebooks'] ) && is_array( $in['ebooks'] ) ) ? $in['ebooks'] : array();
 					$out     = array();
 
-					// Only editable fields come from the form. `file` and
-					// `download_name` are written by handle_secure_file() alone,
-					// so a path can never be typed in.
-					foreach ( $current as $slug => $book ) {
-						$p                     = is_array( $posted[ $slug ] ?? null ) ? $posted[ $slug ] : array();
-						$book['label']         = sanitize_text_field( $p['label'] ?? $book['label'] );
-						$book['kit_field']     = sanitize_key( $p['kit_field'] ?? $book['kit_field'] );
-						$book['expiry_days']   = max( 1, min( 365, (int) ( $p['expiry_days'] ?? $book['expiry_days'] ) ) );
-						$book['max_downloads'] = max( 1, min( 100, (int) ( $p['max_downloads'] ?? $book['max_downloads'] ) ) );
-						$out[ $slug ]          = $book;
+					foreach ( $posted as $slug => $p ) {
+						$slug = sanitize_key( $slug );
+						if ( '' === $slug ) {
+							continue;
+						}
+
+						$p    = is_array( $p ) ? $p : array();
+						$base = $current[ $slug ] ?? self::defaults();
+
+						$book = array(
+							'label'         => sanitize_text_field( $p['label'] ?? $base['label'] ),
+							'kit_field'     => sanitize_key( $p['kit_field'] ?? $base['kit_field'] ),
+							'expiry_days'   => max( 1, min( 365, (int) ( $p['expiry_days'] ?? $base['expiry_days'] ) ) ),
+							'max_downloads' => max( 1, min( 100, (int) ( $p['max_downloads'] ?? $base['max_downloads'] ) ) ),
+							// Only ever written by handle_secure_file(); the
+							// settings form does not post these, so they fall
+							// back to what is stored. Traversal is impossible
+							// regardless — maybe_serve() basename()s the value.
+							'file'          => isset( $p['file'] ) ? sanitize_file_name( $p['file'] ) : $base['file'],
+							'download_name' => isset( $p['download_name'] ) ? sanitize_file_name( $p['download_name'] ) : $base['download_name'],
+						);
+
+						if ( '' === $book['label'] ) {
+							$book['label'] = $slug;
+						}
+
+						$out[ $slug ] = $book;
 					}
 
 					return array( 'ebooks' => $out );
