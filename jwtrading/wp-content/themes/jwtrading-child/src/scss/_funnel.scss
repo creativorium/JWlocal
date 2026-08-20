@@ -96,6 +96,16 @@
 	box-shadow: 0 24px 70px -30px rgb(124 77 255 / 0.55);
 }
 
+// Lead magnet artwork gets the same frame as the page VSLs — it is the hero
+// object on those pages, so it earns the same lift off the dark canvas.
+// Lives here rather than beside the block's other styles in _blocks.scss
+// because Sass placeholders cannot be @extended across @use boundaries, and
+// duplicating the two values is exactly how they drift apart.
+// Shared with /ifvg-strategy/, which uses the same block.
+.jwt-roadmap-hero__img {
+	@extend %jwt-glow-frame;
+}
+
 .jwt-faqvid .jwt-container {
 	@extend %jwt-wide-container;
 }

@@ -2315,14 +2315,18 @@
 	display: block;
 }
 
+// Reads as the page's kicker ("E-BOOK: DOWNLOAD GRATIS"), so it carries more
+// weight than a typical mono label. Tracking eases off as the size goes up —
+// 0.24em is airy at 0.72rem but starts to fall apart wider than that.
 .jwt-roadmap-hero__eyebrow {
 	display: block;
 	font-family: var(--jwt-font-mono);
-	font-size: 0.72rem;
-	letter-spacing: 0.24em;
+	font-size: 0.92rem;
+	font-weight: 600;
+	letter-spacing: 0.16em;
 	text-transform: uppercase;
 	color: var(--jwt-accent-light);
-	margin-bottom: 0.6rem;
+	margin-bottom: 0.85rem;
 }
 
 .jwt-roadmap-hero__title {
