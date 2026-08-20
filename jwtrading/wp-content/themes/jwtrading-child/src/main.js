@@ -725,6 +725,14 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
         form_id: formId,
       });
 
+      // Kit tag IDs chosen in the block Inspector. This body is built field by
+      // field rather than from the whole form, so repeated inputs have to be
+      // appended explicitly — miss this and the page's tag selection silently
+      // never reaches the server, and the form_id defaults apply instead.
+      form.querySelectorAll('input[name="tags[]"]').forEach((input) => {
+        if (input.value) body.append('tags[]', input.value);
+      });
+
       try {
         const res = await fetch(ajaxUrl, {
           method: 'POST',
