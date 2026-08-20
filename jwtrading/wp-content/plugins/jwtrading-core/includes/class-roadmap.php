@@ -100,6 +100,18 @@ class JWT_Roadmap {
 		// the tagger falls back to the form_id mapping below.
 		$tag_ids = array_values( array_filter( array_map( 'absint', (array) ( $_POST['tags'] ?? array() ) ) ) );
 
+		// Private, expiring download link for THIS subscriber. Handed to Kit as a
+		// custom field so the email can use {{ subscriber.<field> }} — the link is
+		// never the same twice, so a shared one burns the sharer's own quota.
+		// Empty until a PDF has been secured in Mentorship -> E-Book Links.
+		$fields = array();
+		if ( class_exists( 'JWT_Ebook' ) ) {
+			$link = JWT_Ebook::issue_link( $email );
+			if ( '' !== $link ) {
+				$fields[ JWT_Ebook::settings()['kit_field'] ] = $link;
+			}
+		}
+
 		do_action(
 			'jw_kit_tag_subscriber',
 			array(
@@ -108,6 +120,7 @@ class JWT_Roadmap {
 				'first_name' => $first,
 				'last_name'  => $last,
 				'tags'       => $tag_ids,
+				'fields'     => $fields,
 			)
 		);
 
