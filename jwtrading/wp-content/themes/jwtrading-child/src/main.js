@@ -717,21 +717,16 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
       if (btn) { btn.disabled = true; btn.textContent = 'Memproses...'; }
 
       const get = (n) => (form.querySelector(`[name="${n}"]`)?.value || '').trim();
-      const body = new URLSearchParams({
-        action: 'jwt_roadmap_optin',
-        nonce: get('nonce'),
-        first_name: get('first_name'),
-        email: get('email'),
-        form_id: formId,
-      });
 
-      // Kit tag IDs chosen in the block Inspector. This body is built field by
-      // field rather than from the whole form, so repeated inputs have to be
-      // appended explicitly — miss this and the page's tag selection silently
-      // never reaches the server, and the form_id defaults apply instead.
-      form.querySelectorAll('input[name="tags[]"]').forEach((input) => {
-        if (input.value) body.append('tags[]', input.value);
-      });
+      // Serialise the WHOLE form rather than listing fields by hand. The
+      // hand-written version silently dropped every field nobody remembered to
+      // add — first the Kit tag IDs, then the e-book selection — and each time
+      // the symptom was a setting on the page that appeared to do nothing.
+      // FormData picks up repeated inputs (tags[]) correctly too.
+      const body = new URLSearchParams();
+      body.append('action', 'jwt_roadmap_optin');
+      new FormData(form).forEach((value, key) => body.append(key, value));
+      body.append('form_id', formId);
 
       try {
         const res = await fetch(ajaxUrl, {
