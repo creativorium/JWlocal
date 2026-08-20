@@ -34,6 +34,8 @@ class JWT_Ebook {
 		add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ) );
 		add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
 		add_action( 'admin_post_jwt_ebook_secure', array( __CLASS__, 'handle_secure_file' ) );
+		add_action( 'admin_post_jwt_ebook_create_field', array( __CLASS__, 'handle_create_field' ) );
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin' ) );
 	}
 
 	// --- Settings ---------------------------------------------------------------
@@ -257,14 +259,79 @@ class JWT_Ebook {
 	// --- Admin --------------------------------------------------------------------
 
 	public static function admin_menu() {
-		add_submenu_page(
-			'jwt-funnel',
+		// Top-level on purpose: the e-book belongs to the lead magnet funnel,
+		// not to Mentorship, and hanging it there sent the client looking in
+		// the wrong menu.
+		add_menu_page(
 			__( 'E-Book Links', 'jwtrading' ),
 			__( 'E-Book Links', 'jwtrading' ),
 			'manage_options',
 			'jwt-ebook',
-			array( __CLASS__, 'render_admin' )
+			array( __CLASS__, 'render_admin' ),
+			'dashicons-pdf',
+			58
 		);
+	}
+
+	/** Media modal, so the PDF is picked instead of an ID being typed. */
+	public static function enqueue_admin( $hook ) {
+		if ( 'toplevel_page_jwt-ebook' !== $hook ) {
+			return;
+		}
+		wp_enqueue_media();
+	}
+
+	/**
+	 * Create the custom field in Kit so the merge tag exists.
+	 *
+	 * Kit derives the field KEY from the LABEL ("Roadmap Link" -> roadmap_link),
+	 * and the email merge tag uses the key — creating it here guarantees the two
+	 * match instead of relying on someone typing the label the same way.
+	 */
+	public static function handle_create_field() {
+		if ( ! current_user_can( 'manage_options' ) || ! check_admin_referer( 'jwt_ebook_create_field' ) ) {
+			wp_die( 'Unauthorized', 403 );
+		}
+
+		$s     = self::settings();
+		$label = trim( (string) ( $_POST['field_label'] ?? '' ) );
+		$label = '' !== $label ? sanitize_text_field( $label ) : 'Roadmap Link';
+
+		// The API key lives in the kit-tagger plugin's settings; read it directly
+		// rather than duplicating credentials.
+		$api_key = get_option( 'jw_kit_api_key', '' );
+		$notice  = 'field_error';
+
+		if ( '' !== $api_key ) {
+			$res = wp_remote_post(
+				'https://api.kit.com/v4/custom_fields',
+				array(
+					'timeout' => 20,
+					'headers' => array(
+						'X-Kit-Api-Key' => $api_key,
+						'Content-Type'  => 'application/json',
+					),
+					'body'    => wp_json_encode( array( 'label' => $label ) ),
+				)
+			);
+
+			if ( ! is_wp_error( $res ) ) {
+				$body = json_decode( wp_remote_retrieve_body( $res ), true );
+				$key  = $body['custom_field']['key'] ?? '';
+
+				if ( '' !== $key ) {
+					$s['kit_field'] = sanitize_key( $key );
+					update_option( self::OPT, $s );
+					$notice = 'field_created';
+				} elseif ( 422 === (int) wp_remote_retrieve_response_code( $res ) ) {
+					// Already exists — not an error worth alarming anyone about.
+					$notice = 'field_exists';
+				}
+			}
+		}
+
+		wp_safe_redirect( add_query_arg( 'jwt_ebook_notice', $notice, admin_url( 'admin.php?page=jwt-ebook' ) ) );
+		exit;
 	}
 
 	/**
@@ -328,7 +395,13 @@ class JWT_Ebook {
 			<?php if ( 'secured' === $notice ) : ?>
 				<div class="notice notice-success"><p><?php esc_html_e( 'File moved into private storage. Its old public URL no longer works.', 'jwtrading' ); ?></p></div>
 			<?php elseif ( 'error' === $notice ) : ?>
-				<div class="notice notice-error"><p><?php esc_html_e( 'Could not move that file. Check the attachment ID exists in the Media Library.', 'jwtrading' ); ?></p></div>
+				<div class="notice notice-error"><p><?php esc_html_e( 'Could not move that file. Pick the PDF again and retry.', 'jwtrading' ); ?></p></div>
+			<?php elseif ( 'field_created' === $notice ) : ?>
+				<div class="notice notice-success"><p><?php esc_html_e( 'Custom field created in Kit.', 'jwtrading' ); ?></p></div>
+			<?php elseif ( 'field_exists' === $notice ) : ?>
+				<div class="notice notice-info"><p><?php esc_html_e( 'That field already exists in Kit — nothing to do.', 'jwtrading' ); ?></p></div>
+			<?php elseif ( 'field_error' === $notice ) : ?>
+				<div class="notice notice-error"><p><?php esc_html_e( 'Could not create the field in Kit. Check the API key in JW Kit Auto Tagger.', 'jwtrading' ); ?></p></div>
 			<?php endif; ?>
 
 			<h2><?php esc_html_e( '1. Secure the PDF', 'jwtrading' ); ?></h2>
@@ -344,14 +417,38 @@ class JWT_Ebook {
 					?>
 				</p>
 			<?php else : ?>
-				<p class="description"><?php esc_html_e( 'Upload the PDF to the Media Library, then enter its attachment ID here. The file is MOVED out of the public uploads folder, so its current public URL stops working.', 'jwtrading' ); ?></p>
+				<p class="description"><?php esc_html_e( 'Pick the PDF you already uploaded to the Media Library. It is MOVED out of the public uploads folder into private storage, so its current public URL stops working — that is the point.', 'jwtrading' ); ?></p>
 			<?php endif; ?>
 
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 				<?php wp_nonce_field( 'jwt_ebook_secure' ); ?>
 				<input type="hidden" name="action" value="jwt_ebook_secure">
-				<input type="number" name="attachment_id" class="small-text" placeholder="<?php esc_attr_e( 'Attachment ID', 'jwtrading' ); ?>" min="1">
-				<?php submit_button( __( 'Move into private storage', 'jwtrading' ), 'secondary', 'submit', false ); ?>
+				<input type="hidden" name="attachment_id" id="jwt-ebook-attachment-id" value="">
+				<button type="button" class="button" id="jwt-ebook-pick"><?php esc_html_e( 'Choose PDF from Media Library', 'jwtrading' ); ?></button>
+				<span id="jwt-ebook-picked" style="margin-left:8px"></span>
+				<?php submit_button( __( 'Move into private storage', 'jwtrading' ), 'primary', 'submit', false, array( 'id' => 'jwt-ebook-move', 'disabled' => 'disabled' ) ); ?>
+				<script>
+				jQuery(function ($) {
+					var frame;
+					$('#jwt-ebook-pick').on('click', function (e) {
+						e.preventDefault();
+						if (frame) { frame.open(); return; }
+						frame = wp.media({
+							title: <?php echo wp_json_encode( __( 'Choose the e-book PDF', 'jwtrading' ) ); ?>,
+							library: { type: 'application/pdf' },
+							button: { text: <?php echo wp_json_encode( __( 'Use this file', 'jwtrading' ) ); ?> },
+							multiple: false
+						});
+						frame.on('select', function () {
+							var file = frame.state().get('selection').first().toJSON();
+							$('#jwt-ebook-attachment-id').val(file.id);
+							$('#jwt-ebook-picked').text(file.filename + ' (ID ' + file.id + ')');
+							$('#jwt-ebook-move').prop('disabled', false);
+						});
+						frame.open();
+					});
+				});
+				</script>
 			</form>
 
 			<h2 style="margin-top:2em"><?php esc_html_e( '2. Settings', 'jwtrading' ); ?></h2>
@@ -374,13 +471,24 @@ class JWT_Ebook {
 						<td>
 							<input type="text" name="<?php echo esc_attr( self::OPT ); ?>[kit_field]" value="<?php echo esc_attr( $s['kit_field'] ); ?>" class="regular-text">
 							<p class="description">
-								<?php esc_html_e( 'Create this field in Kit (Subscribers → Custom Fields), then use it as the button URL in the email:', 'jwtrading' ); ?>
+								<?php esc_html_e( 'Paste this as the button URL in your Kit email:', 'jwtrading' ); ?>
 								<code>{{ subscriber.<?php echo esc_html( $s['kit_field'] ); ?> }}</code>
 							</p>
 						</td>
 					</tr>
 				</table>
 				<?php submit_button(); ?>
+			</form>
+
+			<h2 style="margin-top:2em"><?php esc_html_e( '3. Create the field in Kit', 'jwtrading' ); ?></h2>
+			<p class="description">
+				<?php esc_html_e( 'Kit builds the field key from the label ("Roadmap Link" becomes roadmap_link), and the email merge tag uses the key. Creating it from here keeps the two in step.', 'jwtrading' ); ?>
+			</p>
+			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+				<?php wp_nonce_field( 'jwt_ebook_create_field' ); ?>
+				<input type="hidden" name="action" value="jwt_ebook_create_field">
+				<input type="text" name="field_label" value="Roadmap Link" class="regular-text">
+				<?php submit_button( __( 'Create custom field in Kit', 'jwtrading' ), 'secondary', 'submit', false ); ?>
 			</form>
 
 			<h2 style="margin-top:2em"><?php esc_html_e( 'Recent links', 'jwtrading' ); ?></h2>
