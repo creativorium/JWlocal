@@ -2774,6 +2774,22 @@ registerBlockType('jwt/roadmap-hero', {
               onChange={(kitTags) => setAttributes({ kitTags })}
             />
           </PanelBody>
+          <PanelBody title={__('E-Book', 'jwtrading')} initialOpen={false}>
+            {/* window.jwtEbooks is { slug: label } from the E-Book Links screen.
+                Picking one makes the opt-in mint a private, expiring download
+                link for that PDF and hand it to Kit as its custom field. */}
+            <SelectControl
+              label={__('Kirim e-book', 'jwtrading')}
+              help={__('Kosong = tidak mengirim link e-book (mis. halaman ini cuma redirect ke webinar).', 'jwtrading')}
+              value={attributes.ebook}
+              options={[{ label: __('— Tidak ada —', 'jwtrading'), value: '' }].concat(
+                Object.entries((typeof window !== 'undefined' && window.jwtEbooks) || {}).map(
+                  ([slug, label]) => ({ label: `${label} (${slug})`, value: slug })
+                )
+              )}
+              onChange={(ebook) => setAttributes({ ebook })}
+            />
+          </PanelBody>
           <PanelBody title={__('Form', 'jwtrading')}>
             {F('Placeholder nama', 'namePlaceholder')}{F('Placeholder email', 'emailPlaceholder')}
             {F('Teks tombol', 'submitText')}{F('Footnote', 'footnote')}

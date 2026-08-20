@@ -63,9 +63,12 @@ class JWT_Roadmap {
 	public static function editor_tag_data() {
 		$tags = class_exists( 'JW_Kit_Admin_Settings' ) ? JW_Kit_Admin_Settings::synced_tags() : array();
 
+		$ebooks = class_exists( 'JWT_Ebook' ) ? JWT_Ebook::choices() : array();
+
 		wp_add_inline_script(
 			'jwt-blocks-editor',
-			'window.jwtKitTags = ' . wp_json_encode( (object) $tags ) . ';',
+			'window.jwtKitTags = ' . wp_json_encode( (object) $tags ) . ';'
+			. 'window.jwtEbooks = ' . wp_json_encode( (object) $ebooks ) . ';',
 			'before'
 		);
 	}
@@ -100,6 +103,22 @@ class JWT_Roadmap {
 		// the tagger falls back to the form_id mapping below.
 		$tag_ids = array_values( array_filter( array_map( 'absint', (array) ( $_POST['tags'] ?? array() ) ) ) );
 
+		// Private, expiring download link for THIS subscriber. Handed to Kit as a
+		// custom field so the email can use {{ subscriber.<field> }} — the link is
+		// never the same twice, so a shared one burns the sharer's own quota.
+		// Empty until a PDF has been secured in Mentorship -> E-Book Links.
+		$fields = array();
+		$ebook  = isset( $_POST['ebook'] ) ? sanitize_key( wp_unslash( $_POST['ebook'] ) ) : '';
+
+		if ( '' !== $ebook && class_exists( 'JWT_Ebook' ) ) {
+			$book = JWT_Ebook::get( $ebook );
+			$link = JWT_Ebook::issue_link( $email, $ebook );
+
+			if ( '' !== $link && ! empty( $book['kit_field'] ) ) {
+				$fields[ $book['kit_field'] ] = $link;
+			}
+		}
+
 		do_action(
 			'jw_kit_tag_subscriber',
 			array(
@@ -108,6 +127,7 @@ class JWT_Roadmap {
 				'first_name' => $first,
 				'last_name'  => $last,
 				'tags'       => $tag_ids,
+				'fields'     => $fields,
 			)
 		);
 
