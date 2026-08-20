@@ -279,6 +279,26 @@ class JW_Kit_Client {
 			} else {
 				$this->logger->info( 'process_tagging: stage tag ID not configured, skipping stage exclusivity', array( 'stage' => $new_stage ) );
 			}
+
+			// The stage tag has to be APPLIED too, not just made exclusive.
+			// It used to ride along because every form_map entry happened to
+			// list it in `tags`. Now that a form can supply its own tag list
+			// (the per-form picker), ticking one tag would otherwise leave the
+			// subscriber with no stage at all — the removals above would run
+			// and nothing would put the new stage on.
+			if ( $stage_tag_id ) {
+				$already = false;
+				foreach ( $tags_to_add as $existing ) {
+					$existing_id = is_numeric( $existing ) ? (int) $existing : (int) $this->get_tag_id( $existing );
+					if ( $existing_id === (int) $stage_tag_id ) {
+						$already = true;
+						break;
+					}
+				}
+				if ( ! $already ) {
+					$tags_to_add[] = $stage_tag_id;
+				}
+			}
 		}
 
 		// 3. Add tags.
