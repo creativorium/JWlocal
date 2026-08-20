@@ -2,8 +2,9 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Webinar / free-preview pages — the warming step between a lead magnet and the
- * sales page.
+ * Standalone funnel landing pages — the webinar/free-preview steps AND the lead
+ * magnet pages that feed them. They all share the same chrome and the same
+ * "reachable by direct link only" rule.
  *
  * Why these exist: the lead magnets deliver their PDF by email, so the visitor
  * used to leave the site the moment they submitted the form and went cold in an
@@ -37,16 +38,30 @@ class JWT_Webinar {
 		add_filter( 'jwt/hidden_page_slugs', array( __CLASS__, 'hide_from_discovery' ) );
 	}
 
-	/** Slugs of the webinar landing pages. */
+	/** Webinar / free-preview pages. */
+	public static function webinar_slugs(): array {
+		return self::clean( apply_filters( 'jwt/webinar_slugs', array( 'webinar-trading', 'webinar-prop-firm' ) ) );
+	}
+
+	/**
+	 * Lead magnet opt-in pages that feed the webinars. Client's instruction for
+	 * the Trader Roadmap page: unlisted, no header CTA, centred logo — i.e. the
+	 * same standalone treatment as the webinar pages it now redirects into.
+	 *
+	 * NOTE: /ifvg-strategy/ is deliberately NOT here — it has not been through
+	 * the same decision yet.
+	 */
+	public static function leadmagnet_slugs(): array {
+		return self::clean( apply_filters( 'jwt/leadmagnet_slugs', array( 'trader-roadmap' ) ) );
+	}
+
+	/** Every page this module owns the chrome for. */
 	public static function slugs(): array {
-		return array_values(
-			array_filter(
-				array_map(
-					'trim',
-					(array) apply_filters( 'jwt/webinar_slugs', array( 'webinar-trading', 'webinar-prop-firm' ) )
-				)
-			)
-		);
+		return array_values( array_unique( array_merge( self::webinar_slugs(), self::leadmagnet_slugs() ) ) );
+	}
+
+	protected static function clean( $slugs ): array {
+		return array_values( array_filter( array_map( 'trim', (array) $slugs ) ) );
 	}
 
 	public static function is_webinar_page(): bool {
