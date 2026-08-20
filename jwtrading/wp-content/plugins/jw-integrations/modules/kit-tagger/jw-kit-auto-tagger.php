@@ -31,6 +31,10 @@ define( 'JW_KIT_STAGE_TAGS', array( 'Stage_Cold', 'Stage_Warm', 'Stage_High_Inte
 // All tag keys used in the plugin.
 define( 'JW_KIT_TAG_KEYS', array(
 	'LM_Roadmap',
+	// Replaces LM_Roadmap for NEW Trader Roadmap opt-ins. LM_Roadmap stays in
+	// the list because existing subscribers still carry it and its broadcast
+	// must keep working for them — new leads simply must not land in it.
+	'Roadmap_Ebook',
 	'LM_IFVG',
 	'Preview_Optin',
 	'Checkout_Started',

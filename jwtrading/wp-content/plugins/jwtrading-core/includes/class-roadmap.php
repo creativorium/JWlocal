@@ -27,8 +27,16 @@ class JWT_Roadmap {
 		// (JW_KIT_TAG_KEYS): LM_Roadmap / LM_IFVG — same as the original
 		// "LM Roadmap" / "LM IFVG" opt-in forms.
 		$defaults = array(
+			// Roadmap_Ebook is ADDED alongside the legacy LM_Roadmap, not swapped
+			// in — per the client, the old tag stays on new opt-ins too.
+			//
+			// ⚠️ This only achieves "new leads skip the old email" if that old
+			// email is a Kit BROADCAST (a one-time send, which never reaches
+			// subscribers tagged afterwards). If it is an AUTOMATION/sequence
+			// triggered by LM_Roadmap, new leads WILL enter it — in that case
+			// drop 'LM_Roadmap' from this array.
 			'trader_roadmap' => array(
-				'tags'  => array( 'LM_Roadmap', 'Stage_Warm' ),
+				'tags'  => array( 'LM_Roadmap', 'Roadmap_Ebook', 'Stage_Warm' ),
 				'stage' => 'Stage_Warm',
 			),
 			'ifvg_strategy'  => array(
