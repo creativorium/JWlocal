@@ -63,9 +63,12 @@ class JWT_Roadmap {
 	public static function editor_tag_data() {
 		$tags = class_exists( 'JW_Kit_Admin_Settings' ) ? JW_Kit_Admin_Settings::synced_tags() : array();
 
+		$ebooks = class_exists( 'JWT_Ebook' ) ? JWT_Ebook::choices() : array();
+
 		wp_add_inline_script(
 			'jwt-blocks-editor',
-			'window.jwtKitTags = ' . wp_json_encode( (object) $tags ) . ';',
+			'window.jwtKitTags = ' . wp_json_encode( (object) $tags ) . ';'
+			. 'window.jwtEbooks = ' . wp_json_encode( (object) $ebooks ) . ';',
 			'before'
 		);
 	}
@@ -105,10 +108,14 @@ class JWT_Roadmap {
 		// never the same twice, so a shared one burns the sharer's own quota.
 		// Empty until a PDF has been secured in Mentorship -> E-Book Links.
 		$fields = array();
-		if ( class_exists( 'JWT_Ebook' ) ) {
-			$link = JWT_Ebook::issue_link( $email );
-			if ( '' !== $link ) {
-				$fields[ JWT_Ebook::settings()['kit_field'] ] = $link;
+		$ebook  = isset( $_POST['ebook'] ) ? sanitize_key( wp_unslash( $_POST['ebook'] ) ) : '';
+
+		if ( '' !== $ebook && class_exists( 'JWT_Ebook' ) ) {
+			$book = JWT_Ebook::get( $ebook );
+			$link = JWT_Ebook::issue_link( $email, $ebook );
+
+			if ( '' !== $link && ! empty( $book['kit_field'] ) ) {
+				$fields[ $book['kit_field'] ] = $link;
 			}
 		}
 

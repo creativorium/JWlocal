@@ -44,6 +44,8 @@ $jwt_wrap    = get_block_wrapper_attributes( array( 'class' => 'jwt-roadmap-hero
 
 				<form class="jwt-roadmap-form" data-jwt-roadmap data-form-id="<?php echo esc_attr( $jwt_form_id ); ?>" data-pdf="<?php echo esc_url( $jwt_pdf ); ?>" data-redirect="<?php echo esc_url( (string) ( $attributes['redirectUrl'] ?? '' ) ); ?>">
 					<input type="hidden" name="nonce" value="<?php echo esc_attr( $jwt_nonce ); ?>">
+						<?php // Which e-book this opt-in delivers (see E-Book Links). ?>
+						<input type="hidden" name="ebook" value="<?php echo esc_attr( (string) ( $attributes['ebook'] ?? '' ) ); ?>">
 						<?php
 						// Kit tag IDs picked in the Inspector. Sent with the opt-in and
 						// applied INSTEAD of the form_id mapping, so the page decides

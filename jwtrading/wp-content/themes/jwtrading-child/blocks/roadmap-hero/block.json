@@ -23,6 +23,7 @@
 		"pdfUrl": { "type": "string", "default": "" },
 		"redirectUrl": { "type": "string", "default": "" },
 		"formId": { "type": "string", "default": "trader_roadmap" },
-		"kitTags": { "type": "string", "default": "" }
+		"kitTags": { "type": "string", "default": "" },
+		"ebook": { "type": "string", "default": "" }
 	}
 }
