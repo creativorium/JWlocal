@@ -9,6 +9,10 @@
  *       'form_id'    => 'webinar_registration',
  *       'first_name' => 'John',
  *       'last_name'  => 'Doe',
+ *       // Optional: Kit tag IDs chosen on the form itself. When present these
+ *       // REPLACE whatever the form_id maps to below.
+ *       'tags'       => array( 16939171, 16939366 ),
+ *       'fields'     => array( 'roadmap_link' => 'https://…' ),
  *   ) );
  *
  * Supported form_id values (or add via jw_kit_custom_form_map filter):
@@ -83,12 +87,24 @@ class JW_Kit_Custom_Form_Hook {
 
 		$form_map = apply_filters( 'jw_kit_custom_form_map', $this->form_map );
 
-		if ( ! isset( $form_map[ $form_id ] ) ) {
-			jw_kit_auto_tagger()->logger->debug( 'Custom form: form_id not in map, skipping', array( 'form_id' => $form_id ) );
+		// A form may carry its own tags (Kit tag IDs chosen in the block's
+		// Inspector). When it does they REPLACE the form_map entry, so the page
+		// decides its tags without a code change. Falls back to the map when
+		// the form sends nothing, which keeps every existing caller working.
+		$explicit = array_values( array_filter( array_map( 'trim', (array) ( $args['tags'] ?? array() ) ) ) );
+
+		if ( ! empty( $explicit ) ) {
+			$mapping = array(
+				'tags'  => $explicit,
+				'stage' => isset( $args['stage'] ) ? sanitize_text_field( $args['stage'] ) : ( $form_map[ $form_id ]['stage'] ?? '' ),
+			);
+		} elseif ( isset( $form_map[ $form_id ] ) ) {
+			$mapping = $form_map[ $form_id ];
+		} else {
+			jw_kit_auto_tagger()->logger->debug( 'Custom form: form_id not in map and no explicit tags, skipping', array( 'form_id' => $form_id ) );
 			return;
 		}
 
-		$mapping   = $form_map[ $form_id ];
 		$event_key = 'custom_' . $form_id;
 		$order_id  = isset( $args['order_id'] ) ? absint( $args['order_id'] ) : 0;
 		$idem_key  = jw_kit_auto_tagger()->idempotency->get_key( $email, $event_key, $order_id );
@@ -103,6 +119,16 @@ class JW_Kit_Custom_Form_Hook {
 		$fields     = array();
 		if ( ! empty( $last_name ) ) {
 			$fields['Last name'] = $last_name;
+		}
+
+		// Custom fields supplied by the caller (e.g. a per-subscriber download
+		// link). These are set on the subscriber BEFORE tags are applied, so a
+		// tag-triggered automation can already reference them in its email.
+		foreach ( (array) ( $args['fields'] ?? array() ) as $field_key => $field_value ) {
+			$field_key = sanitize_text_field( (string) $field_key );
+			if ( '' !== $field_key ) {
+				$fields[ $field_key ] = sanitize_text_field( (string) $field_value );
+			}
 		}
 
 		$client = jw_kit_auto_tagger()->kit_client;

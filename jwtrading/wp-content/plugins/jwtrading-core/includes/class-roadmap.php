@@ -14,6 +14,10 @@ class JWT_Roadmap {
 		add_action( 'wp_ajax_jwt_roadmap_optin', array( __CLASS__, 'optin_handler' ) );
 		add_action( 'wp_ajax_nopriv_jwt_roadmap_optin', array( __CLASS__, 'optin_handler' ) );
 
+		// Hand the synced Kit tags to the block editor so the opt-in blocks can
+		// offer them as checkboxes instead of anyone typing IDs.
+		add_action( 'enqueue_block_editor_assets', array( __CLASS__, 'editor_tag_data' ), 20 );
+
 		// Map the roadmap form_id to Kit tags (filterable — adjust to your tags).
 		add_filter( 'jw_kit_custom_form_map', array( __CLASS__, 'kit_form_map' ) );
 	}
@@ -52,6 +56,20 @@ class JWT_Roadmap {
 		return $map;
 	}
 
+	/**
+	 * Expose the Kit tag catalogue to the editor as window.jwtKitTags.
+	 * Empty until someone presses "Sync Tags from Kit" in the tagger settings.
+	 */
+	public static function editor_tag_data() {
+		$tags = class_exists( 'JW_Kit_Admin_Settings' ) ? JW_Kit_Admin_Settings::synced_tags() : array();
+
+		wp_add_inline_script(
+			'jwt-blocks-editor',
+			'window.jwtKitTags = ' . wp_json_encode( (object) $tags ) . ';',
+			'before'
+		);
+	}
+
 	/** AJAX: validate, notify admin, tag in Kit, return the PDF URL. */
 	public static function optin_handler() {
 		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
@@ -78,7 +96,10 @@ class JWT_Roadmap {
 		$message .= 'Time: ' . current_time( 'mysql' ) . "\n";
 		wp_mail( get_option( 'admin_email' ), $subject, $message );
 
-		// Kit tagging (mapped in kit_form_map / filterable via jw_kit_custom_form_map).
+		// Tags chosen on the block itself win; with none set this stays empty and
+		// the tagger falls back to the form_id mapping below.
+		$tag_ids = array_values( array_filter( array_map( 'absint', (array) ( $_POST['tags'] ?? array() ) ) ) );
+
 		do_action(
 			'jw_kit_tag_subscriber',
 			array(
@@ -86,6 +107,7 @@ class JWT_Roadmap {
 				'form_id'    => $form_id,
 				'first_name' => $first,
 				'last_name'  => $last,
+				'tags'       => $tag_ids,
 			)
 		);
 

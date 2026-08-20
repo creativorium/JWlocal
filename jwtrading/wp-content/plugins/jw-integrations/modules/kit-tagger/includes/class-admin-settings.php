@@ -30,6 +30,7 @@ class JW_Kit_Admin_Settings {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'wp_ajax_jw_kit_test_connection', array( $this, 'ajax_test_connection' ) );
 		add_action( 'wp_ajax_jw_kit_resync_order', array( $this, 'ajax_resync_order' ) );
+		add_action( 'wp_ajax_jw_kit_sync_tags', array( $this, 'ajax_sync_tags' ) );
 		add_filter( 'plugin_action_links_' . JW_KIT_AUTO_TAGGER_BASENAME, array( $this, 'add_plugin_links' ) );
 	}
 
@@ -241,7 +242,6 @@ class JW_Kit_Admin_Settings {
     'first_name' => sanitize_text_field( $_POST['first_name'] ?? '' ),
     'last_name'  => sanitize_text_field( $_POST['last_name'] ?? '' ),
 ) );</code></pre>
-							<p class="description"><?php esc_html_e( 'Supported form_id values: free_preview_gate_keep, checkout_started, webinar_registration. Add more via jw_kit_custom_form_map filter.', 'jw-kit-auto-tagger' ); ?></p>
 					<p class="description"><?php esc_html_e( 'Quick single-tag shortcut (no stage exclusivity): jw_kit_add_tag( $email, \'Webinar_Registrant\', $first_name );', 'jw-kit-auto-tagger' ); ?></p>
 						</td>
 					</tr>
@@ -265,6 +265,75 @@ class JW_Kit_Admin_Settings {
 								<?php esc_html_e( 'Enable debug logging', 'jw-kit-auto-tagger' ); ?>
 							</label>
 							<p class="description"><?php esc_html_e( 'Logs to WooCommerce log (if available) or PHP error_log.', 'jw-kit-auto-tagger' ); ?></p>
+						</td>
+					</tr>
+				</table>
+
+				<h2 class="title"><?php esc_html_e( 'Active Form Tagging', 'jw-kit-auto-tagger' ); ?></h2>
+				<p class="description">
+					<?php esc_html_e( 'Read live from the site — every form wired to Kit right now and the tags it applies. A tag with no ID is skipped at submit time.', 'jw-kit-auto-tagger' ); ?>
+				</p>
+				<table class="widefat striped" style="max-width:900px;margin-bottom:1.5em">
+					<thead>
+						<tr>
+							<th><?php esc_html_e( 'form_id', 'jw-kit-auto-tagger' ); ?></th>
+							<th><?php esc_html_e( 'Tags applied', 'jw-kit-auto-tagger' ); ?></th>
+							<th><?php esc_html_e( 'Stage', 'jw-kit-auto-tagger' ); ?></th>
+						</tr>
+					</thead>
+					<tbody>
+					<?php $jw_map = apply_filters( 'jw_kit_custom_form_map', array() ); ?>
+					<?php if ( empty( $jw_map ) ) : ?>
+						<tr><td colspan="3"><?php esc_html_e( 'No forms registered.', 'jw-kit-auto-tagger' ); ?></td></tr>
+					<?php else : ?>
+						<?php foreach ( $jw_map as $jw_form_id => $jw_entry ) : ?>
+							<tr>
+								<td><code><?php echo esc_html( $jw_form_id ); ?></code></td>
+								<td>
+									<?php foreach ( (array) ( $jw_entry['tags'] ?? array() ) as $jw_tag ) : ?>
+										<?php
+										$jw_id = is_numeric( $jw_tag ) ? (int) $jw_tag : get_option( 'jw_kit_tag_' . $jw_tag, '' );
+										$jw_ok = ! empty( $jw_id );
+										?>
+										<div>
+											<code><?php echo esc_html( $jw_tag ); ?></code>
+											<?php if ( $jw_ok ) : ?>
+												<span style="color:#008a20">&#10003; <?php echo esc_html( 'ID ' . $jw_id ); ?></span>
+											<?php else : ?>
+												<span style="color:#d63638">&#10007; <?php esc_html_e( 'no ID — skipped', 'jw-kit-auto-tagger' ); ?></span>
+											<?php endif; ?>
+										</div>
+									<?php endforeach; ?>
+								</td>
+								<td><code><?php echo esc_html( $jw_entry['stage'] ?? '-' ); ?></code></td>
+							</tr>
+						<?php endforeach; ?>
+					<?php endif; ?>
+					</tbody>
+				</table>
+
+				<h2 class="title"><?php esc_html_e( 'Kit Tag Catalogue', 'jw-kit-auto-tagger' ); ?></h2>
+				<table class="form-table" role="presentation">
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Sync tags', 'jw-kit-auto-tagger' ); ?></th>
+						<td>
+							<button type="button" id="jw-kit-sync-tags" class="button button-secondary"><?php esc_html_e( 'Sync Tags from Kit', 'jw-kit-auto-tagger' ); ?></button>
+							<span id="jw-kit-sync-tags-result"></span>
+							<?php $jw_synced = self::synced_tags(); ?>
+							<p class="description">
+								<?php if ( ! empty( $jw_synced ) ) : ?>
+									<?php
+									printf(
+										/* translators: 1: tag count, 2: date/time of last sync. */
+										esc_html__( '%1$d tags cached (last synced %2$s). Create a tag in Kit, press this, then pick it on the form.', 'jw-kit-auto-tagger' ),
+										count( $jw_synced ),
+										esc_html( get_option( 'jw_kit_synced_tags_at', '' ) )
+									);
+									?>
+								<?php else : ?>
+									<?php esc_html_e( 'Not synced yet. Read-only — this never changes anything in your Kit account.', 'jw-kit-auto-tagger' ); ?>
+								<?php endif; ?>
+							</p>
 						</td>
 					</tr>
 				</table>
@@ -306,6 +375,44 @@ class JW_Kit_Admin_Settings {
 			wp_send_json_success( array( 'message' => $result['message'] ) );
 		}
 		wp_send_json_error( array( 'message' => $result['message'] ) );
+	}
+
+	/**
+	 * AJAX: pull the tag catalogue from Kit.
+	 *
+	 * Read-only — it never creates or changes anything in the Kit account, so
+	 * it is safe to press at any time.
+	 */
+	public function ajax_sync_tags() {
+		check_ajax_referer( 'jw_kit_admin', 'nonce' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'jw-kit-auto-tagger' ) ) );
+		}
+
+		$tags = jw_kit_auto_tagger()->kit_client->list_tags();
+
+		if ( is_wp_error( $tags ) ) {
+			wp_send_json_error( array( 'message' => $tags->get_error_message() ) );
+		}
+
+		update_option( 'jw_kit_synced_tags', $tags, false );
+		update_option( 'jw_kit_synced_tags_at', current_time( 'mysql' ), false );
+
+		wp_send_json_success(
+			array(
+				/* translators: %d: number of tags synced. */
+				'message' => sprintf( __( 'Synced %d tags from Kit.', 'jw-kit-auto-tagger' ), count( $tags ) ),
+				'count'   => count( $tags ),
+			)
+		);
+	}
+
+	/**
+	 * Tags pulled from Kit, as [ id => name ].
+	 */
+	public static function synced_tags() {
+		$tags = get_option( 'jw_kit_synced_tags', array() );
+		return is_array( $tags ) ? $tags : array();
 	}
 
 	/**

@@ -265,7 +265,7 @@ class JW_Kit_Client {
 
 		// 2. Remove other stage tags if we're setting a new stage.
 		if ( ! empty( $new_stage ) ) {
-			$stage_tag_id = $this->get_tag_id( $new_stage );
+			$stage_tag_id = is_numeric( $new_stage ) ? (int) $new_stage : $this->get_tag_id( $new_stage );
 			if ( $stage_tag_id ) {
 				foreach ( JW_KIT_STAGE_TAGS as $stage_key ) {
 					if ( $stage_key === $new_stage ) {
@@ -279,13 +279,37 @@ class JW_Kit_Client {
 			} else {
 				$this->logger->info( 'process_tagging: stage tag ID not configured, skipping stage exclusivity', array( 'stage' => $new_stage ) );
 			}
+
+			// The stage tag has to be APPLIED too, not just made exclusive.
+			// It used to ride along because every form_map entry happened to
+			// list it in `tags`. Now that a form can supply its own tag list
+			// (the per-form picker), ticking one tag would otherwise leave the
+			// subscriber with no stage at all — the removals above would run
+			// and nothing would put the new stage on.
+			if ( $stage_tag_id ) {
+				$already = false;
+				foreach ( $tags_to_add as $existing ) {
+					$existing_id = is_numeric( $existing ) ? (int) $existing : (int) $this->get_tag_id( $existing );
+					if ( $existing_id === (int) $stage_tag_id ) {
+						$already = true;
+						break;
+					}
+				}
+				if ( ! $already ) {
+					$tags_to_add[] = $stage_tag_id;
+				}
+			}
 		}
 
 		// 3. Add tags.
 		$tags_added = 0;
 		$tags_skipped = array();
 		foreach ( $tags_to_add as $tag_key ) {
-			$tag_id = $this->get_tag_id( $tag_key );
+			// A numeric entry is already a Kit tag ID — that is what the
+			// per-form tag pickers store, since they choose real tags synced
+			// from Kit rather than the plugin's hard-coded key list. Named
+			// keys still resolve through the saved jw_kit_tag_* options.
+			$tag_id = is_numeric( $tag_key ) ? (int) $tag_key : $this->get_tag_id( $tag_key );
 			if ( $tag_id ) {
 				$result = $this->add_tag_by_email( $email, $tag_id );
 				if ( $result['success'] ) {
@@ -301,6 +325,62 @@ class JW_Kit_Client {
 		}
 
 		return array( 'success' => true );
+	}
+
+	/**
+	 * Every tag in the Kit account, as [ id => name ].
+	 *
+	 * Backs the "Sync Tags from Kit" button: once synced, tags are chosen by
+	 * name in the admin and on each form, so nobody copies IDs by hand and a
+	 * new tag never needs a code change.
+	 *
+	 * @return array|WP_Error
+	 */
+	public function list_tags() {
+		if ( ! $this->is_configured() ) {
+			return new WP_Error( 'no_api_key', __( 'Kit API key is not configured.', 'jw-kit-auto-tagger' ) );
+		}
+
+		$tags   = array();
+		$cursor = '';
+
+		// Kit paginates; walk every page so a big account syncs completely.
+		for ( $page = 0; $page < 20; $page++ ) {
+			$path     = '/tags?per_page=500' . ( '' !== $cursor ? '&after=' . rawurlencode( $cursor ) : '' );
+			$response = $this->request( 'GET', $path );
+
+			if ( is_wp_error( $response ) ) {
+				return $response;
+			}
+
+			$code = (int) wp_remote_retrieve_response_code( $response );
+			$body = json_decode( wp_remote_retrieve_body( $response ), true );
+
+			if ( 200 !== $code || ! isset( $body['tags'] ) ) {
+				return new WP_Error(
+					'jw_kit_tags_http_' . $code,
+					sprintf( /* translators: %d: HTTP status code. */ __( 'Kit returned HTTP %d while listing tags.', 'jw-kit-auto-tagger' ), $code )
+				);
+			}
+
+			foreach ( $body['tags'] as $tag ) {
+				if ( isset( $tag['id'], $tag['name'] ) ) {
+					$tags[ (string) $tag['id'] ] = (string) $tag['name'];
+				}
+			}
+
+			if ( empty( $body['pagination']['has_next_page'] ) ) {
+				break;
+			}
+			$cursor = (string) ( $body['pagination']['end_cursor'] ?? '' );
+			if ( '' === $cursor ) {
+				break;
+			}
+		}
+
+		asort( $tags, SORT_NATURAL | SORT_FLAG_CASE );
+
+		return $tags;
 	}
 
 	/**

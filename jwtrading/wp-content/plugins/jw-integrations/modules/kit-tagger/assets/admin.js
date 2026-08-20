@@ -62,5 +62,35 @@
 				$btn.prop('disabled', false);
 			});
 		});
+
+		// Pull the tag catalogue from Kit. Read-only: it lists tags, it never
+		// creates or edits anything in the account.
+		$('#jw-kit-sync-tags').on('click', function() {
+			var $btn = $(this);
+			var $result = $('#jw-kit-sync-tags-result');
+
+			$btn.prop('disabled', true);
+			$result.removeClass('jw-kit-success jw-kit-error').text('Syncing...');
+
+			$.post(jwKitAdmin.ajaxUrl, {
+				action: 'jw_kit_sync_tags',
+				nonce: jwKitAdmin.nonce
+			})
+			.done(function(response) {
+				if (response.success) {
+					$result.addClass('jw-kit-success').text(response.data.message);
+					// Reload so the cached count and every tag dropdown refresh.
+					setTimeout(function() { window.location.reload(); }, 900);
+				} else {
+					$result.addClass('jw-kit-error').text((response.data && response.data.message) ? response.data.message : 'Sync failed');
+				}
+			})
+			.fail(function(xhr) {
+				$result.addClass('jw-kit-error').text((xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) ? xhr.responseJSON.data.message : 'Request failed');
+			})
+			.always(function() {
+				$btn.prop('disabled', false);
+			});
+		});
 	});
 })(jQuery);

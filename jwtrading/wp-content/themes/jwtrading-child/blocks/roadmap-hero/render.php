@@ -44,6 +44,16 @@ $jwt_wrap    = get_block_wrapper_attributes( array( 'class' => 'jwt-roadmap-hero
 
 				<form class="jwt-roadmap-form" data-jwt-roadmap data-form-id="<?php echo esc_attr( $jwt_form_id ); ?>" data-pdf="<?php echo esc_url( $jwt_pdf ); ?>" data-redirect="<?php echo esc_url( (string) ( $attributes['redirectUrl'] ?? '' ) ); ?>">
 					<input type="hidden" name="nonce" value="<?php echo esc_attr( $jwt_nonce ); ?>">
+						<?php
+						// Kit tag IDs picked in the Inspector. Sent with the opt-in and
+						// applied INSTEAD of the form_id mapping, so the page decides
+						// its own tags. Empty = keep the mapped defaults.
+						foreach ( array_filter( array_map( 'absint', explode( ',', (string) ( $attributes['kitTags'] ?? '' ) ) ) ) as $jwt_tag_id ) :
+							?>
+							<input type="hidden" name="tags[]" value="<?php echo esc_attr( $jwt_tag_id ); ?>">
+							<?php
+						endforeach;
+						?>
 
 					<label class="jwt-roadmap-form__field">
 						<span><?php esc_html_e( 'Nama Lengkap', 'jwtrading' ); ?></span>
