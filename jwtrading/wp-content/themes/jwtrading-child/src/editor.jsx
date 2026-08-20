@@ -1327,14 +1327,30 @@ registerBlockType('jwt/proof', {
       ['jwt/proof-item', { label: 'hasil member 5' }],
     ],
     panelExtras: ({ attributes, setAttributes }) => (
-      <RangeControl
-        label={__('Kecepatan scroll (detik/putaran)', 'jwtrading')}
-        help={__('Angka lebih besar = lebih lambat.', 'jwtrading')}
-        min={15}
-        max={120}
-        value={attributes.speed}
-        onChange={(speed) => setAttributes({ speed })}
-      />
+      <>
+        <RangeControl
+          label={__('Kecepatan scroll (detik/putaran)', 'jwtrading')}
+          help={__('Angka lebih besar = lebih lambat.', 'jwtrading')}
+          min={15}
+          max={120}
+          value={attributes.speed}
+          onChange={(speed) => setAttributes({ speed })}
+        />
+        {/* The render has always supported a link under the marquee, but the
+            fields were never exposed — so it could only be removed by hand in
+            the code editor. */}
+        <TextControl
+          label={__('Teks link di bawah slider', 'jwtrading')}
+          help={__('Kosongkan untuk menghilangkan link-nya.', 'jwtrading')}
+          value={attributes.buttonText}
+          onChange={(buttonText) => setAttributes({ buttonText })}
+        />
+        <TextControl
+          label={__('URL link', 'jwtrading')}
+          value={attributes.buttonUrl}
+          onChange={(buttonUrl) => setAttributes({ buttonUrl })}
+        />
+      </>
     ),
   }),
   save: saveInner,
