@@ -21,6 +21,7 @@ const {
   TextControl,
   TextareaControl,
   ToggleControl,
+  CheckboxControl,
   RangeControl,
   SelectControl,
   Button,
@@ -2197,6 +2198,51 @@ registerBlockType('jwt/contact', {
   save: saveNull,
 });
 
+// --- Kit tag picker -----------------------------------------------------------
+// window.jwtKitTags is { id: name }, injected by JWT_Roadmap::editor_tag_data()
+// from whatever the tagger last synced. Selections are stored as a CSV of Kit
+// tag IDs, which the form posts and the tagger applies verbatim — so adding a
+// tag is: create in Kit -> Sync -> tick it here. No code, no IDs typed by hand.
+const KitTagPicker = ({ value, onChange }) => {
+  const all = (typeof window !== 'undefined' && window.jwtKitTags) || {};
+  const ids = Object.keys(all);
+  const selected = String(value || '')
+    .split(',')
+    .map((v) => v.trim())
+    .filter(Boolean);
+
+  if (!ids.length) {
+    return (
+      <p style={{ fontSize: 12, opacity: 0.8 }}>
+        {__('Belum ada tag. Buka Settings → JW Kit Auto Tagger dan klik "Sync Tags from Kit" dulu.', 'jwtrading')}
+      </p>
+    );
+  }
+
+  const toggle = (id) => {
+    const next = selected.includes(id)
+      ? selected.filter((v) => v !== id)
+      : selected.concat(id);
+    onChange(next.join(','));
+  };
+
+  return (
+    <>
+      <p style={{ fontSize: 12, opacity: 0.8 }}>
+        {__('Centang tag yang dikirim ke Kit saat form ini disubmit. Kosong = pakai tag default dari form_id.', 'jwtrading')}
+      </p>
+      {ids.map((id) => (
+        <CheckboxControl
+          key={id}
+          label={`${all[id]}`}
+          checked={selected.includes(id)}
+          onChange={() => toggle(id)}
+        />
+      ))}
+    </>
+  );
+};
+
 // --- Phase 2: mentorship funnel + prop firms ---------------------------------
 
 // Shared media picker for the item blocks below.
@@ -2721,6 +2767,12 @@ registerBlockType('jwt/roadmap-hero', {
           </PanelBody>
           <PanelBody title={__('Teks', 'jwtrading')}>
             {F('Eyebrow', 'eyebrow')}{F('Judul', 'title')}{F('Lead', 'lead')}
+          </PanelBody>
+          <PanelBody title={__('Kit Tags', 'jwtrading')} initialOpen={false}>
+            <KitTagPicker
+              value={attributes.kitTags}
+              onChange={(kitTags) => setAttributes({ kitTags })}
+            />
           </PanelBody>
           <PanelBody title={__('Form', 'jwtrading')}>
             {F('Placeholder nama', 'namePlaceholder')}{F('Placeholder email', 'emailPlaceholder')}
