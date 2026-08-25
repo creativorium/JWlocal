@@ -6,13 +6,16 @@ defined( 'ABSPATH' ) || exit;
  *
  * Flow:
  *  1. /mentorship/ — opt-in form (nama / email / WhatsApp, all required).
- *     Creates a LEAD record (status "optin") and fires `jw_kit_tag_subscriber`
- *     with form_id `mentorship_optin` (mapped below → Kit tags), then redirects
- *     to the application page carrying the lead token.
- *  2. /mentorship/application/ — VSL + 6-question quiz. On submit the answers
- *     are attached to the lead (status "applied"), POSTed to the Google Apps
- *     Script receiver (when configured), and `application_submitted` is pushed
- *     to the dataLayer by the front end. Then → thank you.
+ *     Creates a LEAD record (status "optin"), fires `jw_kit_tag_subscriber`
+ *     with form_id `mentorship_optin` (mapped below → Kit tags, no email), and
+ *     mirrors the lead to the Sheet, then redirects to the application page
+ *     carrying the lead token.
+ *  2. /mentorship/application/ — VSL + quiz. On submit the answers are attached
+ *     to the lead (status "applied"), POSTed to the Google Apps Script receiver
+ *     (which UPSERTS on lead_id, updating the row opt-in created), tagged in Kit
+ *     with form_id `mentorship_applied` (the thank-you email automation fires on
+ *     that tag), and `application_submitted` is pushed to the dataLayer by the
+ *     front end. Then → thank you.
  *  3. /mentorship/thank-you/ — token-gated: reachable only after a real submit
  *     (cookie set server-side in step 2). No form.
  *
@@ -40,6 +43,11 @@ class JWT_Funnel {
 
 	/** Kit form_id for the opt-in (registered in the kit-tagger map below). */
 	const KIT_FORM_ID = 'mentorship_optin';
+
+	/** Kit form_id for a COMPLETED application. Separate tag so the client can
+	 *  tell "interested" apart from "actually applied" — the applied tag is what
+	 *  the thank-you email automation fires on. */
+	const KIT_FORM_ID_APPLIED = 'mentorship_applied';
 
 	public static function init() {
 		add_action( 'admin_init', array( __CLASS__, 'maybe_create_table' ) );
@@ -178,6 +186,9 @@ class JWT_Funnel {
 			'sheets_secret'    => '',
 			'notify_email'     => '',
 			'kit_tags'         => 'Mentorship_Optin, Stage_Warm',
+			// Stage_High_Intent (not Stage_Warm) — stage tags are exclusive in the
+			// kit-tagger, so applying upgrades the lead's stage in place.
+			'kit_tags_applied' => 'Mentorship_Applied, Stage_High_Intent',
 			// ⚠️ TEMPORARILY 0 so the client can review the thank-you design
 			// without submitting the funnel. LOCK THIS BEFORE LAUNCH — tick
 			// "Kunci halaman Thank You" in Mentorship → Pengaturan (that writes
@@ -198,7 +209,7 @@ class JWT_Funnel {
 				'sanitize_callback' => static function ( $in ) {
 					$in  = is_array( $in ) ? $in : array();
 					$out = array();
-					foreach ( array( 'optin_slug', 'application_slug', 'thankyou_slug', 'turnstile_site', 'turnstile_secret', 'sheets_secret', 'kit_tags' ) as $k ) {
+					foreach ( array( 'optin_slug', 'application_slug', 'thankyou_slug', 'turnstile_site', 'turnstile_secret', 'sheets_secret', 'kit_tags', 'kit_tags_applied' ) as $k ) {
 						$out[ $k ] = sanitize_text_field( $in[ $k ] ?? '' );
 					}
 					$out['sheets_url']    = esc_url_raw( $in['sheets_url'] ?? '' );
@@ -362,22 +373,59 @@ class JWT_Funnel {
 
 	// --- Kit --------------------------------------------------------------------
 
-	/** Register the opt-in form_id → tags mapping for the jw-integrations kit-tagger. */
+	/** Split a comma-separated tag setting, falling back to $default when blank. */
+	protected static function tag_list( string $key, array $default ): array {
+		$tags = array_values( array_filter( array_map( 'trim', explode( ',', (string) self::settings()[ $key ] ) ) ) );
+		return $tags ? $tags : $default;
+	}
+
+	/** The stage tag inside a tag list, if any — the kit-tagger keeps stages exclusive. */
+	protected static function stage_of( array $tags, string $default ): string {
+		foreach ( $tags as $tag ) {
+			if ( 0 === strpos( $tag, 'Stage_' ) ) {
+				return $tag;
+			}
+		}
+		return $default;
+	}
+
+	/** Register both funnel form_id → tags mappings for the jw-integrations kit-tagger. */
 	public static function kit_form_map( $map ) {
 		if ( ! is_array( $map ) ) {
 			return $map;
 		}
-		$tags = array_values( array_filter( array_map( 'trim', explode( ',', (string) self::settings()['kit_tags'] ) ) ) );
-		if ( empty( $tags ) ) {
-			$tags = array( 'Mentorship_Optin', 'Stage_Warm' );
-		}
+
+		$optin = self::tag_list( 'kit_tags', array( 'Mentorship_Optin', 'Stage_Warm' ) );
 		if ( ! isset( $map[ self::KIT_FORM_ID ] ) ) {
 			$map[ self::KIT_FORM_ID ] = array(
-				'tags'  => $tags,
-				'stage' => 'Stage_Warm',
+				'tags'  => $optin,
+				'stage' => self::stage_of( $optin, 'Stage_Warm' ),
 			);
 		}
+
+		$applied = self::tag_list( 'kit_tags_applied', array( 'Mentorship_Applied', 'Stage_High_Intent' ) );
+		if ( ! isset( $map[ self::KIT_FORM_ID_APPLIED ] ) ) {
+			$map[ self::KIT_FORM_ID_APPLIED ] = array(
+				'tags'  => $applied,
+				'stage' => self::stage_of( $applied, 'Stage_High_Intent' ),
+			);
+		}
+
 		return $map;
+	}
+
+	/** Fire the kit-tagger for a lead. Idempotent on the tagger's side. */
+	protected static function kit_tag( $lead, string $form_id ) {
+		$parts = preg_split( '/\s+/', (string) $lead->name, 2 );
+		do_action(
+			'jw_kit_tag_subscriber',
+			array(
+				'email'      => $lead->email,
+				'form_id'    => $form_id,
+				'first_name' => $parts[0] ?? (string) $lead->name,
+				'last_name'  => $parts[1] ?? '',
+			)
+		);
 	}
 
 	// --- Step 1: opt-in ----------------------------------------------------------
@@ -425,17 +473,28 @@ class JWT_Funnel {
 			)
 		);
 
-		// Kit: tagged via the jw-integrations kit-tagger (idempotent on its side).
-		$parts = preg_split( '/\s+/', $name, 2 );
-		do_action(
-			'jw_kit_tag_subscriber',
-			array(
-				'email'      => $email,
-				'form_id'    => self::KIT_FORM_ID,
-				'first_name' => $parts[0] ?? $name,
-				'last_name'  => $parts[1] ?? '',
-			)
+		$lead = (object) array(
+			'id'     => (int) $wpdb->insert_id,
+			'status' => self::S_OPTIN,
+			'name'   => $name,
+			'email'  => $email,
+			'phone'  => $phone,
+			'source' => esc_url_raw( wp_unslash( $_POST['source'] ?? '' ) ),
 		);
+
+		// Kit: tagged via the jw-integrations kit-tagger (idempotent on its side).
+		// No email is sent here by design — the opt-in tag is for tracking only.
+		self::kit_tag( $lead, self::KIT_FORM_ID );
+
+		// Mirror the lead to the Sheet NOW, not on application submit. People who
+		// opt in and never finish are exactly the group the client needs to see,
+		// and they would otherwise never reach the Sheet at all. The receiver
+		// upserts on lead_id, so step 2 updates this same row.
+		try {
+			self::dispatch_to_sheets( $lead, array(), 'mentorship_optin' );
+		} catch ( Throwable $e ) {
+			self::record_sheet_result( (int) $lead->id, 'failed', $e->getMessage() );
+		}
 
 		self::set_cookie( self::COOKIE_LEAD, $token );
 
@@ -520,14 +579,24 @@ class JWT_Funnel {
 			self::record_sheet_result( (int) $lead->id, 'failed', $e->getMessage() );
 		}
 
+		// Second Kit tag — this is what the thank-you email automation fires on,
+		// and what separates "interested" from "actually applied" in Kit.
+		self::kit_tag( $lead, self::KIT_FORM_ID_APPLIED );
+
 		self::notify_admin( $lead, $answers );
 		self::set_cookie( self::COOKIE_DONE, $token );
 
 		wp_send_json_success( array( 'redirect' => self::thankyou_url() ) );
 	}
 
-	/** POST the application to the Apps Script receiver (own tab/endpoint). */
-	protected static function dispatch_to_sheets( $lead, array $answers ) {
+	/**
+	 * POST a lead to the Apps Script receiver (own tab/endpoint).
+	 *
+	 * Called twice per lead: once at opt-in (type `mentorship_optin`, no answers)
+	 * and once at application (type `mentorship_application`). The receiver
+	 * upserts on `lead_id`, so both land on ONE row per person.
+	 */
+	protected static function dispatch_to_sheets( $lead, array $answers = array(), string $type = 'mentorship_application' ) {
 		$s   = self::settings();
 		$url = trim( (string) $s['sheets_url'] );
 
@@ -544,7 +613,8 @@ class JWT_Funnel {
 		$payload = array_merge(
 			array(
 				'secret'  => trim( (string) $s['sheets_secret'] ),
-				'type'    => 'mentorship_application',
+				'type'    => $type,
+				'status'  => (string) $lead->status,
 				'lead_id' => (int) $lead->id,
 				'date'    => current_time( 'mysql' ),
 				'name'    => $lead->name,
@@ -559,7 +629,7 @@ class JWT_Funnel {
 		$res = wp_remote_post(
 			$url,
 			array(
-				'timeout' => 15,
+				'timeout' => ( 'mentorship_optin' === $type ) ? 10 : 15,
 				'headers' => array( 'Content-Type' => 'application/json' ),
 				'body'    => wp_json_encode( $payload ),
 			)
@@ -845,7 +915,14 @@ class JWT_Funnel {
 						<th scope="row"><?php esc_html_e( 'Kit tags (opt-in)', 'jwtrading' ); ?></th>
 						<td>
 							<input type="text" class="regular-text" name="<?php echo esc_attr( self::OPT ); ?>[kit_tags]" value="<?php echo esc_attr( $s['kit_tags'] ); ?>">
-							<p class="description"><?php esc_html_e( 'Dipisah koma. Tag harus sudah ada di konfigurasi kit-tagger.', 'jwtrading' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Dipisah koma. Tag harus sudah ada di konfigurasi kit-tagger. Tidak mengirim email — hanya penanda.', 'jwtrading' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Kit tags (aplikasi terkirim)', 'jwtrading' ); ?></th>
+						<td>
+							<input type="text" class="regular-text" name="<?php echo esc_attr( self::OPT ); ?>[kit_tags_applied]" value="<?php echo esc_attr( $s['kit_tags_applied'] ); ?>">
+							<p class="description"><?php esc_html_e( 'Dipasang saat aplikasi (langkah 2) terkirim. Pakai tag ini sebagai trigger automation email Thank You di Kit.', 'jwtrading' ); ?></p>
 						</td>
 					</tr>
 					<tr>

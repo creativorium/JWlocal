@@ -40,6 +40,11 @@ define( 'JW_KIT_TAG_KEYS', array(
 	'Checkout_Started',
 	'Bootcamp_Buyer',
 	'Webinar_Registrant',
+	// Mentorship funnel (Phase 2). Optin = filled the step-1 form; Applied =
+	// completed the step-2 application. Both must exist here or the tagger
+	// logs "ID not configured" and silently skips them.
+	'Mentorship_Optin',
+	'Mentorship_Applied',
 	'Stage_Cold',
 	'Stage_Warm',
 	'Stage_High_Intent',
