@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 ?>
-<!-- wp:jwt/hero {"align":"full","compact":true,"titleTag":"h1","eyebrow":"Langkah 1 dari 3 · Mentorship 1:1","title":"Kamu Serius Soal Trading.<br>Saatnya Belajar dengan <mark>Mentor yang Juga Serius.</mark>","lead":"Ini hanya untuk trader yang benar-benar siap berkomitmen dan ingin bimbingan 1:1 yang menghasilkan hasil nyata — tempat sangat terbatas untuk menjaga kualitas setiap sesi."} /-->
+<!-- wp:jwt/hero {"align":"full","compact":true,"titleTag":"h1","className":"jwt-hero--long-head","eyebrow":"Langkah 1 dari 3 · Mentorship 1:1","title":"Kamu Serius Soal Trading. Saatnya<br>Belajar dengan <mark>Mentor yang Juga Serius.</mark>","lead":"Ini hanya untuk trader yang benar-benar siap berkomitmen dan ingin bimbingan 1:1<br>yang menghasilkan hasil nyata — tempat sangat terbatas untuk menjaga kualitas setiap sesi."} /-->
 
 <!-- wp:jwt/optin-form {"align":"full","anchor":"mulai","title":"Isi data kamu untuk mulai proses aplikasi","submitText":"Lanjut Ke Aplikasi","note":"Data kamu 100% aman &amp; tidak akan dibagikan ke siapa pun."} /-->
 
