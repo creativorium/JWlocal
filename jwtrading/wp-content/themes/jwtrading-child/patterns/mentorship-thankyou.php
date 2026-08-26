@@ -10,8 +10,7 @@
  * FAQ videos cut from eleven to four (links supplied), an accordion FAQ added
  * below them, and the "Testimoni dari member lain" section removed.
  *
- * NOTE: the eight accordion answers are OUR DRAFT — the brief supplied the
- * questions only. Client to review the wording.
+ * The eight accordion answers are the client's own supplied copy, used verbatim.
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -31,14 +30,14 @@ defined( 'ABSPATH' ) || exit;
 
 <!-- Accordion FAQ — same component as the homepage and bootcamp pages. -->
 <!-- wp:jwt/faq {"align":"full","eyebrow":"FAQ","title":"Pertanyaan Sebelum Bergabung"} -->
-<!-- wp:jwt/faq-item {"question":"Bagaimana proses onboarding berlangsung?","answer":"Setelah aplikasi kamu masuk, tim kami menghubungi lewat WhatsApp dalam 1×24 jam untuk sesi perkenalan singkat. Di situ kami pastikan program ini memang cocok buat kamu, lalu atur jadwal sesi 1:1 pertama dan kasih akses ke materi serta grup mentoring."} /-->
-<!-- wp:jwt/faq-item {"question":"Apakah aku akan dibantu untuk lulus prop firm challenge?","answer":"Ya. Ini salah satu fokus utama mentorship: lolos challenge dan menjaga akun tetap funded. Kamu dibimbing dari pemilihan prop firm, penyesuaian risk management ke aturan challenge, sampai evaluasi trade secara rutin."} /-->
-<!-- wp:jwt/faq-item {"question":"Apakah program ini cocok untuk yang baru mulai trading?","answer":"Cocok, selama kamu siap mengikuti prosesnya. Materinya dimulai dari fondasi, dan karena sifatnya 1:1, kecepatan belajar menyesuaikan level kamu. Kalau kamu sudah trading tapi belum konsisten, bimbingan langsung justru mempercepat karena kita benahi yang salah sejak awal."} /-->
-<!-- wp:jwt/faq-item {"question":"Berapa jam per minggu yang aku butuhkan untuk persiapan?","answer":"Rata-rata 5–8 jam per minggu: sesi 1:1, review chart, dan backtesting mandiri. Yang menentukan hasil bukan jumlah jamnya, tapi konsistensi mengerjakannya setiap minggu."} /-->
-<!-- wp:jwt/faq-item {"question":"Market apa saja yang diajarkan?","answer":"Fokus utamanya NQ (Nasdaq) karena struktur marketnya paling bersih untuk ICT. Framework yang kamu pelajari tetap berlaku di forex, gold, indices, dan crypto — banyak member menerapkannya lintas market."} /-->
-<!-- wp:jwt/faq-item {"question":"Berapa modal yang aku butuhkan untuk mulai?","answer":"Untuk belajar, kamu tidak perlu modal besar: kita mulai dari demo dan backtesting. Kalau tujuanmu akun funded, yang dibutuhkan hanya biaya challenge prop firm, dan kami bantu pilih yang paling masuk akal untuk kondisimu."} /-->
-<!-- wp:jwt/faq-item {"question":"Apa bedanya dengan Bootcamp?","answer":"Bootcamp adalah program terstruktur yang kamu jalankan sendiri lewat modul dan komunitas. Mentorship 1:1 adalah pendampingan langsung dengan Jack dan William — materi menyesuaikan kondisi trading kamu, dan setiap keputusan bisa dibahas personal. Slotnya sangat terbatas."} /-->
-<!-- wp:jwt/faq-item {"question":"Bagaimana jika aku masih punya pertanyaan lain?","answer":"Tulis pertanyaanmu saat tim kami menghubungi lewat WhatsApp — semua dijawab sebelum kamu memutuskan. Tidak ada kewajiban lanjut setelah sesi perkenalan."} /-->
+<!-- wp:jwt/faq-item {"question":"Bagaimana proses onboarding berlangsung?","answer":"Tim kami akan review jawaban aplikasi kamu dan menghubungi kamu via WhatsApp. Kalau kamu cocok, kita akan jadwalkan discovery call — di sini kita kenalan, pahami level kamu, dan jawab pertanyaan kamu. Jika setelah call kita sepakat untuk lanjut, mentor akan mulai membangun roadmap yang spesifik untuk kamu."} /-->
+<!-- wp:jwt/faq-item {"question":"Apakah aku akan dibantu untuk lulus prop firm challenge?","answer":"Ya — salah satu outcome utama program ini adalah membantu kamu membangun sistem dan disiplin yang dibutuhkan untuk lulus prop firm challenge. Kami tidak kasih sinyal atau beri tahu kamu kapan harus trade. Kami ajari kamu caranya, supaya kamu bisa lulus menggunakan kemampuan kamu sendiri."} /-->
+<!-- wp:jwt/faq-item {"question":"Apakah program ini cocok untuk yang baru mulai trading?","answer":"Ya. Program ini dirancang untuk dua tipe trader: yang baru mulai dan yang sudah trading tapi belum konsisten. Kalau kamu masih baru, kita bangun fondasi yang benar dari awal. Kalau kamu sudah punya pengalaman tapi masih stuck, kita identifikasi leakage spesifik dalam sistem kamu dan perbaiki satu per satu."} /-->
+<!-- wp:jwt/faq-item {"question":"Berapa jam per minggu yang aku butuhkan untuk persiapan?","answer":"Minimal 1–2 jam per hari untuk backtesting, journaling, dan review chart. Semakin banyak yang kamu masukkan di luar sesi, semakin cepat kamu berkembang."} /-->
+<!-- wp:jwt/faq-item {"question":"Market apa saja yang diajarkan?","answer":"Kami fokus pada indices dan gold. Di sesi London dan New York, kita trading XAUUSD (Gold) dan major forex pairs. Untuk yang ingin fokus di indices, kita juga cover NQ (Nasdaq) — cocok untuk sesi New York. Market mana yang paling pas untuk kamu tergantung pada goals dan ketersediaan waktu kamu. Sistem ICT yang kami ajarkan juga bisa diaplikasikan ke Forex, Crypto, dan aset lainnya — ilmunya berlaku di semua market yang liquid."} /-->
+<!-- wp:jwt/faq-item {"question":"Berapa modal yang aku butuhkan untuk mulai?","answer":"Ada dua opsi. Pertama, kamu bisa trading dengan modal sendiri — mulai dari sebesar atau sekecil yang kamu mau. Kedua, kamu bisa gunakan prop firm, di mana kamu hanya butuh sekitar $50 untuk beli eval account pertama dan mendapatkan akses ke funding yang jauh lebih besar. Kalau kamu belum familiar dengan prop firm, semua ini akan kami jelaskan di dalam mentorship."} /-->
+<!-- wp:jwt/faq-item {"question":"Apa bedanya dengan Bootcamp?","answer":"Bootcamp adalah program self-paced dengan video course dan akses komunitas Discord — cocok untuk yang ingin belajar secara mandiri. Mentorship 1:1 adalah program eksklusif dengan mentor dedicat, sesi langsung, dan roadmap yang dibangun spesifik untuk kamu. Kalau Bootcamp adalah universitasnya, Mentorship adalah private tutornya."} /-->
+<!-- wp:jwt/faq-item {"question":"Bagaimana jika aku masih punya pertanyaan lain?","answer":"Tenang — tim kami akan menghubungi kamu, dan kamu bisa tanyakan semua pertanyaan kamu di sana. Kalau ada yang mendesak, kamu bisa langsung WhatsApp kami dan beritahu bahwa kamu baru saja apply untuk mentorship."} /-->
 <!-- /wp:jwt/faq -->
 
 <!-- Real payout screenshots — same image set and scroll animation as the
