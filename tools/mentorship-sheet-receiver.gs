@@ -31,6 +31,12 @@ var SHEET_ID = '164sA8-HsdkIRe8mlzd5jG1k_K_evVIkwWRFcj577IbQ';
 
 var TIMEZONE = 'Asia/Jakarta';
 
+// Bumped whenever this file changes. Open the /exec URL in a browser: the
+// version it reports tells you which code the DEPLOYMENT is actually serving.
+// Editing and saving does NOT change it -- only Deploy > Manage deployments >
+// edit > New version does.
+var VERSION = '2026-08-27-b';
+
 // Fixed leading columns. Anything after these is a question column.
 // "Lead ID" must stay column A -- it is the key the upsert matches on -- but it
 // is hidden on creation, so the sheet reads as if it starts at Status.
@@ -139,9 +145,35 @@ function doPost(e) {
   }
 }
 
-/** GET is only for eyeballing that the deployment is live. */
+/** GET is only for eyeballing which version the deployment serves. */
 function doGet() {
-  return reply(true, 'mentorship receiver alive');
+  return ContentService
+    .createTextOutput(JSON.stringify({
+      ok: true,
+      message: 'mentorship receiver alive',
+      version: VERSION,
+      columns: FIXED
+    }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+/**
+ * Run this ONCE from the editor (Run menu) after changing the column layout.
+ * Deletes the leads tab so the next submission rebuilds it with the current
+ * FIXED columns -- the script only ever ADDS missing columns, it never removes
+ * stale ones, so an old tab keeps its old headers forever.
+ */
+function resetSheet() {
+  var ss = SHEET_ID
+    ? SpreadsheetApp.openById(SHEET_ID)
+    : SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(SHEET);
+  if (sheet) {
+    ss.deleteSheet(sheet);
+    Logger.log('Deleted "%s". It will be rebuilt on the next submission.', SHEET);
+  } else {
+    Logger.log('No "%s" tab to delete.', SHEET);
+  }
 }
 
 function getSheet() {
