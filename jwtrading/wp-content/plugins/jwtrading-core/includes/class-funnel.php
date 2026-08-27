@@ -189,13 +189,10 @@ class JWT_Funnel {
 			// Stage_High_Intent (not Stage_Warm) — stage tags are exclusive in the
 			// kit-tagger, so applying upgrades the lead's stage in place.
 			'kit_tags_applied' => 'Mentorship_Applied, Stage_High_Intent',
-			// ⚠️ TEMPORARILY 0 so the client can review the thank-you design
-			// without submitting the funnel. LOCK THIS BEFORE LAUNCH — tick
-			// "Kunci halaman Thank You" in Mentorship → Pengaturan (that writes
-			// the option, so this default stops mattering). An open thank-you
-			// page is shareable, which breaks the URL-based conversion trigger
-			// in GTM. Tracked in PHASE2-PLAN.md §7b.
-			'thankyou_gate'    => 0,
+			// Gated by default. An open thank-you page is shareable, which would
+			// break the URL-based conversion trigger in GTM. It was temporarily
+			// opened on Local for the design review; that is over.
+			'thankyou_gate'    => 1,
 		);
 		$saved = get_option( self::OPT, array() );
 		return wp_parse_args( is_array( $saved ) ? $saved : array(), $defaults );

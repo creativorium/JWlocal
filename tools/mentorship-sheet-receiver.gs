@@ -29,16 +29,18 @@ var SHEET  = 'Mentorship Leads'; // Tab name; created automatically.
 // Leave blank ONLY if the script is bound to the sheet.
 var SHEET_ID = '164sA8-HsdkIRe8mlzd5jG1k_K_evVIkwWRFcj577IbQ';
 
+var TIMEZONE = 'Asia/Jakarta';
+
 // Fixed leading columns. Anything after these is a question column.
+// "Lead ID" must stay column A -- it is the key the upsert matches on -- but it
+// is hidden on creation, so the sheet reads as if it starts at Status.
 var FIXED = [
   'Lead ID',
   'Status',
-  'Tanggal Opt-in',
-  'Tanggal Aplikasi',
+  'Tanggal',
   'Nama',
   'Email',
   'WhatsApp',
-  'WA Link',
   'Source'
 ];
 
@@ -91,14 +93,13 @@ function doPost(e) {
       row.push('');
     }
 
-    var stamp = String(body.date || '') || nowStamp();
-
     set(row, headers, 'Lead ID',  leadId);
     set(row, headers, 'Status',   String(body.status || (isApply ? 'applied' : 'optin')));
+    set(row, headers, 'Tanggal',  dateOnly(body.date));
     set(row, headers, 'Nama',     String(body.name  || ''));
     set(row, headers, 'Email',    String(body.email || ''));
-    set(row, headers, 'WhatsApp', String(body.phone || ''));
-    set(row, headers, 'WA Link',  waLink(String(body.phone || '')));
+    var wa = waDigits(String(body.phone || ''));
+    set(row, headers, 'WhatsApp', wa);
 
     // Source is the landing URL captured at opt-in — never overwrite it with
     // the application page's URL on the second call.
@@ -107,24 +108,28 @@ function doPost(e) {
     }
 
     if (isApply) {
-      set(row, headers, 'Tanggal Aplikasi', stamp);
       for (var j = 0; j < answers.length; j++) {
         var qq = String((answers[j] && answers[j].q) || '').trim();
         if (qq) {
           set(row, headers, qq, String((answers[j] && answers[j].a) || ''));
         }
       }
-    } else {
-      set(row, headers, 'Tanggal Opt-in', stamp);
-    }
-
-    // An application can arrive without an opt-in row (cookie cleared, direct
-    // hit) — backfill the opt-in date so the column is never empty.
-    if (!get(row, headers, 'Tanggal Opt-in')) {
-      set(row, headers, 'Tanggal Opt-in', stamp);
     }
 
     sheet.getRange(rowIndex, 1, 1, headers.length).setValues([row]);
+
+    // Make the number itself the link. Rich text rather than a HYPERLINK()
+    // formula: the formula's argument separator is , in some locales and ; in
+    // others, so a formula written here breaks on a sheet set to the other one.
+    var waCol = headers.indexOf('WhatsApp') + 1;
+    if (wa && waCol > 0) {
+      sheet.getRange(rowIndex, waCol).setRichTextValue(
+        SpreadsheetApp.newRichTextValue()
+          .setText(wa)
+          .setLinkUrl('https://wa.me/' + wa)
+          .build()
+      );
+    }
 
     return reply(true, isNew ? 'created' : 'updated');
   } catch (err) {
@@ -159,6 +164,7 @@ function getSheet() {
     sheet.getRange(1, 1, 1, FIXED.length).setValues([FIXED]);
     sheet.setFrozenRows(1);
     sheet.getRange(1, 1, 1, FIXED.length).setFontWeight('bold');
+    sheet.hideColumns(1); // Lead ID: needed for matching, not for reading.
   }
   return sheet;
 }
@@ -207,8 +213,11 @@ function get(row, headers, name) {
   return i > -1 ? row[i] : '';
 }
 
-/** 08xx / +62xx / 62xx → wa.me link. Blank phone → blank cell. */
-function waLink(phone) {
+/**
+ * Normalise to international digits: 08xx / +62xx / 62xx all become 62xx.
+ * Blank phone gives an empty string.
+ */
+function waDigits(phone) {
   var d = String(phone).replace(/[^0-9]/g, '');
   if (!d) {
     return '';
@@ -216,11 +225,16 @@ function waLink(phone) {
   if (d.indexOf('0') === 0) {
     d = '62' + d.substring(1);
   }
-  return 'https://wa.me/' + d;
+  return d;
 }
 
-function nowStamp() {
-  return Utilities.formatDate(new Date(), 'Asia/Jakarta', 'yyyy-MM-dd HH:mm:ss');
+/** Date without the time — "2026-08-27". Falls back to today. */
+function dateOnly(raw) {
+  var d = raw ? new Date(String(raw).replace(' ', 'T')) : new Date();
+  if (isNaN(d.getTime())) {
+    d = new Date();
+  }
+  return Utilities.formatDate(d, TIMEZONE, 'yyyy-MM-dd');
 }
 
 function reply(ok, msg) {
