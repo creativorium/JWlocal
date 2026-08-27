@@ -159,6 +159,22 @@
 		}
 	}
 
+	// The mentorship opt-in headline is the longest in the funnel — 72 characters
+	// against "Saatnya ada yang bimbing langsung."'s 34 — so the shared 1200px /
+	// 3.4rem pairing breaks its authored second line onto a third visual line,
+	// and the 640px lead measure spills onto a third line too. Widening both
+	// measures keeps each authored line intact without shrinking the type.
+	// Opt in per block (className), so the other funnel heroes are untouched.
+	.jwt-hero--long-head {
+		.jwt-hero__title {
+			max-width: 1400px;
+		}
+
+		.jwt-hero__lead {
+			max-width: 1040px;
+		}
+	}
+
 	// Neon: the highlighted phrase gets a gradient fill plus a soft bloom.
 	// The flat accent colour stays as the fallback — background-clip:text has
 	// no effect where it is unsupported, so the text never renders invisible.
