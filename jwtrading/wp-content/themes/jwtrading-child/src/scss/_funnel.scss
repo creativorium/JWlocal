@@ -517,10 +517,25 @@
 	}
 }
 
+// Sits directly above the submit button in both funnel forms, so it reads as
+// part of submitting rather than as a gate in front of the heading. Turnstile
+// renders its own iframe at a fixed width; data-size="flexible" lets it take
+// the form width instead, and the max-width keeps it from outgrowing the card.
 .jwt-funnel__captcha {
-	margin-top: 0.9rem;
 	display: flex;
 	justify-content: center;
+	margin-block: 1.1rem 0.25rem;
+
+	// Nothing renders while Turnstile is unconfigured or still booting, and an
+	// empty flex row would otherwise leave a gap above the button.
+	&:empty {
+		display: none;
+		margin: 0;
+	}
+
+	iframe {
+		max-width: 100%;
+	}
 }
 
 // --- Application quiz -------------------------------------------------------
