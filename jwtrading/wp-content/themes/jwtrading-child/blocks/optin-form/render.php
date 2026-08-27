@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 
 $jwt_wrap = get_block_wrapper_attributes( array( 'class' => 'jwt-optin' ) );
 $jwt_sec  = class_exists( 'JWT_Funnel' ) ? JWT_Funnel::form_security_html() : '';
+$jwt_cap  = class_exists( 'JWT_Funnel' ) ? JWT_Funnel::captcha_html() : '';
 ?>
 <section <?php echo $jwt_wrap; // phpcs:ignore WordPress.Security.EscapeOutput ?>>
 	<div class="jwt-container">
@@ -39,6 +40,8 @@ $jwt_sec  = class_exists( 'JWT_Funnel' ) ? JWT_Funnel::form_security_html() : ''
 					<input type="tel" name="phone" autocomplete="tel" inputmode="tel" required placeholder="<?php echo esc_attr( $attributes['phonePlaceholder'] ); ?>">
 				</label>
 			</div>
+
+			<?php echo $jwt_cap; // phpcs:ignore WordPress.Security.EscapeOutput -- built in the plugin. ?>
 
 			<button type="submit" class="jwt-btn jwt-btn--primary jwt-optin__submit"><?php echo esc_html( $attributes['submitText'] ); ?> →</button>
 

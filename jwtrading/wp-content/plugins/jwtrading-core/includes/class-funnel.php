@@ -808,14 +808,30 @@ class JWT_Funnel {
 	}
 
 	/** Shared by both funnel forms: nonce + Turnstile widget markup. */
+	/**
+	 * Hidden fields only. Safe to place anywhere in the form.
+	 *
+	 * The Turnstile widget deliberately is NOT here: this markup sits at the top
+	 * of the form, and a visible captcha box above the heading is the first thing
+	 * a visitor sees. Render captcha_html() next to the submit button instead.
+	 */
 	public static function form_security_html(): string {
-		$html = '<input type="hidden" name="nonce" value="' . esc_attr( wp_create_nonce( self::NONCE ) ) . '">';
+		return '<input type="hidden" name="nonce" value="' . esc_attr( wp_create_nonce( self::NONCE ) ) . '">';
+	}
 
+	/**
+	 * The Turnstile widget. Empty string when no site key is configured, so the
+	 * forms render unchanged with bot protection switched off.
+	 *
+	 * Place this immediately before the submit button — it belongs with the act
+	 * of submitting, not with the heading.
+	 */
+	public static function captcha_html(): string {
 		$site = self::turnstile_site_key();
-		if ( '' !== $site ) {
-			$html .= '<div class="cf-turnstile jwt-funnel__captcha" data-sitekey="' . esc_attr( $site ) . '" data-theme="dark"></div>';
+		if ( '' === $site ) {
+			return '';
 		}
-		return $html;
+		return '<div class="cf-turnstile jwt-funnel__captcha" data-sitekey="' . esc_attr( $site ) . '" data-theme="dark" data-size="flexible"></div>';
 	}
 
 	// --- Admin --------------------------------------------------------------------

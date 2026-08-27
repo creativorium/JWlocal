@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
 
 $jwt_wrap  = get_block_wrapper_attributes( array( 'class' => 'jwt-quiz-section' ) );
 $jwt_sec   = class_exists( 'JWT_Funnel' ) ? JWT_Funnel::form_security_html() : '';
+$jwt_cap   = class_exists( 'JWT_Funnel' ) ? JWT_Funnel::captcha_html() : '';
 $jwt_token = isset( $_GET['lead'] ) ? sanitize_text_field( wp_unslash( $_GET['lead'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 ?>
 <section <?php echo $jwt_wrap; // phpcs:ignore WordPress.Security.EscapeOutput ?>>
@@ -42,6 +43,8 @@ $jwt_token = isset( $_GET['lead'] ) ? sanitize_text_field( wp_unslash( $_GET['le
 			</div>
 
 			<div class="jwt-quiz__msg" role="status" aria-live="polite"></div>
+
+			<?php echo $jwt_cap; // phpcs:ignore WordPress.Security.EscapeOutput -- built in the plugin. ?>
 
 			<div class="jwt-quiz__nav">
 				<button type="button" class="jwt-quiz__back" data-jwt-quiz-back hidden>← <?php echo esc_html( (string) $attributes['backText'] ); ?></button>
