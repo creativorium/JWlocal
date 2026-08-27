@@ -21,6 +21,14 @@
 var SECRET = 'CHANGE-ME';        // Must match the WP "Shared secret" field.
 var SHEET  = 'Mentorship Leads'; // Tab name; created automatically.
 
+// The spreadsheet to write into, taken from its URL:
+//   docs.google.com/spreadsheets/d/<THIS PART>/edit
+// Setting it explicitly means the script works whether it lives inside the
+// sheet (Extensions -> Apps Script) or as a standalone project -- a standalone
+// project has no "active" spreadsheet and getActiveSpreadsheet() returns null.
+// Leave blank ONLY if the script is bound to the sheet.
+var SHEET_ID = '164sA8-HsdkIRe8mlzd5jG1k_K_evVIkwWRFcj577IbQ';
+
 // Fixed leading columns. Anything after these is a question column.
 var FIXED = [
   'Lead ID',
@@ -132,7 +140,17 @@ function doGet() {
 }
 
 function getSheet() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = SHEET_ID
+    ? SpreadsheetApp.openById(SHEET_ID)
+    : SpreadsheetApp.getActiveSpreadsheet();
+
+  if (!ss) {
+    throw new Error(
+      'No spreadsheet. Set SHEET_ID to the id from the sheet URL, or create ' +
+      'the script from inside the sheet via Extensions > Apps Script.'
+    );
+  }
+
   var sheet = ss.getSheetByName(SHEET);
   if (!sheet) {
     sheet = ss.insertSheet(SHEET);

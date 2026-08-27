@@ -626,12 +626,20 @@ class JWT_Funnel {
 			$flat
 		);
 
+		$timeout = ( 'mentorship_optin' === $type ) ? 10 : 15;
+
+		// Apps Script answers a POST with a 302 to script.googleusercontent.com.
+		// The script has ALREADY run at that point - the redirect target merely
+		// serves the stored result - so following the redirect with the POST body
+		// re-sends it and Google rejects the second request (411/400). Take the
+		// redirect manually and GET the result instead.
 		$res = wp_remote_post(
 			$url,
 			array(
-				'timeout' => ( 'mentorship_optin' === $type ) ? 10 : 15,
-				'headers' => array( 'Content-Type' => 'application/json' ),
-				'body'    => wp_json_encode( $payload ),
+				'timeout'     => $timeout,
+				'redirection' => 0,
+				'headers'     => array( 'Content-Type' => 'application/json' ),
+				'body'        => wp_json_encode( $payload ),
 			)
 		);
 
@@ -641,10 +649,33 @@ class JWT_Funnel {
 		}
 
 		$code = (int) wp_remote_retrieve_response_code( $res );
+
+		if ( in_array( $code, array( 301, 302, 303, 307, 308 ), true ) ) {
+			$location = (string) wp_remote_retrieve_header( $res, 'location' );
+			if ( '' === $location ) {
+				self::record_sheet_result( (int) $lead->id, 'failed', 'HTTP ' . $code . ' with no Location header.' );
+				return;
+			}
+			$res = wp_remote_get( $location, array( 'timeout' => $timeout ) );
+			if ( is_wp_error( $res ) ) {
+				self::record_sheet_result( (int) $lead->id, 'failed', $res->get_error_message() );
+				return;
+			}
+			$code = (int) wp_remote_retrieve_response_code( $res );
+		}
+
 		$body = (string) wp_remote_retrieve_body( $res );
 
 		if ( $code < 200 || $code >= 400 ) {
 			self::record_sheet_result( (int) $lead->id, 'failed', 'HTTP ' . $code . ': ' . $body );
+			return;
+		}
+
+		// The receiver answers 200 even when it refuses the payload (bad secret,
+		// missing lead_id), so trust its own ok flag rather than the status code.
+		$decoded = json_decode( $body, true );
+		if ( is_array( $decoded ) && isset( $decoded['ok'] ) && ! $decoded['ok'] ) {
+			self::record_sheet_result( (int) $lead->id, 'failed', (string) ( $decoded['message'] ?? $body ) );
 			return;
 		}
 
