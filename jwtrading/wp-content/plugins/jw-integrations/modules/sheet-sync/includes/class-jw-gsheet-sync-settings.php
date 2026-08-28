@@ -362,30 +362,59 @@ class JW_GSheet_Sync_Settings {
 			'timestamp'    => current_time( 'c' ),
 		);
 
-		$response = wp_remote_post( $url, array(
-			'timeout'     => 20,
-			'redirection' => 0,
-			'headers'     => array( 'Content-Type' => 'application/json', 'Accept' => 'application/json' ),
-			'body'        => wp_json_encode( $payload ),
-		) );
+		// Reads the script's real answer, not just the 302 that Apps Script always
+		// returns -- a refused payload used to be reported as "Connected".
+		$response = JW_GSheet_Sync_Webhook::post_and_read( $url, wp_json_encode( $payload ), 20 );
 
 		if ( is_wp_error( $response ) ) {
 			wp_send_json_error( array( 'message' => $response->get_error_message() ) );
 		}
 
-		$code    = wp_remote_retrieve_response_code( $response );
-		$body    = wp_remote_retrieve_body( $response );
+		$code    = (int) wp_remote_retrieve_response_code( $response );
+		$body    = (string) wp_remote_retrieve_body( $response );
 		$decoded = json_decode( $body, true );
-		$ok      = ( $code >= 200 && $code < 400 ) || ( is_array( $decoded ) && ! empty( $decoded['success'] ) );
 
-		if ( $ok ) {
-			wp_send_json_success( array(
-				'message' => sprintf( __( 'Connected - webhook responded (HTTP %d). A test row may have been added to your sheet.', 'jw-gsheet-sync' ), $code ),
+		if ( is_array( $decoded ) && array_key_exists( 'success', $decoded ) ) {
+			$reply = isset( $decoded['message'] ) ? (string) $decoded['message'] : '';
+
+			if ( ! empty( $decoded['success'] ) ) {
+				wp_send_json_success( array(
+					'message' => sprintf(
+						/* translators: %s: message returned by the Apps Script receiver. */
+						__( 'Connected - the script accepted the test and wrote a row. It replied: %s', 'jw-gsheet-sync' ),
+						sanitize_text_field( $reply )
+					),
+				) );
+			}
+
+			wp_send_json_error( array(
+				'message' => sprintf(
+					/* translators: %s: message returned by the Apps Script receiver. */
+					__( 'Reached the script, but it REFUSED the data: %s', 'jw-gsheet-sync' ),
+					sanitize_text_field( $reply )
+				),
+			) );
+		}
+
+		// No JSON at all: usually a deleted deployment (Google serves an HTML
+		// error page) or a URL that is not an Apps Script web app.
+		if ( $code >= 200 && $code < 400 ) {
+			wp_send_json_error( array(
+				'message' => sprintf(
+					/* translators: %d: HTTP status code. */
+					__( 'Reached the URL (HTTP %d) but got no readable reply. Check that the Web app URL ends in /exec and that its deployment still exists.', 'jw-gsheet-sync' ),
+					$code
+				),
 			) );
 		}
 
 		wp_send_json_error( array(
-			'message' => sprintf( __( 'Failed - HTTP %1$d: %2$s', 'jw-gsheet-sync' ), $code, sanitize_text_field( substr( (string) $body, 0, 150 ) ) ),
+			'message' => sprintf(
+				/* translators: 1: HTTP status code, 2: response body. */
+				__( 'Failed - HTTP %1$d: %2$s', 'jw-gsheet-sync' ),
+				$code,
+				sanitize_text_field( substr( $body, 0, 150 ) )
+			),
 		) );
 	}
 

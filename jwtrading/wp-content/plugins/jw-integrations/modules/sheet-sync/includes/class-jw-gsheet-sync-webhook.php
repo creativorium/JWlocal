@@ -42,12 +42,35 @@ class JW_GSheet_Sync_Webhook {
 			);
 		}
 
-		// Don't follow redirects - Google Apps Script POST can return 400 when redirects are followed.
+		$response = self::post_and_read( $url, $body, 30 );
+
+		$result = $this->parse_response( $response, $order );
+		$this->log_result( $result, $order );
+
+		return $result;
+	}
+
+	/**
+	 * POST to an Apps Script web app and return its ACTUAL reply.
+	 *
+	 * Apps Script answers every POST with a 302 to script.googleusercontent.com.
+	 * The script has already run by then; the redirect target only serves the
+	 * stored output. Letting WP follow it re-sends the POST body and Google
+	 * rejects the second request, so we take the redirect manually and GET the
+	 * result. Without this the caller only ever sees "302" and cannot tell a
+	 * written row apart from a refused one.
+	 *
+	 * @param string $url     Web app /exec URL.
+	 * @param string $body    JSON body.
+	 * @param int    $timeout Seconds.
+	 * @return array|WP_Error
+	 */
+	public static function post_and_read( $url, $body, $timeout = 30 ) {
 		$response = wp_remote_post(
 			$url,
 			array(
-				'timeout'     => 30,
-				'redirection' => 0, // Apps Script returns 400 if redirects are followed; a 302 means doPost ran (row appended) and is treated as success below
+				'timeout'     => $timeout,
+				'redirection' => 0,
 				'headers'     => array(
 					'Content-Type' => 'application/json',
 					'Accept'       => 'application/json',
@@ -56,10 +79,24 @@ class JW_GSheet_Sync_Webhook {
 			)
 		);
 
-		$result = $this->parse_response( $response, $order );
-		$this->log_result( $result, $order );
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
 
-		return $result;
+		$code = (int) wp_remote_retrieve_response_code( $response );
+
+		if ( in_array( $code, array( 301, 302, 303, 307, 308 ), true ) ) {
+			$location = (string) wp_remote_retrieve_header( $response, 'location' );
+			if ( '' === $location ) {
+				return $response;
+			}
+			$followed = wp_remote_get( $location, array( 'timeout' => $timeout ) );
+			if ( ! is_wp_error( $followed ) ) {
+				return $followed;
+			}
+		}
+
+		return $response;
 	}
 
 	/**
@@ -83,13 +120,18 @@ class JW_GSheet_Sync_Webhook {
 		$body     = wp_remote_retrieve_body( $response );
 		$decoded  = json_decode( $body, true );
 
-		// Success: HTTP 2xx OR response body has success: true (Google Apps Script may return 400
-		// even when doPost runs successfully due to redirect/Content-Type quirks).
-		$body_success = is_array( $decoded ) && ! empty( $decoded['success'] );
-		// A 302 from Apps Script /exec means doPost completed and is redirecting to its
-		// output; the row is already appended. So accept 2xx AND 3xx (or an explicit
-		// success:true body) as success.
-		$success      = ( $code >= 200 && $code < 400 ) || $body_success;
+		// The receiver always answers with {"success": true|false, "message": ...}.
+		// When we can read that, it is the only thing worth trusting: a refused
+		// payload (bad token, script error) still arrives over a 200/302, so
+		// status-only checks report a delivered row that was never written.
+		if ( is_array( $decoded ) && array_key_exists( 'success', $decoded ) ) {
+			$success = ! empty( $decoded['success'] );
+		} else {
+			// No readable body (redirect target unreachable, HTML error page).
+			// Fall back to the status code so a working sync is never broken by
+			// an unexpected response shape.
+			$success = ( $code >= 200 && $code < 400 );
+		}
 		$summary      = $this->build_response_summary( $code, $body, $decoded, $success );
 
 		return array(
