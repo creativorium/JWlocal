@@ -39,7 +39,7 @@ defined( 'ABSPATH' ) || exit;
 <!-- /wp:jwt/propfirm -->
 
 <!-- wp:jwt/propfirm {"align":"full","eyebrow":"Section 03","title":"Tools untuk Backtest &amp; Journaling","lead":"Latihan dan track progress kamu seperti trader profesional."} -->
-<!-- wp:jwt/propfirm-item {"name":"FX Replay","variant":"blue","blurb":"Replay market dan latihan setup kamu seperti kondisi live.","codeNote":"Coming Soon","guideLabel":"FX Replay Guide","guideVideoUrl":"https://youtu.be/xdA9g4-X_Nc"} /-->
+<!-- wp:jwt/propfirm-item {"name":"FX Replay","blurb":"Replay market dan latihan setup kamu seperti kondisi live.","codeNote":"Coming Soon","guideLabel":"FX Replay Guide","guideVideoUrl":"https://youtu.be/xdA9g4-X_Nc"} /-->
 <!-- /wp:jwt/propfirm -->
 
 <!-- wp:jwt/propfirm {"align":"full","eyebrow":"Section 04","title":"Trade Copier","lead":"Copy trade dari akun yang sudah funded ke akun lain secara otomatis.","disclosure":"Beberapa link di halaman ini adalah link afiliasi. Kamu tidak dikenakan biaya tambahan."} -->
