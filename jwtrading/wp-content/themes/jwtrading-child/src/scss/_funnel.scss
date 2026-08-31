@@ -1171,14 +1171,20 @@
 		font-size: 1.7rem;
 		line-height: 1.2;
 		font-weight: 700;
-		color: var(--jwt-text);
+		// Pure white, not --jwt-text (#eef1f6): the name is the card's anchor and
+		// the client wants it reading brighter than body copy.
+		color: #fff;
 
 		a {
-			color: inherit;
+			color: #fff;
 			text-decoration: none;
+			transition: opacity 0.2s;
 
+			// Stays white on hover -- dimming slightly instead of shifting hue,
+			// so the colour stays as specified while the link still responds.
 			&:hover {
-				color: var(--jwt-accent-light);
+				color: #fff;
+				opacity: 0.82;
 			}
 		}
 	}
@@ -1237,10 +1243,22 @@
 			transform: scale(0.985);
 		}
 
-		// Set by the [data-jwt-copy] handler in main.js.
+		// Set by the [data-jwt-copy] handler in main.js for ~1.6s, then removed --
+		// so every override here reverts on its own and the cell returns to a
+		// white code with a purple label and icon.
 		&.is-copied {
 			border-color: var(--jwt-success);
-			background: rgb(34 197 94 / 0.14);
+			background: rgb(62 207 142 / 0.16);
+		}
+
+		// The handler swaps the <code> text to "Tersalin!". Keep it white so the
+		// confirmation is readable against the green wash.
+		&.is-copied .jwt-pfcard__copy-code {
+			color: #fff;
+		}
+
+		&.is-copied .jwt-pfcard__copy-icon {
+			color: var(--jwt-success);
 		}
 	}
 
@@ -1253,7 +1271,9 @@
 	}
 
 	&__copy-label {
-		color: var(--jwt-dim);
+		// --jwt-dim (#5b6473) was almost invisible on the dark card. Purple both
+		// reads clearly and ties the cell to the copy affordance beside it.
+		color: var(--jwt-accent-light);
 		font-size: 0.7rem;
 		letter-spacing: 0.04em;
 		text-transform: uppercase;
@@ -1264,23 +1284,23 @@
 		font-family: var(--jwt-font-mono);
 		font-size: 0.95rem;
 		font-weight: 700;
-		color: var(--jwt-text);
+		color: #fff;
 		line-height: 1.2;
 		overflow-wrap: anywhere;
 	}
 
-	// The affordance that the code is copyable. Dim until hover so it hints
-	// rather than competes with the code itself.
+	// The affordance that the code is copyable. Purple so it is visible at rest
+	// -- it was --jwt-dim before, which read as disabled on this background.
 	&__copy-icon {
 		flex: none;
 		width: 16px;
 		height: 16px;
-		color: var(--jwt-dim);
+		color: var(--jwt-accent-light);
 		transition: color 0.2s;
 	}
 
 	&__copy:hover &__copy-icon {
-		color: var(--jwt-accent-light);
+		color: var(--jwt-accent);
 	}
 
 	&__codenote-text {
@@ -1294,6 +1314,8 @@
 		@extend %pfcard-cell;
 		border: 1px solid transparent;
 		background: var(--jwt-accent);
+		// Held white through every state: link colours elsewhere on the site are
+		// accent-tinted, and visited/hover rules would otherwise recolour it.
 		color: #fff;
 		font-family: var(--jwt-font-heading);
 		font-size: 0.9rem;
@@ -1301,7 +1323,10 @@
 		text-decoration: none;
 		transition: background 0.2s, transform 0.15s var(--jwt-ease);
 
-		&:hover {
+		&:hover,
+		&:focus,
+		&:active,
+		&:visited {
 			background: var(--jwt-accent-hover);
 			color: #fff;
 		}
