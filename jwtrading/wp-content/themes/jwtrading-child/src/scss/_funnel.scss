@@ -1345,8 +1345,17 @@
 			color: #fff;
 		}
 
+		// Lifts and glows on hover so the button reads as the primary action of
+		// the card, not just a coloured block.
+		&:hover,
+		&:focus-visible {
+			transform: translateY(-1px);
+			box-shadow: 0 6px 18px rgb(124 77 255 / 0.35);
+		}
+
 		&:active {
 			transform: scale(0.985);
+			box-shadow: none;
 		}
 	}
 
@@ -1358,9 +1367,12 @@
 		color: var(--jwt-dim);
 		cursor: not-allowed;
 
-		&:hover {
+		&:hover,
+		&:active {
 			background: rgb(124 77 255 / 0.18);
 			color: var(--jwt-dim);
+			transform: none;
+			box-shadow: none;
 		}
 	}
 
@@ -1375,8 +1387,16 @@
 // Not solved by adding .jwt-btn (which the base rule excludes): that would pull
 // in the site button's own padding, radius and background and fight the card
 // cell's fixed-height layout.
-#jwt-content {
-	.jwt-pfcard__name a {
+// SPECIFICITY MATH, because it is easy to get wrong here:
+//   #jwt-content a:not(.jwt-btn)  ->  (1,1,1)   id + :not() argument + element
+// `:not()` contributes its argument's weight, so the base rule is a full three
+// components. Every override below therefore carries the extra .jwt-pfcard
+// class to reach (1,2,x) -- a plain `#jwt-content .jwt-pfcard__explore` is only
+// (1,1,0) and LOSES at rest, which is what left Explore purple until hovered
+// (the :hover variant reached (1,2,0) and won, so the buttons looked inverted).
+#jwt-content .jwt-pfcard {
+	.jwt-pfcard__name a,
+	.jwt-pfcard__explore {
 		color: #fff;
 
 		&:hover,
@@ -1387,20 +1407,13 @@
 		}
 	}
 
-	.jwt-pfcard__explore {
-		color: #fff;
-
+	// Inert button: no link, so no hover response and a muted label.
+	.jwt-pfcard__explore.is-pending {
+		&,
 		&:hover,
 		&:focus,
 		&:active,
 		&:visited {
-			color: #fff;
-		}
-
-		// Keep the pending button muted: the rule above is (1,1,0) and would
-		// otherwise repaint it white.
-		&.is-pending,
-		&.is-pending:hover {
 			color: var(--jwt-dim);
 		}
 	}
