@@ -1186,11 +1186,6 @@
 		// the client wants it reading brighter than body copy.
 		color: #fff;
 
-		// Double-scoped on purpose. The PARENT theme's global.min.css is enqueued
-		// after this bundle and carries `a{color:var(--global-palette-highlight)}`
-		// plus `h3 a{color:inherit}`, so a single-class selector here loses on
-		// source order and the partner name renders in Kadence's purple.
-		.jwt-pfcard & a,
 		a {
 			color: #fff;
 			text-decoration: none;
@@ -1329,9 +1324,6 @@
 		line-height: 1.25;
 	}
 
-	// Selector doubled for the same reason as the name: the parent theme's
-	// bare `a` rule loads later than this file.
-	.jwt-pfcard &__explore,
 	&__explore {
 		@extend %pfcard-cell;
 		border: 1px solid transparent;
@@ -1360,7 +1352,7 @@
 
 	// Awaiting an affiliate link: holds the slot and reads as not-yet-available
 	// rather than pretending to be clickable.
-	.jwt-pfcard &__explore.is-pending {
+	&__explore.is-pending {
 		background: rgb(124 77 255 / 0.18);
 		border-color: var(--jwt-line-strong);
 		color: var(--jwt-dim);
@@ -1372,6 +1364,49 @@
 		}
 	}
 
+}
+
+// The prose-readability rule `#jwt-content a:not(.jwt-btn)` (specificity 1,1,1)
+// tints every content link accent-light. The partner name and the Explore
+// button are not prose links, so they have to out-specify it -- a class-only
+// selector cannot, however many classes it stacks. Same `#jwt-content` prefix
+// _blog.scss already uses for the filter pills and the article back-link.
+//
+// Not solved by adding .jwt-btn (which the base rule excludes): that would pull
+// in the site button's own padding, radius and background and fight the card
+// cell's fixed-height layout.
+#jwt-content {
+	.jwt-pfcard__name a {
+		color: #fff;
+
+		&:hover,
+		&:focus,
+		&:active,
+		&:visited {
+			color: #fff;
+		}
+	}
+
+	.jwt-pfcard__explore {
+		color: #fff;
+
+		&:hover,
+		&:focus,
+		&:active,
+		&:visited {
+			color: #fff;
+		}
+
+		// Keep the pending button muted: the rule above is (1,1,0) and would
+		// otherwise repaint it white.
+		&.is-pending,
+		&.is-pending:hover {
+			color: var(--jwt-dim);
+		}
+	}
+}
+
+.jwt-pfcard {
 	// No frame of its own — the card already provides one, and a second nested
 	// box read as clutter around the video.
 	&__guide {
