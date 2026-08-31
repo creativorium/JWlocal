@@ -1107,16 +1107,27 @@
 		max-width: var(--jwt-wide-col);
 		margin-inline: auto;
 
-		// A single-card section (Broker, Tools) runs the FULL width rather than
-		// one grid column, so its guide video matches the page VSL instead of
-		// being half the size of it.
+		// A single-card section (Broker, Tools) keeps the width of ONE column and
+		// centres, so its card and guide video match every other card on the
+		// page. It used to span the full width to match the page VSL above --
+		// that VSL has been removed, and full width made these cards and their
+		// videos roughly double the size of the rest.
+		// calc(50% - 0.75rem) is one column of the 2-up grid: half the width
+		// minus half the 1.5rem gap.
 		&.is-single {
-			grid-template-columns: minmax(0, 1fr);
+			grid-template-columns: minmax(0, calc(50% - 0.75rem));
+			justify-content: center;
 		}
 
 		@media (max-width: 720px) {
 			grid-template-columns: minmax(0, 1fr);
 			max-width: 460px;
+
+			// .is-single above is (0,2,0) and would otherwise beat this block's
+			// (0,1,0) and hold the card at half width on phones.
+			&.is-single {
+				grid-template-columns: minmax(0, 1fr);
+			}
 		}
 	}
 
@@ -1163,18 +1174,31 @@
 	}
 
 	&__name {
-		margin: 0 0 0.4rem;
+		margin: 0 0 0.5rem;
 		font-family: var(--jwt-font-heading);
-		font-size: 1.05rem;
+		// Deliberately far larger than the blurb: the partner name is what
+		// people scan this page for, and at the old 1.05rem it sat too close to
+		// the 0.8rem blurb to lead the card.
+		font-size: 1.7rem;
+		line-height: 1.2;
 		font-weight: 700;
-		color: var(--jwt-text);
+		// Pure white, not --jwt-text (#eef1f6): the name is the card's anchor and
+		// the client wants it reading brighter than body copy.
+		color: #fff;
 
 		a {
-			color: inherit;
+			color: #fff;
 			text-decoration: none;
+			transition: opacity 0.2s;
 
-			&:hover {
-				color: var(--jwt-accent-light);
+			// Stays white on hover -- dimming slightly instead of shifting hue,
+			// so the colour stays as specified while the link still responds.
+			&:hover,
+			&:focus,
+			&:active,
+			&:visited {
+				color: #fff;
+				opacity: 0.82;
 			}
 		}
 	}
@@ -1186,51 +1210,216 @@
 		line-height: 1.55;
 	}
 
-	// "Use Code" row — the pill copies the code to the clipboard.
-	&__code {
+	// Two equal columns: copy-the-code on the left, affiliate link on the right.
+	// Equal widths on purpose -- neither action outranks the other, and a fixed
+	// split keeps every card's row identical however long the code is.
+	&__actions {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0.6rem;
+		align-items: stretch;
+	}
+
+	// A card with a code but no link (or the reverse) still gets a full-width
+	// control rather than a lonely half-row with a gap beside it.
+	&__actions > :only-child {
+		grid-column: 1 / -1;
+	}
+
+	%pfcard-cell {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
-		gap: 0.75rem;
-		padding: 0.45rem 0.5rem 0.45rem 0.9rem;
-		border: 1px solid var(--jwt-line-strong);
+		justify-content: center;
+		gap: 0.5rem;
+		min-height: 3.1rem;
+		padding: 0.5rem 0.9rem;
 		border-radius: 10px;
+		text-align: center;
+	}
+
+	&__copy,
+	&__codenote {
+		@extend %pfcard-cell;
+		border: 1px solid var(--jwt-line-strong);
 		background: rgb(0 0 0 / 0.3);
 	}
 
-	&__code-label {
-		color: var(--jwt-dim);
-		font-size: 0.78rem;
-	}
-
-	&__code-pill {
-		flex: none;
-		min-width: 66px;
-		padding: 0.42rem 0.9rem;
-		border: 0;
-		border-radius: 10px;
-		background: var(--jwt-accent);
-		color: #fff;
-		font-family: var(--jwt-font-heading);
-		font-size: 0.8rem;
-		font-weight: 700;
+	&__copy {
 		cursor: pointer;
-		transition: background 0.2s, transform 0.15s var(--jwt-ease);
+		transition: border-color 0.2s, background 0.2s;
 
 		&:hover {
-			background: var(--jwt-accent-hover);
+			border-color: var(--jwt-accent);
+			background: rgb(124 77 255 / 0.12);
 		}
 
 		&:active {
-			transform: scale(0.96);
+			transform: scale(0.985);
 		}
 
-		// Set by the [data-jwt-copy] handler in main.js.
+		// Set by the [data-jwt-copy] handler in main.js for ~1.6s, then removed --
+		// so every override here reverts on its own and the cell returns to a
+		// white code with a purple label and icon.
 		&.is-copied {
-			background: var(--jwt-success);
+			border-color: var(--jwt-success);
+			background: rgb(62 207 142 / 0.16);
+		}
+
+		// The handler swaps the <code> text to "Tersalin!". Keep it white so the
+		// confirmation is readable against the green wash.
+		&.is-copied .jwt-pfcard__copy-code {
+			color: #fff;
+		}
+
+		&.is-copied .jwt-pfcard__copy-icon {
+			color: var(--jwt-success);
 		}
 	}
 
+	&__copy-text {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.1rem;
+		min-width: 0;
+	}
+
+	&__copy-label {
+		// --jwt-dim (#5b6473) was almost invisible on the dark card. Purple both
+		// reads clearly and ties the cell to the copy affordance beside it.
+		color: var(--jwt-accent-light);
+		font-size: 0.7rem;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		line-height: 1;
+	}
+
+	&__copy-code {
+		font-family: var(--jwt-font-mono);
+		font-size: 0.95rem;
+		font-weight: 700;
+		color: #fff;
+		line-height: 1.2;
+		overflow-wrap: anywhere;
+	}
+
+	// The affordance that the code is copyable. Purple so it is visible at rest
+	// -- it was --jwt-dim before, which read as disabled on this background.
+	&__copy-icon {
+		flex: none;
+		width: 16px;
+		height: 16px;
+		color: var(--jwt-accent-light);
+		transition: color 0.2s;
+	}
+
+	&__copy:hover &__copy-icon {
+		color: var(--jwt-accent);
+	}
+
+	&__codenote-text {
+		font-size: 0.82rem;
+		font-weight: 600;
+		color: var(--jwt-text);
+		line-height: 1.25;
+	}
+
+	&__explore {
+		@extend %pfcard-cell;
+		border: 1px solid transparent;
+		background: var(--jwt-accent);
+		// Held white through every state: link colours elsewhere on the site are
+		// accent-tinted, and visited/hover rules would otherwise recolour it.
+		color: #fff;
+		font-family: var(--jwt-font-heading);
+		font-size: 0.9rem;
+		font-weight: 700;
+		text-decoration: none;
+		transition: background 0.2s, transform 0.15s var(--jwt-ease);
+
+		&:hover,
+		&:focus,
+		&:active,
+		&:visited {
+			background: var(--jwt-accent-hover);
+			color: #fff;
+		}
+
+		// Lifts and glows on hover so the button reads as the primary action of
+		// the card, not just a coloured block.
+		&:hover,
+		&:focus-visible {
+			transform: translateY(-1px);
+			box-shadow: 0 6px 18px rgb(124 77 255 / 0.35);
+		}
+
+		&:active {
+			transform: scale(0.985);
+			box-shadow: none;
+		}
+	}
+
+	// Awaiting an affiliate link: holds the slot and reads as not-yet-available
+	// rather than pretending to be clickable.
+	&__explore.is-pending {
+		background: rgb(124 77 255 / 0.18);
+		border-color: var(--jwt-line-strong);
+		color: var(--jwt-dim);
+		cursor: not-allowed;
+
+		&:hover,
+		&:active {
+			background: rgb(124 77 255 / 0.18);
+			color: var(--jwt-dim);
+			transform: none;
+			box-shadow: none;
+		}
+	}
+
+}
+
+// The prose-readability rule `#jwt-content a:not(.jwt-btn)` (specificity 1,1,1)
+// tints every content link accent-light. The partner name and the Explore
+// button are not prose links, so they have to out-specify it -- a class-only
+// selector cannot, however many classes it stacks. Same `#jwt-content` prefix
+// _blog.scss already uses for the filter pills and the article back-link.
+//
+// Not solved by adding .jwt-btn (which the base rule excludes): that would pull
+// in the site button's own padding, radius and background and fight the card
+// cell's fixed-height layout.
+// SPECIFICITY MATH, because it is easy to get wrong here:
+//   #jwt-content a:not(.jwt-btn)  ->  (1,1,1)   id + :not() argument + element
+// `:not()` contributes its argument's weight, so the base rule is a full three
+// components. Every override below therefore carries the extra .jwt-pfcard
+// class to reach (1,2,x) -- a plain `#jwt-content .jwt-pfcard__explore` is only
+// (1,1,0) and LOSES at rest, which is what left Explore purple until hovered
+// (the :hover variant reached (1,2,0) and won, so the buttons looked inverted).
+#jwt-content .jwt-pfcard {
+	.jwt-pfcard__name a,
+	.jwt-pfcard__explore {
+		color: #fff;
+
+		&:hover,
+		&:focus,
+		&:active,
+		&:visited {
+			color: #fff;
+		}
+	}
+
+	// Inert button: no link, so no hover response and a muted label.
+	.jwt-pfcard__explore.is-pending {
+		&,
+		&:hover,
+		&:focus,
+		&:active,
+		&:visited {
+			color: var(--jwt-dim);
+		}
+	}
+}
+
+.jwt-pfcard {
 	// No frame of its own — the card already provides one, and a second nested
 	// box read as clutter around the video.
 	&__guide {

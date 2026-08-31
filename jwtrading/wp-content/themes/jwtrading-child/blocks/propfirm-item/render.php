@@ -2,9 +2,14 @@
 /**
  * Render: jwt/propfirm-item — one partner card (prop firm / broker / tool).
  *
- * Anatomy per the client's layout PDF: tinted head with name + blurb, a
- * "Use Code" row whose pill copies the discount code to the clipboard, and a
- * guide sub-card holding that partner's walkthrough video.
+ * Anatomy: tinted head with name + blurb, then a two-column action row --
+ * click-to-copy discount code on the left, affiliate "Explore" link on the
+ * right -- then a guide sub-card holding that partner's walkthrough video.
+ *
+ * Some partners have no unique code (the code lives behind the link instead).
+ * Those set `codeNote` rather than `code`: the left column then shows that text
+ * as a plain label, so the row keeps its two-column shape and the Explore
+ * button does not jump the full width on just one card.
  *
  * The name links out through the affiliate URL with rel="sponsored nofollow
  * noopener" — Google requires `sponsored` on affiliate links, and omitting it
@@ -20,6 +25,14 @@ $jwt_name    = trim( (string) ( $attributes['name'] ?? '' ) );
 $jwt_url     = trim( (string) ( $attributes['url'] ?? '' ) );
 $jwt_blurb   = trim( (string) ( $attributes['blurb'] ?? '' ) );
 $jwt_code    = trim( (string) ( $attributes['code'] ?? '' ) );
+$jwt_note    = trim( (string) ( $attributes['codeNote'] ?? '' ) );
+$jwt_explore = trim( (string) ( $attributes['exploreText'] ?? '' ) );
+
+// Inert Explore: either no affiliate link yet, or the partner is signed up but
+// not ready to take traffic. The second case keeps the URL on the block so it
+// goes live by flipping one flag, rather than having to find the link again.
+$jwt_pending = '' === $jwt_url || ! empty( $attributes['explorePending'] );
+$jwt_label   = trim( (string) ( $attributes['codeLabel'] ?? '' ) );
 $jwt_guide   = trim( (string) ( $attributes['guideLabel'] ?? '' ) );
 $jwt_variant = in_array( $attributes['variant'] ?? 'default', array( 'default', 'blue' ), true )
 	? $attributes['variant']
@@ -39,15 +52,56 @@ $jwt_variant = in_array( $attributes['variant'] ?? 'default', array( 'default', 
 		<?php endif; ?>
 	</div>
 
-	<?php if ( '' !== $jwt_code ) : ?>
-		<div class="jwt-pfcard__code">
-			<span class="jwt-pfcard__code-label"><?php echo esc_html( (string) $attributes['codeLabel'] ); ?></span>
-			<button
-				type="button"
-				class="jwt-pfcard__code-pill"
-				data-jwt-copy="<?php echo esc_attr( $jwt_code ); ?>"
-				aria-label="<?php echo esc_attr( sprintf( /* translators: %s: discount code. */ __( 'Salin kode %s', 'jwtrading' ), $jwt_code ) ); ?>"
-			><?php echo esc_html( $jwt_code ); ?></button>
+	<?php if ( '' !== $jwt_code || '' !== $jwt_note || '' !== $jwt_url ) : ?>
+		<div class="jwt-pfcard__actions">
+			<?php if ( '' !== $jwt_code ) : ?>
+				<?php // The copy handler swaps the text of an inner <code> only, so the
+					// label and icon survive the "Tersalin!" flash. ?>
+				<button
+					type="button"
+					class="jwt-pfcard__copy"
+					data-jwt-copy="<?php echo esc_attr( $jwt_code ); ?>"
+					data-jwt-copied="<?php esc_attr_e( 'Tersalin!', 'jwtrading' ); ?>"
+					aria-label="<?php echo esc_attr( sprintf( /* translators: %s: discount code. */ __( 'Salin kode %s', 'jwtrading' ), $jwt_code ) ); ?>"
+				>
+					<span class="jwt-pfcard__copy-text">
+						<?php if ( '' !== $jwt_label ) : ?>
+							<span class="jwt-pfcard__copy-label"><?php echo esc_html( $jwt_label ); ?></span>
+						<?php endif; ?>
+						<code class="jwt-pfcard__copy-code"><?php echo esc_html( $jwt_code ); ?></code>
+					</span>
+					<svg class="jwt-pfcard__copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+						<rect x="9" y="9" width="13" height="13" rx="2"/>
+						<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+					</svg>
+				</button>
+			<?php elseif ( '' !== $jwt_note ) : ?>
+				<span class="jwt-pfcard__codenote">
+					<?php if ( '' !== $jwt_label ) : ?>
+						<span class="jwt-pfcard__copy-label"><?php echo esc_html( $jwt_label ); ?></span>
+					<?php endif; ?>
+					<span class="jwt-pfcard__codenote-text"><?php echo esc_html( $jwt_note ); ?></span>
+				</span>
+			<?php endif; ?>
+
+			<?php if ( '' !== $jwt_explore ) : ?>
+				<?php if ( ! $jwt_pending ) : ?>
+					<a
+						class="jwt-pfcard__explore"
+						href="<?php echo esc_url( $jwt_url ); ?>"
+						target="_blank"
+						rel="sponsored nofollow noopener"
+					><?php echo esc_html( $jwt_explore ); ?> <span aria-hidden="true">&rarr;</span></a>
+				<?php else : ?>
+					<?php // Show the button so every card keeps the same two-column shape,
+						// but as a visibly inert control -- never a dead <a>, which looks
+						// broken when clicked, and never the plain non-affiliate URL, which
+						// would hand away the commission this page exists to earn. ?>
+					<span class="jwt-pfcard__explore is-pending" aria-disabled="true" title="<?php esc_attr_e( 'Link menyusul', 'jwtrading' ); ?>">
+						<?php echo esc_html( $jwt_explore ); ?> <span aria-hidden="true">&rarr;</span>
+					</span>
+				<?php endif; ?>
+			<?php endif; ?>
 		</div>
 	<?php endif; ?>
 
