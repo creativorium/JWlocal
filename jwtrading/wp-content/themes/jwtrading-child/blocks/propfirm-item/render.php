@@ -27,6 +27,11 @@ $jwt_blurb   = trim( (string) ( $attributes['blurb'] ?? '' ) );
 $jwt_code    = trim( (string) ( $attributes['code'] ?? '' ) );
 $jwt_note    = trim( (string) ( $attributes['codeNote'] ?? '' ) );
 $jwt_explore = trim( (string) ( $attributes['exploreText'] ?? '' ) );
+
+// Inert Explore: either no affiliate link yet, or the partner is signed up but
+// not ready to take traffic. The second case keeps the URL on the block so it
+// goes live by flipping one flag, rather than having to find the link again.
+$jwt_pending = '' === $jwt_url || ! empty( $attributes['explorePending'] );
 $jwt_label   = trim( (string) ( $attributes['codeLabel'] ?? '' ) );
 $jwt_guide   = trim( (string) ( $attributes['guideLabel'] ?? '' ) );
 $jwt_variant = in_array( $attributes['variant'] ?? 'default', array( 'default', 'blue' ), true )
@@ -80,7 +85,7 @@ $jwt_variant = in_array( $attributes['variant'] ?? 'default', array( 'default', 
 			<?php endif; ?>
 
 			<?php if ( '' !== $jwt_explore ) : ?>
-				<?php if ( '' !== $jwt_url ) : ?>
+				<?php if ( ! $jwt_pending ) : ?>
 					<a
 						class="jwt-pfcard__explore"
 						href="<?php echo esc_url( $jwt_url ); ?>"
@@ -88,11 +93,10 @@ $jwt_variant = in_array( $attributes['variant'] ?? 'default', array( 'default', 
 						rel="sponsored nofollow noopener"
 					><?php echo esc_html( $jwt_explore ); ?> <span aria-hidden="true">&rarr;</span></a>
 				<?php else : ?>
-					<?php // Partner signed off but the affiliate link has not landed yet. Show
-						// the button so every card keeps the same two-column shape, but as a
-						// visibly inert control -- never a dead <a>, which looks broken when
-						// clicked, and never the plain non-affiliate URL, which would hand
-						// away the commission this page exists to earn. ?>
+					<?php // Show the button so every card keeps the same two-column shape,
+						// but as a visibly inert control -- never a dead <a>, which looks
+						// broken when clicked, and never the plain non-affiliate URL, which
+						// would hand away the commission this page exists to earn. ?>
 					<span class="jwt-pfcard__explore is-pending" aria-disabled="true" title="<?php esc_attr_e( 'Link menyusul', 'jwtrading' ); ?>">
 						<?php echo esc_html( $jwt_explore ); ?> <span aria-hidden="true">&rarr;</span>
 					</span>

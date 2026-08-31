@@ -23,6 +23,7 @@
 		"codeLabel": { "type": "string", "default": "Use Code" },
 		"codeNote": { "type": "string", "default": "" },
 		"exploreText": { "type": "string", "default": "Explore" },
+		"explorePending": { "type": "boolean", "default": false },
 		"guideLabel": { "type": "string", "default": "" },
 		"guideVideoUrl": { "type": "string", "default": "" },
 		"guidePosterId": { "type": "number", "default": 0 },

@@ -43,7 +43,7 @@ defined( 'ABSPATH' ) || exit;
 <!-- /wp:jwt/propfirm -->
 
 <!-- wp:jwt/propfirm {"align":"full","eyebrow":"Section 04","title":"Trade Copier","lead":"Copy trade dari akun yang sudah funded ke akun lain secara otomatis.","disclosure":"Beberapa link di halaman ini adalah link afiliasi. Kamu tidak dikenakan biaya tambahan."} -->
-<!-- wp:jwt/propfirm-item {"name":"Tradesyncer","url":"https://app.tradesyncer.com/?ref=TS5267C2D5","blurb":"Sinkronkan trade otomatis antar akun funded kamu.","codeNote":"Coming Soon","guideLabel":"TradeSyncer Guide","guideVideoUrl":"https://youtu.be/rzGr4gC3MrU"} /-->
+<!-- wp:jwt/propfirm-item {"name":"Tradesyncer","url":"https://app.tradesyncer.com/?ref=TS5267C2D5","explorePending":true,"blurb":"Sinkronkan trade otomatis antar akun funded kamu.","codeNote":"Coming Soon","guideLabel":"TradeSyncer Guide","guideVideoUrl":"https://youtu.be/rzGr4gC3MrU"} /-->
 <!-- wp:jwt/propfirm-item {"name":"Tradecopia","blurb":"Trade copier desktop pertama untuk MetaTrader 5, tanpa software pihak ketiga.","codeNote":"Coming Soon","guideLabel":"Tradecopia Guide","guideVideoUrl":"https://youtu.be/LjZhdzIKfk8"} /-->
 <!-- /wp:jwt/propfirm -->
 
