@@ -1163,9 +1163,13 @@
 	}
 
 	&__name {
-		margin: 0 0 0.4rem;
+		margin: 0 0 0.5rem;
 		font-family: var(--jwt-font-heading);
-		font-size: 1.05rem;
+		// Deliberately far larger than the blurb: the partner name is what
+		// people scan this page for, and at the old 1.05rem it sat too close to
+		// the 0.8rem blurb to lead the card.
+		font-size: 1.7rem;
+		line-height: 1.2;
 		font-weight: 700;
 		color: var(--jwt-text);
 
@@ -1186,48 +1190,124 @@
 		line-height: 1.55;
 	}
 
-	// "Use Code" row — the pill copies the code to the clipboard.
-	&__code {
+	// Two equal columns: copy-the-code on the left, affiliate link on the right.
+	// Equal widths on purpose -- neither action outranks the other, and a fixed
+	// split keeps every card's row identical however long the code is.
+	&__actions {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0.6rem;
+		align-items: stretch;
+	}
+
+	// A card with a code but no link (or the reverse) still gets a full-width
+	// control rather than a lonely half-row with a gap beside it.
+	&__actions > :only-child {
+		grid-column: 1 / -1;
+	}
+
+	%pfcard-cell {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
-		gap: 0.75rem;
-		padding: 0.45rem 0.5rem 0.45rem 0.9rem;
-		border: 1px solid var(--jwt-line-strong);
+		justify-content: center;
+		gap: 0.5rem;
+		min-height: 3.1rem;
+		padding: 0.5rem 0.9rem;
 		border-radius: 10px;
+		text-align: center;
+	}
+
+	&__copy,
+	&__codenote {
+		@extend %pfcard-cell;
+		border: 1px solid var(--jwt-line-strong);
 		background: rgb(0 0 0 / 0.3);
 	}
 
-	&__code-label {
-		color: var(--jwt-dim);
-		font-size: 0.78rem;
-	}
-
-	&__code-pill {
-		flex: none;
-		min-width: 66px;
-		padding: 0.42rem 0.9rem;
-		border: 0;
-		border-radius: 10px;
-		background: var(--jwt-accent);
-		color: #fff;
-		font-family: var(--jwt-font-heading);
-		font-size: 0.8rem;
-		font-weight: 700;
+	&__copy {
 		cursor: pointer;
-		transition: background 0.2s, transform 0.15s var(--jwt-ease);
+		transition: border-color 0.2s, background 0.2s;
 
 		&:hover {
-			background: var(--jwt-accent-hover);
+			border-color: var(--jwt-accent);
+			background: rgb(124 77 255 / 0.12);
 		}
 
 		&:active {
-			transform: scale(0.96);
+			transform: scale(0.985);
 		}
 
 		// Set by the [data-jwt-copy] handler in main.js.
 		&.is-copied {
-			background: var(--jwt-success);
+			border-color: var(--jwt-success);
+			background: rgb(34 197 94 / 0.14);
+		}
+	}
+
+	&__copy-text {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.1rem;
+		min-width: 0;
+	}
+
+	&__copy-label {
+		color: var(--jwt-dim);
+		font-size: 0.7rem;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		line-height: 1;
+	}
+
+	&__copy-code {
+		font-family: var(--jwt-font-mono);
+		font-size: 0.95rem;
+		font-weight: 700;
+		color: var(--jwt-text);
+		line-height: 1.2;
+		overflow-wrap: anywhere;
+	}
+
+	// The affordance that the code is copyable. Dim until hover so it hints
+	// rather than competes with the code itself.
+	&__copy-icon {
+		flex: none;
+		width: 16px;
+		height: 16px;
+		color: var(--jwt-dim);
+		transition: color 0.2s;
+	}
+
+	&__copy:hover &__copy-icon {
+		color: var(--jwt-accent-light);
+	}
+
+	&__codenote-text {
+		font-size: 0.82rem;
+		font-weight: 600;
+		color: var(--jwt-text);
+		line-height: 1.25;
+	}
+
+	&__explore {
+		@extend %pfcard-cell;
+		border: 1px solid transparent;
+		background: var(--jwt-accent);
+		color: #fff;
+		font-family: var(--jwt-font-heading);
+		font-size: 0.9rem;
+		font-weight: 700;
+		text-decoration: none;
+		transition: background 0.2s, transform 0.15s var(--jwt-ease);
+
+		&:hover {
+			background: var(--jwt-accent-hover);
+			color: #fff;
+		}
+
+		&:active {
+			transform: scale(0.985);
 		}
 	}
 

@@ -12,7 +12,8 @@
  * the NORMAL site header and footer — it is not a funnel step, so the nav and
  * the full footer stay.
  *
- * Affiliate links, discount codes and guide videos are pending from the client:
+ * Section 01 (prop firms) has its real affiliate links, codes and guide videos.
+ * The remaining sections are still pending from the client:
  * a card with no link shows its name as plain text, no code hides the code row,
  * and no video shows the "[ video menyusul ]" frame. Fill each in from the
  * block Inspector as they arrive.
@@ -23,10 +24,10 @@ defined( 'ABSPATH' ) || exit;
 <!-- wp:jwt/hero {"align":"full","compact":true,"titleTag":"h1","eyebrow":"Deal Eksklusif Komunitas","title":"Deal &amp; Kode Diskon <mark>Prop Firm Terpercaya</mark>","lead":"Semua prop firm, broker, dan tools yang kami pakai sendiri — lengkap dengan kode diskon biar kamu bisa mulai lebih murah.","primaryText":"Lihat Semua Deal →","primaryUrl":"#deal"} /-->
 
 <!-- wp:jwt/propfirm {"align":"full","anchor":"deal","eyebrow":"Section 01","title":"Prop Firm Terpercaya","lead":"Modal dari prop firm, profit untuk kamu. Ini partner yang kami gunakan dan rekomendasikan sendiri."} -->
-<!-- wp:jwt/propfirm-item {"name":"WeMasterTrade","blurb":"CFD prop firm dengan aturan yang jelas dan payout yang konsisten.","code":"JW","guideLabel":"WMT Full Guide"} /-->
-<!-- wp:jwt/propfirm-item {"name":"Alpha Futures","blurb":"Futures prop firm untuk trader yang fokus di NQ dan futures market.","code":"JW","guideLabel":"Alpha Futures Guide"} /-->
-<!-- wp:jwt/propfirm-item {"name":"The 5%ers","blurb":"CFD prop firm dengan program scaling — cocok kalau mau tumbuh perlahan.","code":"JW","guideLabel":"The 5%ers Guide"} /-->
-<!-- wp:jwt/propfirm-item {"name":"FundedNext","blurb":"Opsi futures dan CFD dalam satu platform — fleksibel untuk semua jenis trader.","code":"JW","guideLabel":"FundedNext Full Guide"} /-->
+<!-- wp:jwt/propfirm-item {"name":"WeMasterTrade","url":"https://my.wemastertrade.com/register?ref=066803","blurb":"CFD prop firm dengan aturan yang jelas dan payout yang konsisten.","code":"JWICT","guideLabel":"WMT Full Guide","guideVideoUrl":"https://youtu.be/gYta-T2FHK8"} /-->
+<!-- wp:jwt/propfirm-item {"name":"Alpha Futures","url":"https://app.alpha-futures.com/signup/JW/","blurb":"Futures prop firm untuk trader yang fokus di NQ dan futures market.","code":"JW","guideLabel":"Alpha Futures Guide","guideVideoUrl":"https://youtu.be/3E7FwcOVM3w"} /-->
+<!-- wp:jwt/propfirm-item {"name":"The 5%ers","url":"https://www.the5ers.com/?afmc=zub","blurb":"CFD prop firm dengan program scaling — cocok kalau mau tumbuh perlahan.","code":"0N9S5Y","guideLabel":"The 5%ers Guide","guideVideoUrl":"https://youtu.be/W97MwJkxsW0"} /-->
+<!-- wp:jwt/propfirm-item {"name":"FundedNext","url":"https://fundednext.com/?fpr=jack24","blurb":"Opsi futures dan CFD dalam satu platform — fleksibel untuk semua jenis trader.","codeNote":"Dapet Kode di Web","guideLabel":"FundedNext Full Guide","guideVideoUrl":"https://youtu.be/k4bRe-N5x-I"} /-->
 <!-- /wp:jwt/propfirm -->
 
 <!-- wp:jwt/propfirm {"align":"full","eyebrow":"Section 02","title":"Broker yang Kami Rekomendasikan","lead":"Untuk yang mau trading dengan akun sendiri sebelum masuk ke prop firm."} -->
