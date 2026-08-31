@@ -79,13 +79,24 @@ $jwt_variant = in_array( $attributes['variant'] ?? 'default', array( 'default', 
 				</span>
 			<?php endif; ?>
 
-			<?php if ( '' !== $jwt_url && '' !== $jwt_explore ) : ?>
-				<a
-					class="jwt-pfcard__explore"
-					href="<?php echo esc_url( $jwt_url ); ?>"
-					target="_blank"
-					rel="sponsored nofollow noopener"
-				><?php echo esc_html( $jwt_explore ); ?> <span aria-hidden="true">&rarr;</span></a>
+			<?php if ( '' !== $jwt_explore ) : ?>
+				<?php if ( '' !== $jwt_url ) : ?>
+					<a
+						class="jwt-pfcard__explore"
+						href="<?php echo esc_url( $jwt_url ); ?>"
+						target="_blank"
+						rel="sponsored nofollow noopener"
+					><?php echo esc_html( $jwt_explore ); ?> <span aria-hidden="true">&rarr;</span></a>
+				<?php else : ?>
+					<?php // Partner signed off but the affiliate link has not landed yet. Show
+						// the button so every card keeps the same two-column shape, but as a
+						// visibly inert control -- never a dead <a>, which looks broken when
+						// clicked, and never the plain non-affiliate URL, which would hand
+						// away the commission this page exists to earn. ?>
+					<span class="jwt-pfcard__explore is-pending" aria-disabled="true" title="<?php esc_attr_e( 'Link menyusul', 'jwtrading' ); ?>">
+						<?php echo esc_html( $jwt_explore ); ?> <span aria-hidden="true">&rarr;</span>
+					</span>
+				<?php endif; ?>
 			<?php endif; ?>
 		</div>
 	<?php endif; ?>

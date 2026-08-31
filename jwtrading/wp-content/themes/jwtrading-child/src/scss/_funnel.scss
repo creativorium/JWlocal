@@ -1107,16 +1107,27 @@
 		max-width: var(--jwt-wide-col);
 		margin-inline: auto;
 
-		// A single-card section (Broker, Tools) runs the FULL width rather than
-		// one grid column, so its guide video matches the page VSL instead of
-		// being half the size of it.
+		// A single-card section (Broker, Tools) keeps the width of ONE column and
+		// centres, so its card and guide video match every other card on the
+		// page. It used to span the full width to match the page VSL above --
+		// that VSL has been removed, and full width made these cards and their
+		// videos roughly double the size of the rest.
+		// calc(50% - 0.75rem) is one column of the 2-up grid: half the width
+		// minus half the 1.5rem gap.
 		&.is-single {
-			grid-template-columns: minmax(0, 1fr);
+			grid-template-columns: minmax(0, calc(50% - 0.75rem));
+			justify-content: center;
 		}
 
 		@media (max-width: 720px) {
 			grid-template-columns: minmax(0, 1fr);
 			max-width: 460px;
+
+			// .is-single above is (0,2,0) and would otherwise beat this block's
+			// (0,1,0) and hold the card at half width on phones.
+			&.is-single {
+				grid-template-columns: minmax(0, 1fr);
+			}
 		}
 	}
 
@@ -1175,6 +1186,11 @@
 		// the client wants it reading brighter than body copy.
 		color: #fff;
 
+		// Double-scoped on purpose. The PARENT theme's global.min.css is enqueued
+		// after this bundle and carries `a{color:var(--global-palette-highlight)}`
+		// plus `h3 a{color:inherit}`, so a single-class selector here loses on
+		// source order and the partner name renders in Kadence's purple.
+		.jwt-pfcard & a,
 		a {
 			color: #fff;
 			text-decoration: none;
@@ -1182,7 +1198,10 @@
 
 			// Stays white on hover -- dimming slightly instead of shifting hue,
 			// so the colour stays as specified while the link still responds.
-			&:hover {
+			&:hover,
+			&:focus,
+			&:active,
+			&:visited {
 				color: #fff;
 				opacity: 0.82;
 			}
@@ -1310,6 +1329,9 @@
 		line-height: 1.25;
 	}
 
+	// Selector doubled for the same reason as the name: the parent theme's
+	// bare `a` rule loads later than this file.
+	.jwt-pfcard &__explore,
 	&__explore {
 		@extend %pfcard-cell;
 		border: 1px solid transparent;
@@ -1333,6 +1355,20 @@
 
 		&:active {
 			transform: scale(0.985);
+		}
+	}
+
+	// Awaiting an affiliate link: holds the slot and reads as not-yet-available
+	// rather than pretending to be clickable.
+	.jwt-pfcard &__explore.is-pending {
+		background: rgb(124 77 255 / 0.18);
+		border-color: var(--jwt-line-strong);
+		color: var(--jwt-dim);
+		cursor: not-allowed;
+
+		&:hover {
+			background: rgb(124 77 255 / 0.18);
+			color: var(--jwt-dim);
 		}
 	}
 

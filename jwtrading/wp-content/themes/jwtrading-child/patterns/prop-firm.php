@@ -12,8 +12,12 @@
  * the NORMAL site header and footer — it is not a funnel step, so the nav and
  * the full footer stay.
  *
- * Section 01 (prop firms) has its real affiliate links, codes and guide videos.
- * The remaining sections are still pending from the client:
+ * All guide videos and every affiliate link the client has are in place.
+ * STILL PENDING (tracked on their side, applications submitted via the
+ * jattwood100 account): FX Replay code + link, Tradesyncer partner code,
+ * Tradecopia code + link. Those cards show "Coming Soon" in place of a code,
+ * and the two with no link yet render without an Explore button rather than
+ * with a dead one. Fill each in from the block Inspector as they arrive:
  * a card with no link shows its name as plain text, no code hides the code row,
  * and no video shows the "[ video menyusul ]" frame. Fill each in from the
  * block Inspector as they arrive.
@@ -31,16 +35,16 @@ defined( 'ABSPATH' ) || exit;
 <!-- /wp:jwt/propfirm -->
 
 <!-- wp:jwt/propfirm {"align":"full","eyebrow":"Section 02","title":"Broker yang Kami Rekomendasikan","lead":"Untuk yang mau trading dengan akun sendiri sebelum masuk ke prop firm."} -->
-<!-- wp:jwt/propfirm-item {"name":"XM Global","blurb":"Broker global untuk trading dengan akun sendiri sebelum masuk prop firm.","code":"JW","guideLabel":"XM Setup Guide"} /-->
+<!-- wp:jwt/propfirm-item {"name":"XM Global","url":"https://affs.click/tJJHp","blurb":"Broker global untuk trading dengan akun sendiri sebelum masuk prop firm.","code":"JWTRADING","guideLabel":"XM Broker Review","guideVideoUrl":"https://youtu.be/KtSHcpSlcOc"} /-->
 <!-- /wp:jwt/propfirm -->
 
 <!-- wp:jwt/propfirm {"align":"full","eyebrow":"Section 03","title":"Tools untuk Backtest &amp; Journaling","lead":"Latihan dan track progress kamu seperti trader profesional."} -->
-<!-- wp:jwt/propfirm-item {"name":"FX Replay","variant":"blue","blurb":"Replay market dan latihan setup kamu seperti kondisi live.","code":"JW","guideLabel":"FX Replay Guide"} /-->
+<!-- wp:jwt/propfirm-item {"name":"FX Replay","variant":"blue","blurb":"Replay market dan latihan setup kamu seperti kondisi live.","codeNote":"Coming Soon","guideLabel":"FX Replay Guide","guideVideoUrl":"https://youtu.be/xdA9g4-X_Nc"} /-->
 <!-- /wp:jwt/propfirm -->
 
 <!-- wp:jwt/propfirm {"align":"full","eyebrow":"Section 04","title":"Trade Copier","lead":"Copy trade dari akun yang sudah funded ke akun lain secara otomatis.","disclosure":"Beberapa link di halaman ini adalah link afiliasi. Kamu tidak dikenakan biaya tambahan."} -->
-<!-- wp:jwt/propfirm-item {"name":"Tradesyncer","blurb":"Sinkronkan trade otomatis antar akun funded kamu.","code":"JW","guideLabel":"Tradesyncer Guide"} /-->
-<!-- wp:jwt/propfirm-item {"name":"Tradecopia","blurb":"Trade copier desktop pertama untuk MetaTrader 5, tanpa software pihak ketiga.","code":"JW","guideLabel":"Tradecopia Guide"} /-->
+<!-- wp:jwt/propfirm-item {"name":"Tradesyncer","url":"https://app.tradesyncer.com/?ref=TS5267C2D5","blurb":"Sinkronkan trade otomatis antar akun funded kamu.","codeNote":"Coming Soon","guideLabel":"TradeSyncer Guide","guideVideoUrl":"https://youtu.be/rzGr4gC3MrU"} /-->
+<!-- wp:jwt/propfirm-item {"name":"Tradecopia","blurb":"Trade copier desktop pertama untuk MetaTrader 5, tanpa software pihak ketiga.","codeNote":"Coming Soon","guideLabel":"Tradecopia Guide","guideVideoUrl":"https://youtu.be/LjZhdzIKfk8"} /-->
 <!-- /wp:jwt/propfirm -->
 
 <!-- wp:jwt/cta {"align":"full","title":"Masih bingung pilih yang mana?","lead":"Gabung Discord dan tanya langsung ke komunitas kami buat dapetin arahan lebih lanjut.","buttonText":"Gabung Discord →","buttonUrl":"/discord/"} /-->
