@@ -1,6 +1,6 @@
 <?php
 /**
- * ONE-SHOT: push the mentorship funnel patterns into their page post_content.
+ * ONE-SHOT: push the funnel + prop firm patterns into their page post_content.
  *
  * WHY THIS EXISTS
  * Page copy lives in the DATABASE (wp_posts.post_content), not in the theme.
@@ -33,6 +33,7 @@ $map = array(
 	'mentorship'              => 'mentorship-optin.php',
 	'mentorship/application'  => 'mentorship-application.php',
 	'mentorship/thank-you'    => 'mentorship-thankyou.php',
+	'prop-firm'               => 'prop-firm.php',
 );
 
 $dir     = get_stylesheet_directory() . '/patterns/';
