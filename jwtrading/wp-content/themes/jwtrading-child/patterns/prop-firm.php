@@ -4,9 +4,11 @@
  * Slug: jwtrading/prop-firm
  * Categories: jwtrading
  * Viewport Width: 1400
- * Description: Halaman partner: VSL, prop firm, broker, tools backtest, trade copier — masing-masing dengan kode diskon dan video guide.
+ * Description: Halaman partner: prop firm, broker, tools backtest, trade copier — masing-masing dengan kode diskon dan video guide.
  *
- * Structure + copy follow the client's layout PDF. This page deliberately keeps
+ * Copy follows the client's design reference. The above-the-fold VSL was removed
+ * at their request; the hero CTA scrolls to #deal (the first section) instead.
+ * This page deliberately keeps
  * the NORMAL site header and footer — it is not a funnel step, so the nav and
  * the full footer stay.
  *
@@ -18,11 +20,9 @@
 
 defined( 'ABSPATH' ) || exit;
 ?>
-<!-- wp:jwt/hero {"align":"full","compact":true,"titleTag":"h1","eyebrow":"Partner &amp; Kode Diskon","title":"Cara Mulai Trading Dengan <mark>Prop Firm</mark>","lead":"Tonton video di bawah ini — biar kamu paham cara kerja prop firm sebelum pilih yang paling cocok buat kamu."} /-->
+<!-- wp:jwt/hero {"align":"full","compact":true,"titleTag":"h1","eyebrow":"Deal Eksklusif Komunitas","title":"Deal &amp; Kode Diskon <mark>Prop Firm Terpercaya</mark>","lead":"Semua prop firm, broker, dan tools yang kami pakai sendiri — lengkap dengan kode diskon biar kamu bisa mulai lebih murah.","primaryText":"Lihat Semua Deal →","primaryUrl":"#deal"} /-->
 
-<!-- wp:jwt/video-embed {"align":"full","narrow":false,"label":"video cara kerja prop firm"} /-->
-
-<!-- wp:jwt/propfirm {"align":"full","eyebrow":"Section 01","title":"Prop Firm Terpercaya","lead":"Modal dari prop firm, profit untuk kamu. Ini partner yang kami gunakan dan rekomendasikan sendiri."} -->
+<!-- wp:jwt/propfirm {"align":"full","anchor":"deal","eyebrow":"Section 01","title":"Prop Firm Terpercaya","lead":"Modal dari prop firm, profit untuk kamu. Ini partner yang kami gunakan dan rekomendasikan sendiri."} -->
 <!-- wp:jwt/propfirm-item {"name":"WeMasterTrade","blurb":"CFD prop firm dengan aturan yang jelas dan payout yang konsisten.","code":"JW","guideLabel":"WMT Full Guide"} /-->
 <!-- wp:jwt/propfirm-item {"name":"Alpha Futures","blurb":"Futures prop firm untuk trader yang fokus di NQ dan futures market.","code":"JW","guideLabel":"Alpha Futures Guide"} /-->
 <!-- wp:jwt/propfirm-item {"name":"The 5%ers","blurb":"CFD prop firm dengan program scaling — cocok kalau mau tumbuh perlahan.","code":"JW","guideLabel":"The 5%ers Guide"} /-->
