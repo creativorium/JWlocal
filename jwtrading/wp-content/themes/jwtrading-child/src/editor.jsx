@@ -1736,6 +1736,12 @@ registerBlockType('jwt/intro', {
               value={attributes.buttonUrl}
               onChange={(buttonUrl) => setAttributes({ buttonUrl })}
             />
+            <ToggleControl
+              label={__('Gaya tombol sekunder', 'jwtrading')}
+              help={__('Untuk tombol yang mengarah keluar dari tujuan halaman ini.', 'jwtrading')}
+              checked={!!attributes.buttonGhost}
+              onChange={(buttonGhost) => setAttributes({ buttonGhost })}
+            />
           </PanelBody>
         </InspectorControls>
         <section {...blockProps}>

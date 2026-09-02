@@ -681,6 +681,12 @@
 	padding-block: var(--jwt-section-y);
 }
 
+// Feeds straight into the section below it. Both bring a full --jwt-section-y,
+// and stacked they left a dead band between the copy and what it introduces.
+.jwt-intro--tight {
+	padding-bottom: clamp(0.5rem, 1.5vw, 1rem);
+}
+
 .jwt-intro__inner {
 	max-width: 760px;
 	margin-inline: auto;

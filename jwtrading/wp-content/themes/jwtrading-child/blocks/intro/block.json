@@ -19,6 +19,7 @@
 		"title": { "type": "string", "default": "" },
 		"body": { "type": "string", "default": "" },
 		"buttonText": { "type": "string", "default": "" },
-		"buttonUrl": { "type": "string", "default": "" }
+		"buttonUrl": { "type": "string", "default": "" },
+		"buttonGhost": { "type": "boolean", "default": false }
 	}
 }
