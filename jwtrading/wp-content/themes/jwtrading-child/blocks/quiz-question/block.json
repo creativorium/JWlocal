@@ -16,6 +16,7 @@
 	},
 	"attributes": {
 		"question": { "type": "string", "default": "" },
+		"note": { "type": "string", "default": "" },
 		"type": { "type": "string", "default": "choice" },
 		"options": { "type": "string", "default": "" },
 		"scaleMin": { "type": "number", "default": 1 },

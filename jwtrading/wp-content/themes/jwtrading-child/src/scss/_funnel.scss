@@ -621,6 +621,16 @@
 		color: var(--jwt-dim);
 	}
 
+	// Guidance under a question: quieter than the question, and sitting closer
+	// to it than to the answers, so it reads as part of the ask rather than as a
+	// first option.
+	&__note {
+		margin: -0.35rem 0 1rem;
+		color: var(--jwt-muted);
+		font-size: 0.82rem;
+		line-height: 1.55;
+	}
+
 	&__question {
 		margin: 0 0 1.25rem;
 		font-family: var(--jwt-font-heading);

@@ -17,6 +17,7 @@
 defined( 'ABSPATH' ) || exit;
 
 $jwt_q        = trim( (string) ( $attributes['question'] ?? '' ) );
+$jwt_note     = trim( (string) ( $attributes['note'] ?? '' ) );
 $jwt_type     = in_array( $attributes['type'] ?? 'choice', array( 'choice', 'scale', 'text' ), true ) ? $attributes['type'] : 'choice';
 $jwt_required = ! empty( $attributes['required'] );
 $jwt_field    = wp_unique_id( 'jwt-q' );
@@ -28,6 +29,13 @@ $jwt_field    = wp_unique_id( 'jwt-q' );
 
 	<?php if ( '' !== $jwt_q ) : ?>
 		<p class="jwt-quiz__question"><?php echo wp_kses_post( $jwt_q ); ?></p>
+	<?php endif; ?>
+
+	<?php // Guidance shown under the question, before the choices. Not part of
+		// the <legend>, so screen readers announce the question itself and reach
+		// this as ordinary text rather than hearing both read as one label. ?>
+	<?php if ( '' !== $jwt_note ) : ?>
+		<p class="jwt-quiz__note"><?php echo wp_kses_post( $jwt_note ); ?></p>
 	<?php endif; ?>
 
 	<?php if ( 'text' === $jwt_type ) : ?>

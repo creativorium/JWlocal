@@ -2431,6 +2431,12 @@ registerBlockType('jwt/quiz-question', {
       <>
         <InspectorControls>
           <PanelBody title={__('Pertanyaan', 'jwtrading')}>
+            <TextareaControl
+              label={__('Catatan di bawah pertanyaan', 'jwtrading')}
+              help={__('Opsional. Muncul di antara pertanyaan dan pilihan jawaban.', 'jwtrading')}
+              value={attributes.note}
+              onChange={(note) => setAttributes({ note })}
+            />
             <SelectControl
               label={__('Tipe jawaban', 'jwtrading')}
               value={type}
