@@ -687,6 +687,26 @@
 	padding-bottom: clamp(0.5rem, 1.5vw, 1rem);
 }
 
+// The section that follows brings its own top padding, which on top of even the
+// trimmed value above still read as a gap. Drop it entirely at this one seam.
+.jwt-intro--tight + .jwt-quiz-section {
+	padding-top: 0;
+}
+
+// A wider measure for an intro whose heading must hold one line. The default
+// 760px leaves only 696px of text once --jwt-gutter (2rem a side) is removed,
+// and this heading needs 748px at its 2.75rem size. 920px clears that and also
+// pulls the longest body paragraph from three lines to two.
+.jwt-intro--wide .jwt-intro__inner {
+	max-width: 920px;
+}
+
+// Same accent treatment the hero and section headings use for a marked phrase.
+.jwt-intro__title mark {
+	background: none;
+	color: var(--jwt-accent);
+}
+
 .jwt-intro__inner {
 	max-width: 760px;
 	margin-inline: auto;

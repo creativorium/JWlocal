@@ -37,3 +37,16 @@
 	margin-top: 1.5rem;
 }
 
+
+// Scroll cue placeholder: the real thing is position:fixed, which would float
+// over the whole editing canvas, so the editor shows a plain inline note.
+.jwt-scrollcue-edit {
+	padding: 0.75rem 1rem;
+	border: 1px dashed rgba(124, 77, 255, 0.5);
+	border-radius: 8px;
+	background: rgba(124, 77, 255, 0.08);
+	color: var(--jwt-muted, #a49bc0);
+	font-family: system-ui, sans-serif;
+	font-size: 13px;
+	text-align: center;
+}

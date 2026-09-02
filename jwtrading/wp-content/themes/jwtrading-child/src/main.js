@@ -1051,3 +1051,41 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
   if (window.jQuery) window.jQuery(document.body).on('updated_checkout', sync);
   sync();
 })();
+
+// --- Scroll cue ([data-jwt-scrollcue]) ---------------------------------------
+// Points at something further down the page and retires once that thing is on
+// screen. Observing the TARGET rather than watching scroll position means it
+// stays correct whatever the page height is, with no scroll listener.
+(() => {
+  const cue = document.querySelector('[data-jwt-scrollcue]');
+  if (!cue) return;
+
+  const target = document.querySelector(cue.getAttribute('data-target') || '');
+  if (!target) {
+    // Nothing to point at: never show a cue that leads nowhere.
+    cue.remove();
+    return;
+  }
+
+  // Keep the falling dot's travel equal to the track's real height.
+  const track = cue.querySelector('.jwt-scrollcue__track');
+  if (track) {
+    const sync = () => cue.style.setProperty('--jwt-scrollcue-h', `${track.offsetHeight}px`);
+    sync();
+    window.addEventListener('resize', sync);
+  }
+
+  cue.addEventListener('click', () => {
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  if (!('IntersectionObserver' in window)) return;
+
+  new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => cue.classList.toggle('is-done', entry.isIntersecting));
+    },
+    // A sliver of the form is enough: by then the reader can see it exists.
+    { threshold: 0.08 }
+  ).observe(target);
+})();
