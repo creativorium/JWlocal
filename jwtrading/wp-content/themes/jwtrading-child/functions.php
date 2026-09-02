@@ -153,7 +153,27 @@ add_action( 'wp_footer', function () {
 	if ( ! apply_filters( 'jwt/show_scrollcue', $show ) ) {
 		return;
 	}
-	echo '<div class="jwt-scrollcue" data-jwt-scrollcue aria-hidden="true">'
+	// Optional target. Without one the cue fades after the first 60px of scroll
+	// (it has done its job: the visitor knows the page continues). With one it
+	// stays until that element is on screen -- for a page whose point sits far
+	// below several screens of reading, 60px is nowhere near enough.
+	$target = (string) apply_filters( 'jwt/scrollcue_target', '' );
+
+	echo '<div class="jwt-scrollcue" data-jwt-scrollcue'
+		. ( '' !== $target ? ' data-target="' . esc_attr( $target ) . '"' : '' )
+		. ' aria-hidden="true">'
 		. '<span class="jwt-scrollcue__label">' . esc_html__( 'Scroll', 'jwtrading' ) . '</span>'
 		. '<span class="jwt-scrollcue__track"><span class="jwt-scrollcue__drop"></span></span></div>';
 }, 20 );
+
+/**
+ * The application page hides its form below a headline, a video and three
+ * paragraphs of preamble, so its cue points at the form and persists until the
+ * reader gets there.
+ */
+add_filter( 'jwt/scrollcue_target', function ( $target ) {
+	if ( function_exists( 'is_page' ) && is_page( 'application' ) && '' === $target ) {
+		return '#apply';
+	}
+	return $target;
+} );

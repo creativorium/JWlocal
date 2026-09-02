@@ -684,7 +684,14 @@
 // Feeds straight into the section below it. Both bring a full --jwt-section-y,
 // and stacked they left a dead band between the copy and what it introduces.
 .jwt-intro--tight {
-	padding-bottom: clamp(0.5rem, 1.5vw, 1rem);
+	padding-bottom: 0;
+
+	// With the section padding gone, the breathing room below the CTA has to
+	// come from the button itself -- otherwise it sits directly on whatever
+	// heading the next section opens with.
+	.jwt-intro__cta {
+		margin-bottom: clamp(2.5rem, 6vw, 4rem);
+	}
 }
 
 // The section that follows brings its own top padding, which on top of even the
@@ -2529,9 +2536,20 @@
 		}
 	}
 
-	// Not needed on mobile.
+	// Not needed on mobile: a short marketing page is obviously scrollable.
 	@media (max-width: 768px) {
 		display: none;
+	}
+
+	// Unless it is guiding the reader to something specific further down, which
+	// is exactly where a phone needs it most — the run-up costs several screens
+	// there. Lifted clear of the floating WhatsApp button.
+	&.has-target {
+		@media (max-width: 768px) {
+			display: flex;
+			right: 0.85rem;
+			bottom: clamp(5.5rem, 14vh, 7.5rem);
+		}
 	}
 }
 

@@ -689,10 +689,31 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
   if (search) search.addEventListener('input', apply);
 })();
 
-// --- Landing scroll cue: fade out once the visitor starts scrolling ----------
+// --- Landing scroll cue ------------------------------------------------------
+// Default: fade out once the visitor starts scrolling — it has said its piece.
+// With data-target: stay until that element is on screen, for a page whose
+// point sits below several screens of reading. Observing the target beats
+// measuring scroll offsets, which would need re-measuring on every resize and
+// whenever the copy above it changes length.
 (() => {
   const cue = document.querySelector('[data-jwt-scrollcue]');
   if (!cue) return;
+
+  const selector = cue.getAttribute('data-target');
+  const target = selector ? document.querySelector(selector) : null;
+
+  if (target && 'IntersectionObserver' in window) {
+    cue.classList.add('has-target');
+    new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => cue.classList.toggle('is-hidden', e.isIntersecting));
+      },
+      // A sliver is enough: by then the form is visibly there.
+      { threshold: 0.08 }
+    ).observe(target);
+    return;
+  }
+
   const onScroll = () => cue.classList.toggle('is-hidden', window.scrollY > 60);
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
