@@ -1716,42 +1716,6 @@ registerBlockType('jwt/vsl', {
   save: saveNull,
 });
 
-// --- Scroll cue (fixed right-edge marker, retires at its target) --------------
-
-registerBlockType('jwt/scroll-cue', {
-  edit({ attributes, setAttributes }) {
-    // Shown inline in the editor rather than fixed: a position:fixed element in
-    // the canvas would float over the whole editing surface.
-    const blockProps = useBlockProps({ className: 'jwt-scrollcue-edit' });
-
-    return (
-      <>
-        <InspectorControls>
-          <PanelBody title={__('Penanda scroll', 'jwtrading')}>
-            <TextControl
-              label={__('Target', 'jwtrading')}
-              help={__('Selector CSS tujuan, contoh #apply. Kosong = penanda tidak tampil.', 'jwtrading')}
-              value={attributes.target}
-              onChange={(target) => setAttributes({ target })}
-            />
-            <TextControl
-              label={__('Label', 'jwtrading')}
-              value={attributes.label}
-              onChange={(label) => setAttributes({ label })}
-            />
-          </PanelBody>
-        </InspectorControls>
-        <div {...blockProps}>
-          {attributes.target
-            ? __('Penanda scroll aktif, menuju: ', 'jwtrading') + attributes.target
-            : __('Penanda scroll: isi target dulu di panel kanan.', 'jwtrading')}
-        </div>
-      </>
-    );
-  },
-  save: saveNull,
-});
-
 // --- Intro (centered eyebrow + heading + body paragraphs + CTA) ---------------
 
 registerBlockType('jwt/intro', {
