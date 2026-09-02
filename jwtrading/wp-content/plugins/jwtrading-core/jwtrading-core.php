@@ -34,6 +34,7 @@ require_once JWT_CORE_PATH . 'includes/class-manual-payment.php';
 require_once JWT_CORE_PATH . 'includes/class-funnel.php';
 require_once JWT_CORE_PATH . 'includes/class-webinar.php';
 require_once JWT_CORE_PATH . 'includes/class-ebook.php';
+require_once JWT_CORE_PATH . 'includes/class-page-sync.php';
 
 // WooCommerce-independent features — boot immediately.
 JWT_Plugin_Guard::init();
