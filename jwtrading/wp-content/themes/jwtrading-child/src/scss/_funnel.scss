@@ -159,6 +159,15 @@
 		}
 	}
 
+	// Widens ONLY the lead, for a subtext that needs two authored lines while the
+	// headline above it is already breaking the way it should. Separate from
+	// --long-head on purpose: that one also widens the title, which would
+	// re-break a headline nobody asked to change.
+	// 900px holds the longest authored line here (748px) with room to spare.
+	.jwt-hero--wide-lead .jwt-hero__lead {
+		max-width: 900px;
+	}
+
 	// The mentorship opt-in headline is the longest in the funnel — 72 characters
 	// against "Saatnya ada yang bimbing langsung."'s 34 — so the shared 1200px /
 	// 3.4rem pairing breaks its authored second line onto a third visual line,
@@ -619,6 +628,16 @@
 		letter-spacing: 0.14em;
 		text-transform: uppercase;
 		color: var(--jwt-dim);
+	}
+
+	// Guidance under a question: quieter than the question, and sitting closer
+	// to it than to the answers, so it reads as part of the ask rather than as a
+	// first option.
+	&__note {
+		margin: -0.35rem 0 1rem;
+		color: var(--jwt-muted);
+		font-size: 0.82rem;
+		line-height: 1.55;
 	}
 
 	&__question {

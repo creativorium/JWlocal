@@ -23,7 +23,10 @@ $jwt_wrapper = get_block_wrapper_attributes( array( 'class' => 'jwt-intro' ) );
 		<?php endif; ?>
 		<?php if ( '' !== trim( (string) ( $attributes['buttonText'] ?? '' ) ) ) : ?>
 			<div class="jwt-intro__cta">
-				<a class="jwt-btn jwt-btn--primary" href="<?php echo esc_url( $attributes['buttonUrl'] ?: '#' ); ?>"><?php echo esc_html( $attributes['buttonText'] ); ?></a>
+				<?php // Ghost when this button points AWAY from the page's own goal (e.g. the
+					// application page sending unready readers to Bootcamp) -- a filled
+					// primary there would outrank the action the page exists for. ?>
+					<a class="jwt-btn <?php echo empty( $attributes['buttonGhost'] ) ? 'jwt-btn--primary' : 'jwt-btn--ghost'; ?>" href="<?php echo esc_url( $attributes['buttonUrl'] ?: '#' ); ?>"><?php echo esc_html( $attributes['buttonText'] ); ?></a>
 			</div>
 		<?php endif; ?>
 	</div>

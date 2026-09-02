@@ -681,6 +681,39 @@
 	padding-block: var(--jwt-section-y);
 }
 
+// Feeds straight into the section below it. Both bring a full --jwt-section-y,
+// and stacked they left a dead band between the copy and what it introduces.
+.jwt-intro--tight {
+	padding-bottom: 0;
+
+	// With the section padding gone, the breathing room below the CTA has to
+	// come from the button itself -- otherwise it sits directly on whatever
+	// heading the next section opens with.
+	.jwt-intro__cta {
+		margin-bottom: clamp(2rem, 4vw, 2.75rem);
+	}
+}
+
+// The section that follows brings its own top padding, which on top of even the
+// trimmed value above still read as a gap. Drop it entirely at this one seam.
+.jwt-intro--tight + .jwt-quiz-section {
+	padding-top: 0;
+}
+
+// A wider measure for an intro whose heading must hold one line. The default
+// 760px leaves only 696px of text once --jwt-gutter (2rem a side) is removed,
+// and this heading needs 748px at its 2.75rem size. 920px clears that and also
+// pulls the longest body paragraph from three lines to two.
+.jwt-intro--wide .jwt-intro__inner {
+	max-width: 920px;
+}
+
+// Same accent treatment the hero and section headings use for a marked phrase.
+.jwt-intro__title mark {
+	background: none;
+	color: var(--jwt-accent);
+}
+
 .jwt-intro__inner {
 	max-width: 760px;
 	margin-inline: auto;
@@ -696,17 +729,29 @@
 	margin: 0.85rem 0 0;
 }
 
+.jwt-intro {
+	// Our own rhythm, not Kadence's --global-md-spacing (2rem). Kadence's
+	// `.single-content p` sets margin-bottom from that variable, ties with our
+	// `.jwt-intro__body p` on specificity (0,1,1) and wins on source order --
+	// its stylesheet is enqueued after this bundle. The result was 2rem of
+	// margin stacked on top of the flex gap after every paragraph, including
+	// the last, which is where the gap above the button came from.
+	--jwt-intro-gap: 1.15rem;
+}
+
 .jwt-intro__body {
 	margin-top: 1.5rem;
 	display: flex;
 	flex-direction: column;
-	gap: 1rem;
+	gap: var(--jwt-intro-gap);
 	color: var(--jwt-muted);
+}
 
-	p {
-		margin: 0;
-		line-height: 1.7;
-	}
+// #jwt-content prefix (1,1,1) beats Kadence's `.single-content p` (0,1,1), so
+// the spacing above is the only thing setting the rhythm here.
+#jwt-content .jwt-intro__body p {
+	margin: 0;
+	line-height: 1.7;
 }
 
 .jwt-intro__cta {
@@ -2525,3 +2570,4 @@
 .jwt-funnel-page .jwt-scrollcue {
 	bottom: clamp(2.5rem, 5vw, 3.5rem);
 }
+

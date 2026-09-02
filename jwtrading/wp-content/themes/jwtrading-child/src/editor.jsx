@@ -1736,6 +1736,12 @@ registerBlockType('jwt/intro', {
               value={attributes.buttonUrl}
               onChange={(buttonUrl) => setAttributes({ buttonUrl })}
             />
+            <ToggleControl
+              label={__('Gaya tombol sekunder', 'jwtrading')}
+              help={__('Untuk tombol yang mengarah keluar dari tujuan halaman ini.', 'jwtrading')}
+              checked={!!attributes.buttonGhost}
+              onChange={(buttonGhost) => setAttributes({ buttonGhost })}
+            />
           </PanelBody>
         </InspectorControls>
         <section {...blockProps}>
@@ -2431,6 +2437,12 @@ registerBlockType('jwt/quiz-question', {
       <>
         <InspectorControls>
           <PanelBody title={__('Pertanyaan', 'jwtrading')}>
+            <TextareaControl
+              label={__('Catatan di bawah pertanyaan', 'jwtrading')}
+              help={__('Opsional. Muncul di antara pertanyaan dan pilihan jawaban.', 'jwtrading')}
+              value={attributes.note}
+              onChange={(note) => setAttributes({ note })}
+            />
             <SelectControl
               label={__('Tipe jawaban', 'jwtrading')}
               value={type}
