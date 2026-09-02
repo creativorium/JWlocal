@@ -690,7 +690,7 @@
 	// come from the button itself -- otherwise it sits directly on whatever
 	// heading the next section opens with.
 	.jwt-intro__cta {
-		margin-bottom: clamp(1.25rem, 2.5vw, 1.75rem);
+		margin-bottom: clamp(2rem, 4vw, 2.75rem);
 	}
 }
 
@@ -729,17 +729,29 @@
 	margin: 0.85rem 0 0;
 }
 
+.jwt-intro {
+	// Our own rhythm, not Kadence's --global-md-spacing (2rem). Kadence's
+	// `.single-content p` sets margin-bottom from that variable, ties with our
+	// `.jwt-intro__body p` on specificity (0,1,1) and wins on source order --
+	// its stylesheet is enqueued after this bundle. The result was 2rem of
+	// margin stacked on top of the flex gap after every paragraph, including
+	// the last, which is where the gap above the button came from.
+	--jwt-intro-gap: 1.15rem;
+}
+
 .jwt-intro__body {
 	margin-top: 1.5rem;
 	display: flex;
 	flex-direction: column;
-	gap: 1rem;
+	gap: var(--jwt-intro-gap);
 	color: var(--jwt-muted);
+}
 
-	p {
-		margin: 0;
-		line-height: 1.7;
-	}
+// #jwt-content prefix (1,1,1) beats Kadence's `.single-content p` (0,1,1), so
+// the spacing above is the only thing setting the rhythm here.
+#jwt-content .jwt-intro__body p {
+	margin: 0;
+	line-height: 1.7;
 }
 
 .jwt-intro__cta {
@@ -2536,20 +2548,9 @@
 		}
 	}
 
-	// Not needed on mobile: a short marketing page is obviously scrollable.
+	// Not needed on mobile.
 	@media (max-width: 768px) {
 		display: none;
-	}
-
-	// Unless it is guiding the reader to something specific further down, which
-	// is exactly where a phone needs it most — the run-up costs several screens
-	// there. Lifted clear of the floating WhatsApp button.
-	&.has-target {
-		@media (max-width: 768px) {
-			display: flex;
-			right: 0.85rem;
-			bottom: clamp(5.5rem, 14vh, 7.5rem);
-		}
 	}
 }
 
@@ -2570,16 +2571,3 @@
 	bottom: clamp(2.5rem, 5vw, 3.5rem);
 }
 
-// A cue that has to survive the WHOLE run-up to a form is a small corner
-// marker, not a decorative full-height waterfall. The 132px track above is
-// sized for a hero that scrolls past in one screen; kept here it becomes a
-// ~180px strip climbing the viewport, which reads as floating mid-screen
-// rather than parked in the corner. Selectors carry the page class so they
-// outrank the two Phase 2 rules above, which are (0,2,0) and come first.
-.jwt-funnel-page .jwt-scrollcue.has-target,
-.jwt-tight-hero .jwt-scrollcue.has-target {
-	--jwt-cue-h: 54px;
-	right: clamp(1rem, 2.5vw, 1.75rem);
-	bottom: clamp(1.25rem, 3vw, 2rem);
-	gap: 0.5rem;
-}

@@ -689,31 +689,10 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
   if (search) search.addEventListener('input', apply);
 })();
 
-// --- Landing scroll cue ------------------------------------------------------
-// Default: fade out once the visitor starts scrolling — it has said its piece.
-// With data-target: stay until that element is on screen, for a page whose
-// point sits below several screens of reading. Observing the target beats
-// measuring scroll offsets, which would need re-measuring on every resize and
-// whenever the copy above it changes length.
+// --- Landing scroll cue: fade out once the visitor starts scrolling ----------
 (() => {
   const cue = document.querySelector('[data-jwt-scrollcue]');
   if (!cue) return;
-
-  const selector = cue.getAttribute('data-target');
-  const target = selector ? document.querySelector(selector) : null;
-
-  if (target && 'IntersectionObserver' in window) {
-    cue.classList.add('has-target');
-    new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => cue.classList.toggle('is-hidden', e.isIntersecting));
-      },
-      // A sliver is enough: by then the form is visibly there.
-      { threshold: 0.08 }
-    ).observe(target);
-    return;
-  }
-
   const onScroll = () => cue.classList.toggle('is-hidden', window.scrollY > 60);
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
@@ -1071,42 +1050,4 @@ if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
 
   if (window.jQuery) window.jQuery(document.body).on('updated_checkout', sync);
   sync();
-})();
-
-// --- Scroll cue ([data-jwt-scrollcue]) ---------------------------------------
-// Points at something further down the page and retires once that thing is on
-// screen. Observing the TARGET rather than watching scroll position means it
-// stays correct whatever the page height is, with no scroll listener.
-(() => {
-  const cue = document.querySelector('[data-jwt-scrollcue]');
-  if (!cue) return;
-
-  const target = document.querySelector(cue.getAttribute('data-target') || '');
-  if (!target) {
-    // Nothing to point at: never show a cue that leads nowhere.
-    cue.remove();
-    return;
-  }
-
-  // Keep the falling dot's travel equal to the track's real height.
-  const track = cue.querySelector('.jwt-scrollcue__track');
-  if (track) {
-    const sync = () => cue.style.setProperty('--jwt-scrollcue-h', `${track.offsetHeight}px`);
-    sync();
-    window.addEventListener('resize', sync);
-  }
-
-  cue.addEventListener('click', () => {
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
-
-  if (!('IntersectionObserver' in window)) return;
-
-  new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => cue.classList.toggle('is-done', entry.isIntersecting));
-    },
-    // A sliver of the form is enough: by then the reader can see it exists.
-    { threshold: 0.08 }
-  ).observe(target);
 })();
