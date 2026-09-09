@@ -69,8 +69,11 @@ class JWT_Page_Sync {
 			return new WP_Error( 'missing_pattern', __( 'Pattern tidak ditemukan.', 'jwtrading' ) );
 		}
 
-		$raw   = (string) file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions
-		$parts = explode( "?>\n", $raw, 2 );
+		$raw = (string) file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+		// Split on the closing PHP tag regardless of line ending — some pattern
+		// files (e.g. bootcamp.php) are saved CRLF, which a literal "?>\n" explode
+		// never matches, silently producing an empty body.
+		$parts = preg_split( '/\?>\r?\n/', $raw, 2 );
 		$body  = isset( $parts[1] ) ? rtrim( $parts[1] ) : '';
 
 		// Never let a malformed pattern blank a live page.
