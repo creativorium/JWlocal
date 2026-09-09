@@ -11,16 +11,16 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <!-- wp:jwt/hero {"align":"full","titleTag":"h1","showTrustBadge":true,"title":"Bootcamp ICT Trading &<br><mark>Persiapan Prop Firm.</mark>","lead":"Pelajari ICT dari nol, bangun sistem konsisten, dan lolos prop firm challenge — dalam satu program terstruktur.","primaryText":"Akses Bootcamp Sekarang →","primaryUrl":"#harga","note":"Bangun skill untuk trading mandiri."} /-->
 
-<!-- wp:jwt/vsl {"align":"full","posterId":2328,"videoId":2359} /-->
+<!-- wp:jwt/vsl {"align":"full","posterId":2328,"videoId":3155} /-->
 
 <!-- wp:jwt/stats {"align":"full"} -->
-<!-- wp:jwt/stat-item {"value":"7","label":"Modul Terstruktur"} /-->
+<!-- wp:jwt/stat-item {"value":"10","label":"Modul Terstruktur"} /-->
 <!-- wp:jwt/stat-item {"value":"17.000+","label":"Member Komunitas","count":"17000","suffix":"+"} /-->
-<!-- wp:jwt/stat-item {"value":"100%","label":"Rating Trustpilot","count":"100","suffix":"%"} /-->
-<!-- wp:jwt/stat-item {"value":"Selamanya","label":"Akses & Update Materi"} /-->
+<!-- wp:jwt/stat-item {"value":"5/5","label":"Rating Trustpilot"} /-->
+<!-- wp:jwt/stat-item {"value":"Permanen","label":"Akses & Update Materi"} /-->
 <!-- /wp:jwt/stats -->
 
-<!-- wp:jwt/intro {"align":"full","eyebrow":"Apa Itu JW Bootcamp?","title":"Belajar Membaca Market Sendiri tanpa Sinyal","body":"<p>JW Trading Bootcamp adalah program edukasi trading yang membantu kamu memahami market secara sistematis menggunakan metodologi ICT dan model entry IFVG — bukan hafal pattern, bukan beli sinyal.</p><p>Dirancang untuk pemula yang baru mulai, trader yang belum konsisten, dan trader yang ingin lolos prop firm tapi belum punya sistem yang kuat. Berlaku untuk semua market liquid — futures, forex, gold, dan crypto.</p>","buttonText":"Akses Sekarang →","buttonUrl":"#harga"} /-->
+<!-- wp:jwt/intro {"align":"full","eyebrow":"Apa Itu JW Bootcamp?","title":"Belajar Membaca Market Sendiri","body":"<p>JW Trading Bootcamp adalah program edukasi trading yang membantu kamu memahami market secara sistematis menggunakan metodologi ICT dan model entry IFVG.</p><p>Dirancang untuk pemula yang baru mulai, trader yang belum konsisten, dan trader yang ingin lolos prop firm tapi belum punya sistem yang kuat. Berlaku untuk semua market liquid — futures, forex, gold, dan crypto.</p>","buttonText":"Akses Sekarang →","buttonUrl":"#harga"} /-->
 
 <!-- wp:jwt/showcase {"align":"full","eyebrow":"Di Dalam Bootcamp","title":"Lebih dari Sekadar Video Course"} -->
 <!-- wp:jwt/showcase-item {"title":"Video Course","text":"Materi ICT terstruktur dari fondasi sampai sistem prop firm. Akses seumur hidup, update gratis di masa depan.","placeholder":"Platform video course","mediaId":3128} /-->
@@ -58,11 +58,11 @@ defined( 'ABSPATH' ) || exit;
 <!-- /wp:jwt/partners -->
 
 <!-- wp:jwt/offer {"align":"full","anchor":"harga","eyebrow":"Pilih Program","title":"Bayar Sekali. Akses Seumur Hidup."} -->
-<!-- wp:jwt/offer-card {"variant":"accent","vertical":true,"badge":"Full Akses","title":"JW Trading Bootcamp","rating":true,"ratingText":"100% rating di Trustpilot","price":"Rp 1.250.000","priceOld":"Rp 3.000.000+","text":"Bayar sekali. Akses seumur hidup.","features":"<li>9+ Modul Video Lengkap, Mulai dari Nol</li><li>JW Trading Journal, Mulai Journaling dengan Benar</li><li>Discord Privat bersama Bang Jack & Bang Bule</li><li>Atur Risiko, Hindari Over-Risk dan Revenge Trading</li><li>Persiapan Prop Firm</li>","buttonText":"Akses Bootcamp →","buttonUrl":"/?add-to-cart=684","footnote":"Kami menerima Visa, Mastercard, QRIS, GoPay, dll."} /-->
-<!-- wp:jwt/offer-card {"variant":"dark","vertical":true,"badge":"Coming Soon","title":"Private Coaching","rating":true,"ratingText":"Segera tersedia","price":"Harga belum ditentukan","text":"Mentoring intensif langsung bersama Jack.","features":"<li>Semua yang ada di bootcamp</li><li>Sesi 1-on-1 langsung bersama mentor</li><li>Review chart personal setiap minggu</li><li>Roadmap trading yang dipersonalisasi</li>","buttonDisabled":true,"buttonText":"Segera Hadir","footnote":"Daftarkan dirimu untuk notifikasi peluncuran."} /-->
+<!-- wp:jwt/offer-card {"variant":"accent","vertical":true,"badge":"Full Akses","title":"JW Trading Bootcamp","rating":true,"ratingText":"100% rating di Trustpilot","price":"Rp 1.250.000","priceOld":"Rp 3.000.000+","text":"Bayar sekali. Akses seumur hidup.","features":"<li>9+ Modul Video Lengkap, Mulai dari Nol</li><li>JW Trading Journal, Mulai Journaling dengan Benar</li><li>Discord Privat bersama Bang Jack & Bang Bule</li><li>Atur Risiko, Hindari Over-Risk dan Revenge Trading</li><li>Persiapan Prop Firm</li>","buttonText":"Akses Bootcamp →","buttonUrl":"/?add-to-cart=684","footnote":"Kami menerima QRIS, OVO, Transfer Bank, dll."} /-->
+<!-- wp:jwt/offer-card {"variant":"dark","vertical":true,"badge":"Coming Soon","title":"Private Coaching","chips":"1-on-1 • Program 6 Minggu","price":"Join The Waitlist","text":"Mentoring intensif langsung bersama Mentor.","features":"<li>Semua yang ada di bootcamp</li><li>Sesi 1-on-1 langsung bersama mentor</li><li>Review chart personal setiap minggu</li><li>Roadmap trading yang dipersonalisasi</li>","buttonDisabled":true,"buttonText":"COMING SOON","footnote":"Daftarkan dirimu untuk notifikasi peluncuran."} /-->
 <!-- /wp:jwt/offer -->
 
-<!-- wp:jwt/payments {"align":"full","title":"Pembayaran Aman & Terpercaya","lead":"Semua transaksi diproses secara aman. Pilih metode pembayaran yang paling mudah untukmu.","methods":"Visa|Mastercard|GoPay|QRIS|OVO|Transfer Bank","points":"Akses langsung setelah pembayaran dikonfirmasi|Satu kali bayar, tidak ada biaya berulang|Update materi gratis selamanya|Ada pertanyaan? Chat kami di WhatsApp"} /-->
+<!-- wp:jwt/payments {"align":"full","title":"Pembayaran Aman & Terpercaya","lead":"Semua transaksi diproses secara aman. Pilih metode pembayaran yang paling mudah untukmu.","methods":"QRIS|OVO|Transfer Bank","points":"Akses langsung setelah pembayaran dikonfirmasi|Satu kali bayar, tidak ada biaya berulang|Update materi gratis selamanya|Ada pertanyaan? Chat kami di WhatsApp"} /-->
 
 <!-- wp:jwt/faq {"align":"full","eyebrow":"FAQ","title":"Pertanyaan Sebelum Bergabung"} -->
 <!-- wp:jwt/faq-item {"question":"Apakah bootcamp ini mengajarkan ICT untuk prop firm?","answer":"Ya — ini justru yang membedakan JW dari bootcamp trading lain. Kamu belajar metodologi ICT secara mendalam, lalu menerapkannya langsung ke sistem prop firm. Dari analisa market sampai risk management yang sesuai aturan challenge, semuanya diajarkan dalam satu program."} /-->
@@ -75,3 +75,4 @@ defined( 'ABSPATH' ) || exit;
 <!-- wp:jwt/cta-banner {"align":"full","title":"Ada pertanyaan? Chat langsung di WhatsApp.","text":"Belum yakin apakah bootcamp ini cocok untukmu? Hubungi kami langsung — kami bantu kamu memutuskan.","buttonText":"Chat di WhatsApp →","buttonUrl":"https://wa.me/628113931505"} /-->
 
 <!-- wp:jwt/discord-cta {"align":"full","title":"Gratis — Komunitas Discord 17.000+ Member!","buttonText":"Gabung Sekarang →","buttonUrl":"/discord/","mediaId":3131} /-->
+
