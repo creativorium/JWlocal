@@ -46,6 +46,7 @@ class JWT_Page_Sync {
 				'mentorship/application' => 'mentorship-application.php',
 				'mentorship/thank-you'   => 'mentorship-thankyou.php',
 				'prop-firm'              => 'prop-firm.php',
+				'bootcamp'               => 'bootcamp.php',
 			)
 		);
 	}
