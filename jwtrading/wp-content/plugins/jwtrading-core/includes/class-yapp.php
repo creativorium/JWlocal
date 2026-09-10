@@ -28,7 +28,7 @@ class JWT_Yapp {
 
 	const NONCE      = 'jwt_yapp';
 	const DB_OPT      = 'jwt_yapp_db_version';
-	const DB_VER      = '2';
+	const DB_VER      = '3';
 
 	const S_PENDING   = 'pending';
 	const S_COMPLETED = 'completed';
@@ -92,6 +92,7 @@ class JWT_Yapp {
 			buyer_email VARCHAR(191) NULL,
 			buyer_phone VARCHAR(50) NULL,
 			discord_username VARCHAR(100) NULL,
+			promo_code VARCHAR(64) NULL,
 			checkout_link TEXT NULL,
 			is_mock TINYINT UNSIGNED NOT NULL DEFAULT 0,
 			order_id BIGINT UNSIGNED NULL,
@@ -171,6 +172,71 @@ class JWT_Yapp {
 		return base64_encode( substr( $priv, -SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES ) ); // phpcs:ignore
 	}
 
+	/**
+	 * WooCommerce coupon code => Yapp promo code.
+	 *
+	 * Configured as one mapping per line in the settings page, so adding a new promo
+	 * never needs a code change:
+	 *
+	 *   DISKON50            (same code both sides)
+	 *   EARLYBIRD = EARLY26 (different code on Yapp)
+	 *
+	 * Deliberately an allowlist. Yapp owns the pricing, so sending a code they don't
+	 * recognise risks charging the buyer something we never showed them.
+	 */
+	public static function promo_map() {
+		$raw = (string) get_option( 'jwt_yapp_promo_map', '' );
+		$map = array();
+
+		foreach ( preg_split( '/\r\n|\r|\n/', $raw ) as $line ) {
+			$line = trim( $line );
+			if ( '' === $line || 0 === strpos( $line, '#' ) ) {
+				continue;
+			}
+			$parts = array_map( 'trim', explode( '=', $line, 2 ) );
+			$woo   = strtoupper( $parts[0] );
+			if ( '' === $woo ) {
+				continue;
+			}
+			$yapp = ( isset( $parts[1] ) && '' !== $parts[1] ) ? $parts[1] : $parts[0];
+			$map[ $woo ] = $yapp;
+		}
+
+		return apply_filters( 'jwt/yapp_promo_map', $map );
+	}
+
+	/**
+	 * Work out which Yapp promo code (if any) to send for the applied Woo coupons.
+	 *
+	 * @return array{code:string,error:string}
+	 */
+	public static function resolve_promo( array $coupons ) {
+		if ( empty( $coupons ) ) {
+			return array( 'code' => '', 'error' => '' );
+		}
+
+		// A Yapp invoice carries a single promoCode, so we can't represent a stack.
+		if ( count( $coupons ) > 1 ) {
+			return array(
+				'code'  => '',
+				'error' => __( 'Hanya satu kode promo yang bisa dipakai untuk pembayaran Yapp.', 'jwtrading' ),
+			);
+		}
+
+		$applied = strtoupper( trim( (string) reset( $coupons ) ) );
+		$map     = self::promo_map();
+
+		if ( ! isset( $map[ $applied ] ) ) {
+			return array(
+				'code'  => '',
+				/* translators: %s: the coupon code the buyer applied. */
+				'error' => sprintf( __( 'Kode promo "%s" belum tersedia untuk pembayaran Yapp. Hapus kode promo, atau gunakan metode pembayaran lain.', 'jwtrading' ), $applied ),
+			);
+		}
+
+		return array( 'code' => $map[ $applied ], 'error' => '' );
+	}
+
 	public static function is_mock() {
 		$s = self::settings();
 		// Force mock whenever real credentials aren't in yet, regardless of the toggle,
@@ -190,6 +256,7 @@ class JWT_Yapp {
 			'jwt_yapp_base_url'   => 'esc_url_raw',
 			'jwt_yapp_origin'     => 'esc_url_raw',
 			'jwt_yapp_staff_only' => 'absint',
+			'jwt_yapp_promo_map'  => 'sanitize_textarea_field',
 		);
 		foreach ( $fields as $option => $sanitize ) {
 			register_setting( 'jwt_yapp_settings', $option, array( 'sanitize_callback' => $sanitize ) );
@@ -294,6 +361,35 @@ class JWT_Yapp {
 							</p>
 						</td>
 					</tr>
+					<tr>
+						<th scope="row"><label for="jwt_yapp_promo_map"><?php esc_html_e( 'Promo codes (coupon → Yapp)', 'jwtrading' ); ?></label></th>
+						<td>
+							<textarea id="jwt_yapp_promo_map" name="jwt_yapp_promo_map" rows="5" class="large-text code" placeholder="DISKON50&#10;EARLYBIRD = EARLY26"><?php echo esc_textarea( (string) get_option( 'jwt_yapp_promo_map', '' ) ); ?></textarea>
+							<p class="description">
+								<?php esc_html_e( 'One per line. Just the code if it is identical in WooCommerce and Yapp, or "WooCode = YappCode" if they differ. Lines starting with # are ignored.', 'jwtrading' ); ?>
+							</p>
+							<p class="description">
+								<strong><?php esc_html_e( 'Create the promo in Yapp first', 'jwtrading' ); ?></strong>
+								<?php esc_html_e( '(Yapp dashboard → Products → Promotions), then list it here. Yapp applies its own discount, so keep the amount identical on both sides — otherwise our checkout total will not match what Yapp charges.', 'jwtrading' ); ?>
+							</p>
+							<p class="description">
+								<?php esc_html_e( 'A coupon that is not listed is refused at checkout rather than silently billing full price. Only one coupon at a time works with Yapp.', 'jwtrading' ); ?>
+							</p>
+							<?php $promo_map = self::promo_map(); ?>
+							<?php if ( $promo_map ) : ?>
+								<p class="description" style="margin-top:8px;">
+									<strong><?php esc_html_e( 'Active:', 'jwtrading' ); ?></strong>
+									<?php
+									$pairs = array();
+									foreach ( $promo_map as $woo_code => $yapp_code ) {
+										$pairs[] = $woo_code === $yapp_code ? $woo_code : $woo_code . ' → ' . $yapp_code;
+									}
+									echo esc_html( implode( ' · ', $pairs ) );
+									?>
+								</p>
+							<?php endif; ?>
+						</td>
+					</tr>
 				</table>
 				<?php submit_button(); ?>
 			</form>
@@ -308,13 +404,14 @@ class JWT_Yapp {
 					<th><?php esc_html_e( 'Product', 'jwtrading' ); ?></th>
 					<th><?php esc_html_e( 'Buyer', 'jwtrading' ); ?></th>
 					<th><?php esc_html_e( 'Amount', 'jwtrading' ); ?></th>
+					<th><?php esc_html_e( 'Promo', 'jwtrading' ); ?></th>
 					<th><?php esc_html_e( 'Status', 'jwtrading' ); ?></th>
 					<th><?php esc_html_e( 'Mode', 'jwtrading' ); ?></th>
 					<th><?php esc_html_e( 'Order', 'jwtrading' ); ?></th>
 				</tr></thead>
 				<tbody>
 				<?php if ( ! $rows ) : ?>
-					<tr><td colspan="7"><em><?php esc_html_e( 'No invoices yet — try the buy button on a product page.', 'jwtrading' ); ?></em></td></tr>
+					<tr><td colspan="8"><em><?php esc_html_e( 'No invoices yet — try the buy button on a product page.', 'jwtrading' ); ?></em></td></tr>
 				<?php else : ?>
 					<?php foreach ( $rows as $r ) : ?>
 						<tr>
@@ -322,6 +419,7 @@ class JWT_Yapp {
 							<td><?php echo esc_html( get_the_title( $r->product_id ) ); ?></td>
 							<td><?php echo esc_html( $r->buyer_name ); ?><br><span style="color:#646970;"><?php echo esc_html( $r->buyer_email ); ?></span></td>
 							<td><?php echo wp_kses_post( wc_price( (float) $r->amount, array( 'currency' => $r->currency ) ) ); ?></td>
+							<td><?php echo $r->promo_code ? '<code>' . esc_html( $r->promo_code ) . '</code>' : '—'; ?></td>
 							<td>
 								<?php
 								$colors = array( self::S_PENDING => '#8a6d00', self::S_COMPLETED => '#0a7d33', self::S_EXPIRED => '#646970', self::S_FAILED => '#b32d2e' );
@@ -536,12 +634,13 @@ class JWT_Yapp {
 		}
 
 		/*
-		 * Coupons are applied by WooCommerce, but Yapp charges its own price and knows
-		 * nothing about them — the buyer would see a discount here and be billed full
-		 * price there. Block it until promoCode/givenPrice is agreed with Yapp.
+		 * Yapp applies its own promo, not WooCommerce's. We only forward codes that
+		 * have been mapped in the settings — an unmapped one would show a discount
+		 * here and bill full price there.
 		 */
-		if ( ! empty( WC()->cart->get_applied_coupons() ) ) {
-			wp_send_json_error( array( 'message' => __( 'Kode promo belum didukung untuk pembayaran Yapp. Hapus kode promo, atau gunakan metode pembayaran lain.', 'jwtrading' ) ) );
+		$promo = self::resolve_promo( (array) WC()->cart->get_applied_coupons() );
+		if ( '' !== $promo['error'] ) {
+			wp_send_json_error( array( 'message' => $promo['error'] ) );
 		}
 
 		$cart_item = current( $cart );
@@ -550,7 +649,7 @@ class JWT_Yapp {
 			wp_send_json_error( array( 'message' => __( 'Produk tidak ditemukan.', 'jwtrading' ) ) );
 		}
 
-		$result = self::create_invoice( $product, $name, $email, $phone, $discord );
+		$result = self::create_invoice( $product, $name, $email, $phone, $discord, $promo['code'] );
 
 		if ( is_wp_error( $result ) ) {
 			wp_send_json_error( array( 'message' => $result->get_error_message() ) );
@@ -566,8 +665,13 @@ class JWT_Yapp {
 	 *
 	 * @return array{invoice_uuid:string,checkout_link:string}|WP_Error
 	 */
-	public static function create_invoice( WC_Product $product, $name, $email, $phone, $discord = '' ) {
+	public static function create_invoice( WC_Product $product, $name, $email, $phone, $discord = '', $promo_code = '' ) {
 		global $wpdb;
+
+		// Schema changes ship with a deploy, but the migration only runs on admin_init.
+		// Without this, the window between deploying and the next wp-admin load would
+		// fail every checkout on a missing column. Cheap: a cached option compare.
+		self::maybe_create_table();
 
 		/*
 		 * Reuse a still-open invoice for the same buyer + product instead of minting a
@@ -576,13 +680,17 @@ class JWT_Yapp {
 		 * request would raise two separately payable invoices for one purchase.
 		 * Invoices expire after 24h, so anything older starts clean.
 		 */
+		// Promo code is part of the match: if the buyer changes or removes their coupon,
+		// the old invoice is priced wrong and must not be handed back.
 		$existing = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 			$wpdb->prepare(
-				'SELECT * FROM ' . self::table() . ' WHERE product_id = %d AND buyer_email = %s AND status = %s AND is_mock = %d AND created_at > %s ORDER BY id DESC LIMIT 1', // phpcs:ignore
+				'SELECT * FROM ' . self::table() . ' WHERE product_id = %d AND buyer_email = %s AND status = %s AND is_mock = %d AND COALESCE(promo_code, %s) = %s AND created_at > %s ORDER BY id DESC LIMIT 1', // phpcs:ignore
 				$product->get_id(),
 				$email,
 				self::S_PENDING,
 				self::is_mock() ? 1 : 0,
+				'',
+				$promo_code,
 				gmdate( 'Y-m-d H:i:s', strtotime( current_time( 'mysql' ) ) - DAY_IN_SECONDS )
 			)
 		);
@@ -612,14 +720,21 @@ class JWT_Yapp {
 				return new WP_Error( 'jwt_yapp_no_uuid', __( 'This product has no Yapp Product UUID configured yet.', 'jwtrading' ) );
 			}
 
-			$body = wp_json_encode( array(
+			$payload = array(
 				'productUUID' => $product_uuid,
 				'name'        => $name,
 				'email'       => $email,
 				'phoneNumber' => $phone,
 				'referenceId' => $reference_id,
 				'redirectUrl' => add_query_arg( array( 'jwt_yapp_thanks' => '1', 'ref' => $reference_id ), home_url( '/' ) ),
-			) );
+			);
+
+			// Only ever a code that resolve_promo() matched against the settings map.
+			if ( '' !== $promo_code ) {
+				$payload['promoCode'] = $promo_code;
+			}
+
+			$body = wp_json_encode( $payload );
 
 			$response = self::signed_request( 'POST', '/api/v1/invoices', $body );
 			if ( is_wp_error( $response ) ) {
@@ -648,6 +763,7 @@ class JWT_Yapp {
 				'buyer_email'   => $email,
 				'buyer_phone'   => $phone,
 				'discord_username' => $discord,
+				'promo_code'    => $promo_code,
 				'checkout_link' => $checkout_link,
 				'is_mock'       => $is_mock ? 1 : 0,
 				'created_at'    => $now,
@@ -1031,6 +1147,11 @@ class JWT_Yapp {
 		// is all that's needed for the Sheet row to carry it for Yapp orders too.
 		if ( ! empty( $invoice->discord_username ) ) {
 			$order->update_meta_data( '_discord_username', $invoice->discord_username );
+		}
+
+		// Which Yapp promo was sent, for support ("why was this one cheaper?").
+		if ( ! empty( $invoice->promo_code ) ) {
+			$order->update_meta_data( '_jwt_yapp_promo_code', $invoice->promo_code );
 		}
 
 		/*
