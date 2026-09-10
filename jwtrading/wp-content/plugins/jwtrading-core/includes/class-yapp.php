@@ -1075,14 +1075,31 @@ class JWT_Yapp {
 	// --- Mock checkout screens (front-end) ------------------------------------
 
 	public static function render_screen() {
-		if ( ! empty( $_GET['jwt_yapp_mock'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$is_mock_screen   = ! empty( $_GET['jwt_yapp_mock'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$is_thanks_screen = ! empty( $_GET['jwt_yapp_thanks'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		if ( ! $is_mock_screen && ! $is_thanks_screen ) {
+			return;
+		}
+
+		/*
+		 * Never let these be cached. They render per-order, time-sensitive state, and
+		 * EasyWP's page cache sits in front of nginx serving `cache-control: public`
+		 * for anything on this path — a cached "menunggu konfirmasi" would keep
+		 * showing after the payment had actually landed.
+		 */
+		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+			define( 'DONOTCACHEPAGE', true );
+		}
+		nocache_headers();
+
+		if ( $is_mock_screen ) {
 			self::render_mock_checkout();
 			exit;
 		}
-		if ( ! empty( $_GET['jwt_yapp_thanks'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			self::render_thanks();
-			exit;
-		}
+
+		self::render_thanks();
+		exit;
 	}
 
 	protected static function render_mock_checkout() {
@@ -1203,6 +1220,26 @@ class JWT_Yapp {
 		$reference_id = isset( $_GET['ref'] ) ? sanitize_text_field( wp_unslash( $_GET['ref'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$invoice = $reference_id ? $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . self::table() . ' WHERE reference_id = %s', $reference_id ) ) : null; // phpcs:ignore
 
+		/*
+		 * Once the webhook has built the order, hand the buyer to WooCommerce's own
+		 * order-received page — the one class-thankyou.php dresses up with Langkah
+		 * Selanjutnya, the Discord/WA links and the PDF download. A Yapp buyer should
+		 * land exactly where a Duitku buyer lands; this screen is only the waiting
+		 * room for the seconds before the webhook arrives.
+		 */
+		if ( $invoice && $invoice->order_id ) {
+			$order = wc_get_order( $invoice->order_id );
+			if ( $order ) {
+				wp_safe_redirect( $order->get_checkout_order_received_url() );
+				exit;
+			}
+		}
+
+		// Still waiting: re-check shortly rather than stranding them on a dead page.
+		// Capped so a genuinely failed payment doesn't reload forever.
+		$attempt = isset( $_GET['try'] ) ? absint( $_GET['try'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$waiting = $invoice && self::S_PENDING === $invoice->status && $attempt < 10;
+
 		add_filter( 'body_class', static function ( $classes ) { $classes[] = 'jwt-manual-screen'; return $classes; } );
 		get_header();
 		$completed = $invoice && self::S_COMPLETED === $invoice->status;
@@ -1215,14 +1252,40 @@ class JWT_Yapp {
 				<?php if ( $invoice->is_mock ) : ?>
 					<p class="jwt-manual-note"><?php esc_html_e( '(Simulated — a real WooCommerce order was created and marked Completed from this mock payment, exactly like a real Yapp webhook would.)', 'jwtrading' ); ?></p>
 				<?php endif; ?>
+			<?php elseif ( $waiting ) : ?>
+				<p class="jwt-manual-lead"><?php esc_html_e( 'Pembayaran kamu sedang dikonfirmasi oleh Yapp. Halaman ini akan otomatis lanjut begitu konfirmasi diterima — biasanya hanya beberapa detik.', 'jwtrading' ); ?></p>
+				<p class="jwt-manual-note"><?php esc_html_e( 'Jangan tutup halaman ini dulu. Kalau sudah membayar, akses kelas kamu tetap aman meski halaman ini ditutup.', 'jwtrading' ); ?></p>
 			<?php else : ?>
-				<p class="jwt-manual-lead"><?php esc_html_e( 'Kami sedang menunggu konfirmasi pembayaran dari Yapp. Halaman ini akan valid begitu webhook diterima.', 'jwtrading' ); ?></p>
+				<p class="jwt-manual-lead"><?php esc_html_e( 'Kami belum menerima konfirmasi pembayaran dari Yapp. Kalau kamu sudah membayar, akses kamu tetap diproses otomatis — cek email kamu sebentar lagi.', 'jwtrading' ); ?></p>
+				<p class="jwt-manual-note"><?php esc_html_e( 'Butuh bantuan? Hubungi kami dan sebutkan nomor referensi di bawah.', 'jwtrading' ); ?></p>
+				<?php if ( $invoice ) : ?>
+					<p class="jwt-manual-note"><code><?php echo esc_html( $invoice->reference_id ); ?></code></p>
+				<?php endif; ?>
 			<?php endif; ?>
 			<div class="jwt-manual-actions">
 				<a class="jwt-btn" href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Kembali ke Beranda', 'jwtrading' ); ?></a>
 			</div>
 		</div></div>
 		<?php
+		if ( $waiting ) :
+			// Poll by reloading with an incrementing counter. The redirect at the top of
+			// this method takes over the moment the webhook has built the order.
+			$next = add_query_arg(
+				array(
+					'jwt_yapp_thanks' => '1',
+					'ref'             => $invoice->reference_id,
+					'try'             => $attempt + 1,
+				),
+				home_url( '/' )
+			);
+			?>
+			<script>
+			setTimeout( function () {
+				window.location.replace( <?php echo wp_json_encode( $next ); ?> );
+			}, 3000 );
+			</script>
+			<?php
+		endif;
 		get_footer();
 	}
 
