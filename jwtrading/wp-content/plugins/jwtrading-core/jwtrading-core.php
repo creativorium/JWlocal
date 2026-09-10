@@ -35,6 +35,7 @@ require_once JWT_CORE_PATH . 'includes/class-funnel.php';
 require_once JWT_CORE_PATH . 'includes/class-webinar.php';
 require_once JWT_CORE_PATH . 'includes/class-ebook.php';
 require_once JWT_CORE_PATH . 'includes/class-page-sync.php';
+require_once JWT_CORE_PATH . 'includes/class-yapp.php';
 
 // WooCommerce-independent features — boot immediately.
 JWT_Plugin_Guard::init();
@@ -58,6 +59,7 @@ register_activation_hook( __FILE__, function () {
 	JWT_Manual_Payment::create_table();
 	JWT_Funnel::create_table();
 	JWT_Ebook::create_table();
+	JWT_Yapp::create_table();
 
 	if ( ! wp_next_scheduled( 'jwt_retry_failed_syncs' ) ) {
 		wp_schedule_event( time() + 300, 'jwt_15min', 'jwt_retry_failed_syncs' );
@@ -96,6 +98,7 @@ add_action( 'plugins_loaded', function () {
 	JWT_Checkout::init();
 	JWT_Thankyou::init();
 	JWT_Emails::init();
+	JWT_Yapp::init();
 
 	// Retry cron handler.
 	add_action( 'jwt_retry_failed_syncs', array( 'JWT_Woo', 'retry_failed_syncs' ) );
