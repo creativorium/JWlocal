@@ -15,7 +15,16 @@ class JWT_Thankyou {
 		add_filter( 'woocommerce_order_details_show_customer_details', array( __CLASS__, 'hide_customer_details' ), 9999 );
 		add_filter( 'woocommerce_get_order_item_totals', array( __CLASS__, 'tidy_totals' ), 9999, 2 );
 		add_action( 'template_redirect', array( __CLASS__, 'localize_strings' ) );
+		add_filter( 'woocommerce_order_item_permalink', '__return_false', 9999 );
 	}
+
+	/*
+	 * Order item names are NOT linked. WooCommerce links them to the single-product
+	 * page, but this site sells from /bootcamp/ and the product templates were never
+	 * designed — so the link dropped buyers onto a bare page right after paying.
+	 * Applies everywhere order items are listed: the thank-you page, order emails,
+	 * and My Account.
+	 */
 
 	/** Localize WooCommerce's order-details strings on the thank-you page only. */
 	public static function localize_strings() {
