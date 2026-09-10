@@ -144,13 +144,31 @@ class JWT_Yapp {
 		return wp_parse_args( array(
 			'mock_mode'  => get_option( 'jwt_yapp_mock_mode', 1 ),
 			'client_id'  => get_option( 'jwt_yapp_client_id', '' ),
-			'public_key' => get_option( 'jwt_yapp_public_key', '' ),
+			// Always derived from the private key — see derived_public_key(). The old
+			// jwt_yapp_public_key option is left registered so the next Save clears it.
+			'public_key' => self::derived_public_key(),
 			'private_key' => get_option( 'jwt_yapp_private_key', '' ),
 			'base_url'   => get_option( 'jwt_yapp_base_url', 'https://api.yapp.ink' ),
 			'origin'     => get_option( 'jwt_yapp_origin', 'https://yapp.ink' ),
 			'staff_only' => get_option( 'jwt_yapp_staff_only', 1 ),
 			'webhook_public_key' => get_option( 'jwt_yapp_webhook_public_key', '' ),
 		), $defaults );
+	}
+
+	/**
+	 * The public half of whatever private key is configured.
+	 *
+	 * Derived, never stored: an ED25519 secret key is seed(32) || public(32), so the
+	 * public key is always recoverable from it. Keeping a separate copy in the
+	 * options table only created something that could drift out of sync with the
+	 * private key — which is exactly what happened when the keypair was regenerated.
+	 */
+	public static function derived_public_key() {
+		$priv = base64_decode( (string) get_option( 'jwt_yapp_private_key', '' ), true ); // phpcs:ignore
+		if ( false === $priv || SODIUM_CRYPTO_SIGN_SECRETKEYBYTES !== strlen( $priv ) ) {
+			return '';
+		}
+		return base64_encode( substr( $priv, -SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES ) ); // phpcs:ignore
 	}
 
 	public static function is_mock() {
@@ -247,10 +265,18 @@ class JWT_Yapp {
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><label for="jwt_yapp_public_key"><?php esc_html_e( 'Our Public Key (base64)', 'jwtrading' ); ?></label></th>
+						<th scope="row"><?php esc_html_e( 'Our Public Key (base64)', 'jwtrading' ); ?></th>
 						<td>
-							<input type="text" class="large-text" id="jwt_yapp_public_key" name="jwt_yapp_public_key" value="<?php echo esc_attr( $s['public_key'] ); ?>" readonly>
-							<p class="description"><?php esc_html_e( 'This is what gets sent to Yapp — never the private key below.', 'jwtrading' ); ?></p>
+							<?php $derived = self::derived_public_key(); ?>
+							<input type="text" class="large-text" id="jwt_yapp_public_key" value="<?php echo esc_attr( $derived ); ?>" readonly onclick="this.select();">
+							<p class="description">
+								<?php esc_html_e( 'Derived from the private key below, so it always matches it — nothing to fill in. This is the half you would share with Yapp; the private key never leaves this site.', 'jwtrading' ); ?>
+							</p>
+							<?php if ( '' === $derived && ! empty( $s['private_key'] ) ) : ?>
+								<p class="description" style="color:#b32d2e;">
+									<?php esc_html_e( 'Could not derive a public key — the private key does not look like a valid base64 ED25519 secret key (64 bytes).', 'jwtrading' ); ?>
+								</p>
+							<?php endif; ?>
 						</td>
 					</tr>
 					<tr>
@@ -262,7 +288,10 @@ class JWT_Yapp {
 						<td>
 							<button type="button" class="button" id="jwt-yapp-genkeys"><?php esc_html_e( 'Generate New Keypair', 'jwtrading' ); ?></button>
 							<span id="jwt-yapp-genkeys-msg" style="margin-left:8px;color:#646970;"></span>
-							<p class="description"><?php esc_html_e( 'Overwrites the two fields above (unsaved until you click Save Changes). Do this once, then submit the Public Key to Yapp.', 'jwtrading' ); ?></p>
+							<p class="description" style="color:#b32d2e;">
+								<strong><?php esc_html_e( 'Only use this if Yapp asked you to send them a public key.', 'jwtrading' ); ?></strong>
+								<?php esc_html_e( 'If Yapp issued your Client ID and keypair together from their dashboard, generating here replaces the key they have on file and every request will fail with 401. Requires a confirmation, and still needs Save Changes.', 'jwtrading' ); ?>
+							</p>
 						</td>
 					</tr>
 				</table>
@@ -313,6 +342,30 @@ class JWT_Yapp {
 			var btn = document.getElementById( 'jwt-yapp-genkeys' );
 			if ( ! btn ) { return; }
 			btn.addEventListener( 'click', function () {
+				// Two-step arm rather than confirm(): browsers with "prevent additional
+				// dialogs" ticked silently return false from confirm(), which is why the
+				// Manual Payment screens use this same pattern.
+				if ( btn.dataset.armed !== '1' ) {
+					btn.dataset.armed = '1';
+					btn.dataset.label = btn.textContent;
+					btn.textContent = '<?php echo esc_js( __( 'Replace the key Yapp has on file? Click again', 'jwtrading' ) ); ?>';
+					btn.style.color = '#b32d2e';
+					btn.style.fontWeight = '700';
+					setTimeout( function () {
+						if ( btn.dataset.armed === '1' ) {
+							btn.dataset.armed = '0';
+							btn.textContent = btn.dataset.label;
+							btn.style.color = '';
+							btn.style.fontWeight = '';
+						}
+					}, 5000 );
+					return;
+				}
+				btn.dataset.armed = '0';
+				btn.textContent = btn.dataset.label;
+				btn.style.color = '';
+				btn.style.fontWeight = '';
+
 				btn.disabled = true;
 				var msg = document.getElementById( 'jwt-yapp-genkeys-msg' );
 				msg.textContent = '<?php echo esc_js( __( 'Generating…', 'jwtrading' ) ); ?>';
@@ -378,6 +431,11 @@ class JWT_Yapp {
 		$on_checkout = function_exists( 'is_checkout' ) && is_checkout() && ! is_wc_endpoint_url();
 		$on_own_screen = ! empty( $_GET['jwt_yapp_mock'] ) || ! empty( $_GET['jwt_yapp_thanks'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( ! $on_checkout && ! $on_own_screen ) {
+			return;
+		}
+		// No point shipping the script (or a nonce) to visitors who can't see the
+		// button. The thank-you screen is exempt — buyers land there after paying.
+		if ( $on_checkout && ! self::can_see_button() ) {
 			return;
 		}
 		wp_enqueue_style( 'jwt-manual', JWT_CORE_URL . 'assets/manual-payment.css', array(), JWT_CORE_VERSION );
