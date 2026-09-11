@@ -752,7 +752,10 @@
 	}
 }
 
-// --- Payment notice + manual-transfer CTA (left column) ------------------------
+// --- Payment notice (left column) ---------------------------------------------
+// Currently rendered by nothing: JWT_Checkout::payment_notice() was the Duitku
+// OTP warning and went with the Yapp cutover. Kept because the parked Yapp
+// transaction-fee notice branch still renders this class.
 .jwt-checkout-notice {
 	background: color-mix(in srgb, var(--jwt-warn) 12%, var(--jwt-bg));
 	border: 1px solid color-mix(in srgb, var(--jwt-warn) 45%, var(--jwt-line));
@@ -766,21 +769,49 @@
 	line-height: 1.6;
 }
 
-#alt-transfer-box {
+// --- Available payment methods (left column, under the method radio) -----------
+// Replaced the "Gunakan Transfer Manual" CTA when manual transfer was retired.
+// Text chips, not logos: same language as the jwt/payments block on Bootcamp, no
+// brand assets to license or keep current, and legible at phone width.
+.jwt-paymethods {
 	margin-top: 1.25rem;
 	padding-top: 1.25rem;
 	border-top: 1px solid var(--jwt-line);
 
-	.alt-text {
-		margin: 0 0 0.75rem;
-		font-size: 0.88rem;
-		color: var(--jwt-muted);
+	&__label {
+		display: block;
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: var(--jwt-text);
+		margin-bottom: 0.6rem;
 	}
 
-	// Grey ghost CTA — same treatment as the home-page secondary button.
-	.alt-btn {
-		width: 100%;
-		font-size: 0.95rem;
+	&__list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		// Woo/Kadence style bare <ul> inside checkout — reset explicitly.
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	&__item {
+		padding: 0.3rem 0.62rem;
+		border: 1px solid var(--jwt-line);
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.04);
+		font-size: 0.78rem;
+		line-height: 1.4;
+		color: var(--jwt-muted);
+		white-space: nowrap;
+	}
+
+	&__note {
+		margin: 0.6rem 0 0;
+		font-size: 0.75rem;
+		line-height: 1.55;
+		color: var(--jwt-muted);
 	}
 }
 

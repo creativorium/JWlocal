@@ -30,7 +30,16 @@ require_once JWT_CORE_PATH . 'includes/class-roadmap.php';
 require_once JWT_CORE_PATH . 'includes/class-maintenance.php';
 require_once JWT_CORE_PATH . 'includes/class-promo-banner.php';
 require_once JWT_CORE_PATH . 'includes/class-journal-sync.php';
-require_once JWT_CORE_PATH . 'includes/class-manual-payment.php';
+/*
+ * RETIRED 2026-09-11: manual bank transfer was removed at the client's request once
+ * Yapp went live (Yapp covers bank transfer itself via Virtual Account). The class
+ * file and the {prefix}jwt_manual_payments table are left in place so the records
+ * survive and this is a one-line revert, but nothing loads.
+ *
+ * NOTE: assets/manual-payment.css is still enqueued by class-yapp.php for the mock
+ * checkout screen, which reuses its .jwt-manual-* styles. Do not delete that file.
+ */
+// require_once JWT_CORE_PATH . 'includes/class-manual-payment.php';
 require_once JWT_CORE_PATH . 'includes/class-funnel.php';
 require_once JWT_CORE_PATH . 'includes/class-webinar.php';
 require_once JWT_CORE_PATH . 'includes/class-ebook.php';
@@ -46,7 +55,7 @@ JWT_Redirects::init();
 JWT_Maintenance::init();
 JWT_Promo_Banner::init();
 JWT_Journal_Sync::init();
-JWT_Manual_Payment::init();
+// JWT_Manual_Payment::init(); // retired 2026-09-11 with the require above.
 JWT_Funnel::init();
 JWT_Webinar::init();
 JWT_Ebook::init();
