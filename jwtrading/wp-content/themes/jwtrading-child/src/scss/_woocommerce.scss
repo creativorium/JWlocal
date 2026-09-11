@@ -800,13 +800,16 @@
 
 	&__item {
 		padding: 0.3rem 0.62rem;
-		border: 1px solid var(--jwt-line);
 		border-radius: 999px;
-		background: rgba(255, 255, 255, 0.04);
 		font-size: 0.78rem;
 		line-height: 1.4;
-		color: var(--jwt-muted);
 		white-space: nowrap;
+		// A wash of brand purple so the chips read as part of the payment step
+		// rather than disabled text. Kept low: this is supporting information
+		// under the method radio, not a call to action competing with Checkout.
+		background: color-mix(in srgb, var(--jwt-accent) 12%, transparent);
+		border: 1px solid color-mix(in srgb, var(--jwt-accent) 34%, var(--jwt-line));
+		color: var(--jwt-accent-light);
 	}
 
 	&__note {
