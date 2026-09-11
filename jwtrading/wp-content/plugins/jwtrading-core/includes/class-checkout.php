@@ -429,7 +429,6 @@ class JWT_Checkout {
 		return __( 'Checkout →', 'jwtrading' );
 	}
 
-	/** Required terms checkbox with link (was hardcoded to the old dev URL). */
 	/**
 	 * Keep the only payment method selected.
 	 *
@@ -449,24 +448,57 @@ class JWT_Checkout {
 		<script>
 		( function () {
 			function selectLone() {
-				var inputs = document.querySelectorAll( 'input[name="payment_method"]' );
-				if ( 1 !== inputs.length || inputs[0].checked ) {
+				var inputs = [].slice.call( document.querySelectorAll( 'input[name="payment_method"]' ) );
+				if ( ! inputs.length ) {
 					return;
 				}
-				inputs[0].checked = true;
+
+				// Count DISTINCT methods, not elements. update_checkout renders a fresh
+				// list inside #payment while main.js still has the previous one in
+				// #jwt-payment-list, so the same single method briefly appears twice —
+				// counting elements made this bail out exactly when it was needed.
+				var values = [];
+				inputs.forEach( function ( el ) {
+					if ( values.indexOf( el.value ) === -1 ) {
+						values.push( el.value );
+					}
+				} );
+				if ( 1 !== values.length ) {
+					return; // genuinely more than one method — the buyer chooses.
+				}
+				if ( inputs.some( function ( el ) { return el.checked; } ) ) {
+					return;
+				}
+
+				// Last in the DOM is the freshly rendered one that survives relocation.
+				inputs[ inputs.length - 1 ].checked = true;
 				if ( window.jQuery ) {
 					jQuery( document.body ).trigger( 'payment_method_selected' );
 				}
 			}
+
 			selectLone();
+
 			if ( window.jQuery ) {
-				jQuery( document.body ).on( 'updated_checkout payment_method_selected', selectLone );
+				// Deferred so it lands after main.js has relocated the list.
+				jQuery( document.body ).on( 'updated_checkout', function () {
+					window.setTimeout( selectLone, 0 );
+				} );
 			}
+
+			// Ticking the terms box is the moment before pressing Checkout, so it is
+			// the last useful chance to make sure a method is selected.
+			document.addEventListener( 'change', function ( e ) {
+				if ( e.target && 'jw_accept_terms' === e.target.id ) {
+					selectLone();
+				}
+			} );
 		} )();
 		</script>
 		<?php
 	}
 
+	/** Required terms checkbox with link (was hardcoded to the old dev URL). */
 	public static function terms_checkbox() {
 		if ( ! self::virtual_mode() ) {
 			return;
