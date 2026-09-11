@@ -57,6 +57,8 @@ class JWT_Yapp {
 		add_action( 'wp_ajax_nopriv_jwt_yapp_mock_pay', array( __CLASS__, 'ajax_mock_pay' ) );
 		add_action( 'wp_ajax_jwt_yapp_generate_keys', array( __CLASS__, 'ajax_generate_keys' ) );
 
+		add_filter( 'woocommerce_payment_gateways', array( __CLASS__, 'register_gateway' ) );
+
 		add_action( 'rest_api_init', array( __CLASS__, 'register_webhook_route' ) );
 
 		add_action( 'jwt_yapp_reconcile', array( __CLASS__, 'run_reconciliation' ) );
@@ -787,6 +789,134 @@ class JWT_Yapp {
 	}
 
 	/**
+	 * Raise a Yapp invoice for an existing WooCommerce order (the gateway flow).
+	 *
+	 * Differs from create_invoice() in two ways that matter:
+	 *  - referenceId is derived from the order, so a buyer who retries payment on the
+	 *    same order reuses it. That is exactly the retry protection Yapp documents:
+	 *    resubmitting a live referenceId returns the original checkoutLink instead of
+	 *    raising a second payable invoice.
+	 *  - the invoice is linked to the order up front, so the webhook completes THAT
+	 *    order rather than building a second one.
+	 *
+	 * @return array{invoice_uuid:string,checkout_link:string}|WP_Error
+	 */
+	public static function create_invoice_for_order( WC_Order $order ) {
+		global $wpdb;
+
+		self::maybe_create_table();
+
+		$items = $order->get_items();
+		if ( count( $items ) !== 1 ) {
+			return new WP_Error(
+				'jwt_yapp_multi_item',
+				__( 'Pembayaran Yapp hanya untuk satu produk per pesanan.', 'jwtrading' )
+			);
+		}
+
+		$item    = reset( $items );
+		$product = $item->get_product();
+		if ( ! $product ) {
+			return new WP_Error( 'jwt_yapp_no_product', __( 'Produk tidak ditemukan.', 'jwtrading' ) );
+		}
+
+		$promo = self::resolve_promo( (array) $order->get_coupon_codes() );
+		if ( '' !== $promo['error'] ) {
+			return new WP_Error( 'jwt_yapp_promo', $promo['error'] );
+		}
+
+		$reference_id = 'JWT-ORDER-' . $order->get_id();
+
+		// Reuse this order's own open invoice rather than raising another.
+		$existing = $wpdb->get_row( $wpdb->prepare( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			'SELECT * FROM ' . self::table() . ' WHERE reference_id = %s AND status = %s ORDER BY id DESC LIMIT 1', // phpcs:ignore
+			$reference_id,
+			self::S_PENDING
+		) );
+		if ( $existing && ! empty( $existing->checkout_link ) ) {
+			return array(
+				'invoice_uuid'  => $existing->invoice_uuid,
+				'checkout_link' => $existing->checkout_link,
+			);
+		}
+
+		$name    = trim( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() );
+		$discord = (string) $order->get_meta( '_discord_username' );
+		$is_mock = self::is_mock();
+		$now     = current_time( 'mysql' );
+
+		if ( $is_mock ) {
+			$invoice_uuid  = wp_generate_uuid4();
+			$checkout_link = add_query_arg(
+				array( 'jwt_yapp_mock' => '1', 'invoice' => $invoice_uuid ),
+				home_url( '/' )
+			);
+		} else {
+			$product_uuid = trim( (string) get_post_meta( $product->get_id(), '_jwt_yapp_product_uuid', true ) );
+			if ( '' === $product_uuid ) {
+				return new WP_Error( 'jwt_yapp_no_uuid', __( 'Produk ini belum punya Yapp Product UUID.', 'jwtrading' ) );
+			}
+
+			$payload = array(
+				'productUUID' => $product_uuid,
+				'name'        => $name,
+				'email'       => $order->get_billing_email(),
+				'phoneNumber' => $order->get_billing_phone(),
+				'referenceId' => $reference_id,
+				'redirectUrl' => $order->get_checkout_order_received_url(),
+			);
+			if ( '' !== $promo['code'] ) {
+				$payload['promoCode'] = $promo['code'];
+			}
+
+			$response = self::signed_request( 'POST', '/api/v1/invoices', wp_json_encode( $payload ) );
+			if ( is_wp_error( $response ) ) {
+				return $response;
+			}
+
+			$data = $response['data'] ?? array();
+			if ( empty( $data['invoiceUUID'] ) || empty( $data['checkoutLink'] ) ) {
+				return new WP_Error( 'jwt_yapp_bad_response', __( 'Respons Yapp tidak sesuai.', 'jwtrading' ) );
+			}
+
+			$invoice_uuid  = $data['invoiceUUID'];
+			$checkout_link = $data['checkoutLink'];
+		}
+
+		$inserted = $wpdb->insert(
+			self::table(),
+			array(
+				'invoice_uuid'     => $invoice_uuid,
+				'reference_id'     => $reference_id,
+				'product_id'       => $product->get_id(),
+				'status'           => self::S_PENDING,
+				'amount'           => (float) $order->get_total(),
+				'currency'         => $order->get_currency(),
+				'buyer_name'       => $name,
+				'buyer_email'      => $order->get_billing_email(),
+				'buyer_phone'      => $order->get_billing_phone(),
+				'discord_username' => $discord,
+				'promo_code'       => $promo['code'],
+				'checkout_link'    => $checkout_link,
+				'is_mock'          => $is_mock ? 1 : 0,
+				'order_id'         => $order->get_id(),
+				'created_at'       => $now,
+				'updated_at'       => $now,
+			)
+		);
+
+		if ( false === $inserted ) {
+			return new WP_Error( 'jwt_yapp_db_error', __( 'Tidak bisa menyimpan invoice. Silakan coba lagi.', 'jwtrading' ) );
+		}
+
+		$order->update_meta_data( '_jwt_yapp_invoice_uuid', $invoice_uuid );
+		$order->update_meta_data( '_jwt_yapp_reference_id', $reference_id );
+		$order->save();
+
+		return array( 'invoice_uuid' => $invoice_uuid, 'checkout_link' => $checkout_link );
+	}
+
+	/**
 	 * GET status recheck (invoice-keyed) — real mode only.
 	 */
 	public static function get_invoice_status( $invoice_uuid ) {
@@ -1073,7 +1203,12 @@ class JWT_Yapp {
 		}
 
 		try {
-			$order_id = self::build_order( $invoice, $data );
+			// Gateway flow: WooCommerce already created the order when the buyer
+			// pressed Checkout, so complete THAT one. Only the older button/mock flow
+			// (no order attached) still builds an order from the invoice snapshot.
+			$order_id = $invoice->order_id
+				? self::complete_existing_order( (int) $invoice->order_id, $data )
+				: self::build_order( $invoice, $data );
 		} catch ( Throwable $e ) {
 			// Release the claim so a retry can pick it up rather than stranding it.
 			$wpdb->update(
@@ -1096,6 +1231,58 @@ class JWT_Yapp {
 		);
 
 		return $order_id;
+	}
+
+	/**
+	 * Mark an order the gateway already created as paid.
+	 *
+	 * Deliberately does NOT rewrite the line items: WooCommerce built them at
+	 * checkout with the coupon applied, and Yapp's amount includes their transaction
+	 * fee, so overwriting the total here would make the order disagree with the
+	 * invoice the buyer actually saw. Yapp's figures are recorded as meta instead.
+	 */
+	protected static function complete_existing_order( $order_id, array $data = array() ) {
+		$order = wc_get_order( $order_id );
+		if ( ! $order ) {
+			throw new Exception( 'Order #' . $order_id . ' no longer exists.' );
+		}
+
+		if ( $order->is_paid() ) {
+			return $order->get_id();
+		}
+
+		self::stamp_yapp_meta( $order, $data );
+
+		// Yapp grants course access itself — keep the still-live Thinkific module off
+		// this order (no-op once Thinkific is retired).
+		$order->update_meta_data( '_thinkific_processed', time() );
+		$order->update_meta_data( '_jwt_yapp_skipped_thinkific', 'yes' );
+		$order->save();
+
+		// payment_complete() moves it to processing/completed via WooCommerce's own
+		// path, firing the Kit/Sheets/Journal sync exactly like any other order.
+		$order->payment_complete( $data['orderUUID'] ?? '' );
+		$order->update_status( 'completed', __( 'Pembayaran Yapp berhasil.', 'jwtrading' ) );
+
+		return $order->get_id();
+	}
+
+	/** Record Yapp's own figures on an order; their status endpoint never returns fees. */
+	protected static function stamp_yapp_meta( WC_Order $order, array $data ) {
+		foreach ( array(
+			'orderUUID'          => '_jwt_yapp_order_uuid',
+			'amount'             => '_jwt_yapp_amount_paid',
+			'originalPrice'      => '_jwt_yapp_original_price',
+			'priceAfterDiscount' => '_jwt_yapp_price_after_discount',
+			'platformFee'        => '_jwt_yapp_platform_fee',
+			'paymentGatewayFee'  => '_jwt_yapp_gateway_fee',
+			'currency'           => '_jwt_yapp_currency',
+			'paidAt'             => '_jwt_yapp_paid_at',
+		) as $field => $meta_key ) {
+			if ( isset( $data[ $field ] ) && '' !== $data[ $field ] ) {
+				$order->update_meta_data( $meta_key, $data[ $field ] );
+			}
+		}
 	}
 
 	protected static function build_order( $invoice, array $data = array() ) {
@@ -1282,7 +1469,40 @@ class JWT_Yapp {
 	 *    trip on this site yet. Keeps real customers off an unverified payment path
 	 *    while staff test with a genuine purchase.
 	 */
+	/**
+	 * Register the gateway so "Checkout →" itself can drive Yapp.
+	 *
+	 * Loaded here rather than from the plugin loader on purpose: the class extends
+	 * WC_Payment_Gateway, which does not exist until WooCommerce has booted. A
+	 * top-level require would fatal the whole site if WooCommerce were ever late or
+	 * absent. This filter only ever runs from inside WooCommerce.
+	 */
+	public static function register_gateway( $gateways ) {
+		if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
+			return $gateways;
+		}
+		if ( ! class_exists( 'JWT_Yapp_Gateway' ) ) {
+			require_once JWT_CORE_PATH . 'includes/class-yapp-gateway.php';
+		}
+		$gateways[] = 'JWT_Yapp_Gateway';
+		return $gateways;
+	}
+
+	/** Is the Yapp gateway switched on and usable at checkout? */
+	public static function gateway_active() {
+		if ( ! function_exists( 'WC' ) || ! class_exists( 'JWT_Yapp_Gateway' ) ) {
+			return false;
+		}
+		$gateways = WC()->payment_gateways() ? WC()->payment_gateways()->get_available_payment_gateways() : array();
+		return isset( $gateways[ JWT_Yapp_Gateway::GATEWAY_ID ] );
+	}
+
 	public static function can_see_button() {
+		// Once the gateway is live the main Checkout button IS Yapp, so the separate
+		// button would just be a duplicate route to the same place.
+		if ( self::gateway_active() ) {
+			return false;
+		}
 		if ( self::is_mock() ) {
 			return self::can_simulate();
 		}
