@@ -774,11 +774,15 @@
 // amount, so discounts are entered on Yapp's own checkout. This tells a buyer
 // holding a code that there is nowhere to put it here, before they give up
 // looking for the field that used to exist.
-.jwt-discount-note {
+// Class doubled for (0,2,0), which beats Kadence's `.single-content p
+// { margin-bottom: var(--global-md-spacing) }` at (0,1,1). That variable is
+// 2rem, so a single class here was silently getting 32px under the note and
+// pushing the Checkout button away.
+.jwt-discount-note.jwt-discount-note {
 	display: flex;
 	gap: 0.5rem;
 	align-items: flex-start;
-	margin: 0 0 0.9rem;
+	margin: 0 0 0.6rem;
 	padding: 0.7rem 0.85rem;
 	border-radius: var(--jwt-radius-sm);
 	// Warm accent, deliberately NOT the purple CTA colour — this should catch the

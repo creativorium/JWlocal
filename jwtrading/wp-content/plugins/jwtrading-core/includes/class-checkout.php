@@ -240,17 +240,27 @@ class JWT_Checkout {
 			return;
 		}
 
-		$note = apply_filters(
-			'jwt/checkout_discount_note',
-			__( 'Punya kode diskon? Lanjutkan checkout dulu — kode promo dimasukkan saat pembayaran di platform Yapp.', 'jwtrading' )
+		// Split so the question can be bold: it is what a buyer holding a code
+		// scans for, and the rest is the instruction they read after it.
+		$lead = apply_filters(
+			'jwt/checkout_discount_note_lead',
+			__( 'Punya kode diskon?', 'jwtrading' )
 		);
 
-		if ( '' === trim( (string) $note ) ) {
+		$note = apply_filters(
+			'jwt/checkout_discount_note',
+			__( 'Lanjutkan checkout dulu, kode promo dimasukkan saat pembayaran di platform Yapp.', 'jwtrading' )
+		);
+
+		if ( '' === trim( (string) $lead ) && '' === trim( (string) $note ) ) {
 			return;
 		}
 
 		echo '<p class="jwt-discount-note"><span class="jwt-discount-note__ico" aria-hidden="true">🏷️</span>'
-			. esc_html( $note ) . '</p>';
+			. '<span>'
+			. ( '' !== trim( (string) $lead ) ? '<strong>' . esc_html( $lead ) . '</strong> ' : '' )
+			. esc_html( $note )
+			. '</span></p>';
 	}
 
 	/**
