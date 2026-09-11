@@ -769,6 +769,32 @@
 	line-height: 1.6;
 }
 
+// --- Discount note (summary card, between terms and the Checkout button) -------
+// Coupons are disabled on this site: a Yapp invoice takes a promoCode, not an
+// amount, so discounts are entered on Yapp's own checkout. This tells a buyer
+// holding a code that there is nowhere to put it here, before they give up
+// looking for the field that used to exist.
+.jwt-discount-note {
+	display: flex;
+	gap: 0.5rem;
+	align-items: flex-start;
+	margin: 0 0 0.9rem;
+	padding: 0.7rem 0.85rem;
+	border-radius: var(--jwt-radius-sm);
+	// Warm accent, deliberately NOT the purple CTA colour — this should catch the
+	// eye without reading as a second button next to Checkout.
+	background: color-mix(in srgb, var(--jwt-accent-warm) 10%, transparent);
+	border: 1px solid color-mix(in srgb, var(--jwt-accent-warm) 38%, var(--jwt-line));
+	color: var(--jwt-text);
+	font-size: 0.8rem;
+	line-height: 1.55;
+
+	&__ico {
+		flex: 0 0 auto;
+		line-height: 1.4;
+	}
+}
+
 // --- Available payment methods (left column, under the method radio) -----------
 // Replaced the "Gunakan Transfer Manual" CTA when manual transfer was retired.
 // Text chips, not logos: same language as the jwt/payments block on Bootcamp, no

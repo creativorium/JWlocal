@@ -30,14 +30,16 @@ class JWT_Checkout {
 		} );
 
 		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'discord_field' ), 20 );
-		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'coupon_field' ), 25 );
 		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'payment_slot' ), 28 );
 		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'payment_methods' ), 30 );
 
 		// Replace the collapsible "Have a coupon?" toggle with an always-open
 		// field under the Discord row (rendered by coupon_field above).
 		add_action( 'woocommerce_before_checkout_form', array( __CLASS__, 'remove_default_coupon' ), 5 );
+		add_filter( 'woocommerce_coupons_enabled', array( __CLASS__, 'disable_coupons' ) );
 		add_action( 'woocommerce_review_order_before_submit', array( __CLASS__, 'terms_checkbox' ), 9 );
+		// Between the terms checkbox (9) and the place-order button.
+		add_action( 'woocommerce_review_order_before_submit', array( __CLASS__, 'discount_note' ), 10 );
 		add_action( 'woocommerce_review_order_after_submit', array( __CLASS__, 'after_submit_extras' ), 10 );
 
 		// Header (eyebrow + title + trust badges) above the form.
@@ -207,24 +209,48 @@ class JWT_Checkout {
 	}
 
 	/**
-	 * Always-open coupon field under the Discord row. Not a <form> (it lives
-	 * inside the main checkout form — no nesting); the Apply button calls the
-	 * same wc-ajax=apply_coupon endpoint WooCommerce uses. See main.js.
+	 * Turn WooCommerce coupons off on the front end.
+	 *
+	 * Discounts now live on Yapp, not here. A Yapp invoice is raised from a
+	 * productUUID plus an optional promoCode — there is no amount field — so a
+	 * WooCommerce coupon cannot be expressed to Yapp unless the identical promo has
+	 * been created in Yapp and mapped under WooCommerce -> Yapp Checkout. Any coupon
+	 * that isn't mapped makes JWT_Yapp::create_invoice_for_order() refuse the
+	 * payment, which stranded buyers at the last step.
+	 *
+	 * This is a filter rather than just hiding the field, so a code applied through
+	 * a ?coupon= URL or left in an old session can't reintroduce the failure.
+	 * Coupons can still be created and managed in wp-admin.
+	 *
+	 * To re-enable, drop this filter and fill in the Yapp promo map.
 	 */
-	public static function coupon_field() {
-		if ( ! self::virtual_mode() || ! wc_coupons_enabled() ) {
+	public static function disable_coupons( $enabled ) {
+		return is_admin() ? $enabled : false;
+	}
+
+	/**
+	 * Tell buyers where their discount code actually goes.
+	 *
+	 * Sits between the terms checkbox and the Checkout button — the last thing read
+	 * before committing. Without it, someone holding a code hunts for a field that
+	 * no longer exists and abandons.
+	 */
+	public static function discount_note() {
+		if ( ! self::virtual_mode() ) {
 			return;
 		}
-		?>
-		<div class="jwt-coupon" data-jwt-coupon>
-			<span class="jwt-coupon__label"><?php esc_html_e( 'Punya kode promo?', 'jwtrading' ); ?></span>
-			<div class="jwt-coupon__row">
-				<input type="text" id="jwt_coupon_code" class="input-text jwt-coupon__input" autocomplete="off" autocapitalize="characters" placeholder="<?php esc_attr_e( 'Masukkan kode promo', 'jwtrading' ); ?>">
-				<button type="button" class="jwt-coupon__apply" data-jwt-coupon-apply><?php esc_html_e( 'Terapkan', 'jwtrading' ); ?></button>
-			</div>
-			<div class="jwt-coupon__msg" role="status" aria-live="polite"></div>
-		</div>
-		<?php
+
+		$note = apply_filters(
+			'jwt/checkout_discount_note',
+			__( 'Punya kode diskon? Lanjutkan checkout dulu — kode promo dimasukkan saat pembayaran di platform Yapp.', 'jwtrading' )
+		);
+
+		if ( '' === trim( (string) $note ) ) {
+			return;
+		}
+
+		echo '<p class="jwt-discount-note"><span class="jwt-discount-note__ico" aria-hidden="true">🏷️</span>'
+			. esc_html( $note ) . '</p>';
 	}
 
 	/**
