@@ -73,6 +73,7 @@ class JWT_Checkout {
 		add_filter( 'woocommerce_cart_item_name', array( __CLASS__, 'review_item_name' ), 10, 3 );
 		add_action( 'woocommerce_review_order_before_order_total', array( __CLASS__, 'summary_rows' ) );
 		add_filter( 'woocommerce_order_button_text', array( __CLASS__, 'order_button_text' ) );
+		add_action( 'woocommerce_after_checkout_form', array( __CLASS__, 'lock_single_payment_method' ), 20 );
 
 		// Give Duitku VA/QR payers time to finish (24h before auto-cancel).
 		add_filter( 'woocommerce_cancel_unpaid_orders_interval', array( __CLASS__, 'unpaid_cancel_interval' ) );
@@ -429,6 +430,43 @@ class JWT_Checkout {
 	}
 
 	/** Required terms checkbox with link (was hardcoded to the old dev URL). */
+	/**
+	 * Keep the only payment method selected.
+	 *
+	 * WooCommerce marks the single available gateway as chosen server-side, but this
+	 * checkout moves the payment list out of #payment into #jwt-payment-list with JS,
+	 * and an update_checkout refresh can leave the radio unchecked. When that happens
+	 * the form posts an empty payment_method and WooCommerce answers "Invalid payment
+	 * method" — which is what it did while Duitku and Yapp were both enabled.
+	 *
+	 * Only ever touches a lone method, so it can't override a real choice.
+	 */
+	public static function lock_single_payment_method() {
+		if ( ! self::virtual_mode() ) {
+			return;
+		}
+		?>
+		<script>
+		( function () {
+			function selectLone() {
+				var inputs = document.querySelectorAll( 'input[name="payment_method"]' );
+				if ( 1 !== inputs.length || inputs[0].checked ) {
+					return;
+				}
+				inputs[0].checked = true;
+				if ( window.jQuery ) {
+					jQuery( document.body ).trigger( 'payment_method_selected' );
+				}
+			}
+			selectLone();
+			if ( window.jQuery ) {
+				jQuery( document.body ).on( 'updated_checkout payment_method_selected', selectLone );
+			}
+		} )();
+		</script>
+		<?php
+	}
+
 	public static function terms_checkbox() {
 		if ( ! self::virtual_mode() ) {
 			return;
