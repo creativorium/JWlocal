@@ -790,10 +790,12 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.4rem;
-		// Woo/Kadence style bare <ul> inside checkout — reset explicitly.
-		margin: 0;
-		padding: 0;
 		list-style: none;
+		// Kadence's global `.single-content ul { padding-left: 2em }` out-specifies a
+		// plain class, which indented the chips away from the label and the note.
+		// Same !important override the checkout list above already needs.
+		margin: 0 !important;
+		padding-left: 0 !important;
 	}
 
 	&__item {

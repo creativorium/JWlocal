@@ -1093,6 +1093,11 @@
 	font-size: 0.8rem;
 	font-style: italic;
 	margin: 0;
+	// The payment list is long enough to wrap, and the default greedy wrap left a
+	// stranded last word ("... Akulaku &" / "Crypto."). Balance evens the lines;
+	// browsers without support just fall back to the normal wrap.
+	text-wrap: balance;
+	line-height: 1.55;
 }
 
 // Disabled ("coming soon") button.
