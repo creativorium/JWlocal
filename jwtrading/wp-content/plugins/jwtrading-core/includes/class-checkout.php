@@ -512,7 +512,7 @@ class JWT_Checkout {
 		);
 		?>
 		<div class="jwt-paymethods">
-			<span class="jwt-paymethods__label"><?php esc_html_e( 'Metode pembayaran yang tersedia', 'jwtrading' ); ?></span>
+			<span class="jwt-paymethods__label"><?php esc_html_e( 'Metode pembayaran yang tersedia di platform Yapp', 'jwtrading' ); ?></span>
 			<ul class="jwt-paymethods__list">
 				<?php foreach ( $methods as $method ) : ?>
 					<li class="jwt-paymethods__item"><?php echo esc_html( $method ); ?></li>
