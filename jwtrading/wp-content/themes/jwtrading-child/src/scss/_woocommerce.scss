@@ -774,8 +774,8 @@
 // Text chips, not logos: same language as the jwt/payments block on Bootcamp, no
 // brand assets to license or keep current, and legible at phone width.
 .jwt-paymethods {
-	margin-top: 1.25rem;
-	padding-top: 1.25rem;
+	margin-top: 0;
+	padding-top: 0;
 	border-top: 1px solid var(--jwt-line);
 
 	&__label {
