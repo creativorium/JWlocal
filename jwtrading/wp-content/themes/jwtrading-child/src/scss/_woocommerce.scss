@@ -815,7 +815,7 @@
 	&__note {
 		// The list's `margin: 0 !important` (needed to beat Kadence's padding rule)
 		// also drops its bottom margin, so the gap is set entirely from this side.
-		margin: 0.9rem 0 0;
+		margin: 1.4rem 0 0;
 		font-size: 0.75rem;
 		line-height: 1.55;
 		color: var(--jwt-muted);
