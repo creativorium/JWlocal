@@ -79,15 +79,25 @@ class JWT_Yapp_Gateway extends WC_Payment_Gateway {
 			return false;
 		}
 		/*
-		 * In Mock Mode this pays with a simulated invoice, so it stays staff-only —
-		 * but it must remain usable, otherwise the whole "Checkout →" flow can't be
-		 * rehearsed on Local before going live (Local is http, and Yapp rejects a
-		 * non-https redirectUrl, so a real invoice can't be raised there either).
+		 * Mock Mode pays with a simulated invoice, so on a real site it is staff-only.
+		 * On a local/dev install it is offered to everyone: there are no real buyers
+		 * there, and gating it made it impossible to rehearse the actual logged-out
+		 * checkout — with Duitku disabled, a guest saw no payment methods at all.
+		 * Local can only ever test via mock anyway, since it is http and Yapp rejects
+		 * a non-https redirectUrl.
 		 */
-		if ( JWT_Yapp::is_mock() && ! JWT_Yapp::can_simulate() ) {
+		if ( JWT_Yapp::is_mock() && ! JWT_Yapp::can_simulate() && ! self::is_dev_environment() ) {
 			return false;
 		}
 		return parent::is_available();
+	}
+
+	/** Local/dev install? Production never matches, so mock stays staff-only there. */
+	protected static function is_dev_environment() {
+		if ( ! function_exists( 'wp_get_environment_type' ) ) {
+			return false;
+		}
+		return in_array( wp_get_environment_type(), array( 'local', 'development' ), true );
 	}
 
 	/**
