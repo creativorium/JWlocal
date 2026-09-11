@@ -758,7 +758,9 @@
 	border: 1px solid color-mix(in srgb, var(--jwt-warn) 45%, var(--jwt-line));
 	color: var(--jwt-muted);
 	padding: 0.875rem 1rem;
-	margin-top: 1.25rem;
+	// Space on BOTH sides: the Yapp fee notice renders directly above the terms
+	// checkbox in the summary card, and with only a top margin it sat flush against it.
+	margin: 1.25rem 0;
 	border-radius: var(--jwt-radius-sm);
 	font-size: 0.82rem;
 	line-height: 1.6;
