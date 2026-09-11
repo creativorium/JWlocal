@@ -32,8 +32,7 @@ class JWT_Checkout {
 		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'discord_field' ), 20 );
 		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'coupon_field' ), 25 );
 		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'payment_slot' ), 28 );
-		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'manual_transfer_cta' ), 30 );
-		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'payment_notice' ), 40 );
+		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'payment_methods' ), 30 );
 
 		// Replace the collapsible "Have a coupon?" toggle with an always-open
 		// field under the Discord row (rendered by coupon_field above).
@@ -229,8 +228,8 @@ class JWT_Checkout {
 	}
 
 	/**
-	 * Empty "Metode Pembayaran" slot in the left column, above the manual-transfer
-	 * CTA. main.js moves WooCommerce's payment-methods list (rendered inside
+	 * Empty "Metode Pembayaran" slot in the left column, above the available-methods
+	 * strip. main.js moves WooCommerce's payment-methods list (rendered inside
 	 * #payment in the right column) into #jwt-payment-list, re-applying after each
 	 * update_checkout AJAX. The place-order button/terms stay in the summary card.
 	 */
@@ -241,36 +240,6 @@ class JWT_Checkout {
 		echo '<div class="jwt-payment"><span class="jwt-payment__label">'
 			. esc_html__( 'Metode Pembayaran', 'jwtrading' )
 			. '</span><div id="jwt-payment-list" class="jwt-payment__list"></div></div>';
-	}
-
-	/**
-	 * Manual bank-transfer alternative. Gated on the required checkout data
-	 * (validated client-side in manual-payment.js); a valid click captures the
-	 * order into the Manual Payment store (JWT_Manual_Payment) and forwards the
-	 * buyer to a themed instruction screen — no more off-grid Google Form.
-	 */
-	public static function manual_transfer_cta() {
-		if ( ! self::virtual_mode() ) {
-			return;
-		}
-		// The button always shows. The Manual Payment "Aktifkan Transfer Manual"
-		// switch only decides where it goes:
-		//   ON  → the on-site manual-transfer flow (JS-driven #jwt-manual-btn).
-		//   OFF → the original external Google Form (a plain link).
-		$mp       = class_exists( 'JWT_Manual_Payment' ) ? JWT_Manual_Payment::settings() : array();
-		$enabled  = ! empty( $mp['enabled'] );
-		$form_url = isset( $mp['form_url'] ) ? $mp['form_url'] : '';
-		?>
-		<div id="alt-transfer-box">
-			<p class="alt-text"><?php esc_html_e( 'Ingin menggunakan pembayaran menggunakan bank transfer secara manual?', 'jwtrading' ); ?></p>
-			<?php if ( $enabled ) : ?>
-				<button type="button" class="alt-btn jwt-btn jwt-btn--ghost" id="jwt-manual-btn"><?php esc_html_e( 'Gunakan Transfer Manual →', 'jwtrading' ); ?></button>
-				<div class="jwt-manual-warning" id="jwt-manual-warning" role="alert" hidden></div>
-			<?php elseif ( $form_url ) : ?>
-				<a class="alt-btn jwt-btn jwt-btn--ghost" href="<?php echo esc_url( $form_url ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Gunakan Transfer Manual →', 'jwtrading' ); ?></a>
-			<?php endif; ?>
-		</div>
-		<?php
 	}
 
 	/** Checkout header: eyebrow + title + trust badges (matches the redesign). */
@@ -495,6 +464,64 @@ class JWT_Checkout {
 			} );
 		} )();
 		</script>
+		<?php
+	}
+
+	/**
+	 * Which payment methods Yapp actually accepts, listed under the method radio.
+	 *
+	 * Yapp's hosted page only says "Pembayaran via Yapp", which tells a buyer nothing
+	 * about whether their card or e-wallet will work — so they are shown here, before
+	 * the buyer commits. Text rather than logos: it matches the chips the jwt/payments
+	 * block already uses on Bootcamp, needs no brand assets, and stays legible at
+	 * phone width.
+	 *
+	 * This replaced the "Gunakan Transfer Manual" button and the Duitku OTP notice that
+	 * used to sit here; both went when manual transfer was retired. Bank transfer is
+	 * still covered, via Yapp's Virtual Account.
+	 *
+	 * Filter `jwt/checkout_payment_methods` (chips) and `jwt/checkout_payment_note`.
+	 */
+	public static function payment_methods() {
+		if ( ! self::virtual_mode() ) {
+			return;
+		}
+
+		$methods = apply_filters(
+			'jwt/checkout_payment_methods',
+			array(
+				'Visa',
+				'Mastercard',
+				'QRIS',
+				'Virtual Account',
+				'OVO',
+				'ShopeePay',
+				'LinkAja',
+				'Akulaku',
+				'Crypto',
+			)
+		);
+
+		if ( empty( $methods ) ) {
+			return;
+		}
+
+		$note = apply_filters(
+			'jwt/checkout_payment_note',
+			__( 'Virtual Account: BCA, Mandiri, BNI, BRI, CIMB, Permata, BSI.', 'jwtrading' )
+		);
+		?>
+		<div class="jwt-paymethods">
+			<span class="jwt-paymethods__label"><?php esc_html_e( 'Metode pembayaran yang tersedia di platform Yapp', 'jwtrading' ); ?></span>
+			<ul class="jwt-paymethods__list">
+				<?php foreach ( $methods as $method ) : ?>
+					<li class="jwt-paymethods__item"><?php echo esc_html( $method ); ?></li>
+				<?php endforeach; ?>
+			</ul>
+			<?php if ( '' !== trim( (string) $note ) ) : ?>
+				<p class="jwt-paymethods__note"><?php echo esc_html( $note ); ?></p>
+			<?php endif; ?>
+		</div>
 		<?php
 	}
 
@@ -729,17 +756,6 @@ class JWT_Checkout {
 		}
 
 		return $translated;
-	}
-
-	/** Duitku OTP/blank-page notice above the checkout form. */
-	public static function payment_notice() {
-		if ( is_admin() ) {
-			return;
-		}
-
-		echo '<div class="jwt-checkout-notice">⚠️ <strong>Payment Notice:</strong><br>'
-			. esc_html__( 'If the payment page appears blank after OTP verification, please wait a moment and refresh your browser. Your payment may still be processing.', 'jwtrading' )
-			. '</div>';
 	}
 
 	public static function unpaid_cancel_interval( $seconds ) {

@@ -752,7 +752,10 @@
 	}
 }
 
-// --- Payment notice + manual-transfer CTA (left column) ------------------------
+// --- Payment notice (left column) ---------------------------------------------
+// Currently rendered by nothing: JWT_Checkout::payment_notice() was the Duitku
+// OTP warning and went with the Yapp cutover. Kept because the parked Yapp
+// transaction-fee notice branch still renders this class.
 .jwt-checkout-notice {
 	background: color-mix(in srgb, var(--jwt-warn) 12%, var(--jwt-bg));
 	border: 1px solid color-mix(in srgb, var(--jwt-warn) 45%, var(--jwt-line));
@@ -766,21 +769,59 @@
 	line-height: 1.6;
 }
 
-#alt-transfer-box {
-	margin-top: 1.25rem;
-	padding-top: 1.25rem;
+// --- Available payment methods (left column, under the method radio) -----------
+// Replaced the "Gunakan Transfer Manual" CTA when manual transfer was retired.
+// Text chips, not logos: same language as the jwt/payments block on Bootcamp, no
+// brand assets to license or keep current, and legible at phone width.
+.jwt-paymethods {
+	margin-top: 0;
+	padding-top: 0;
 	border-top: 1px solid var(--jwt-line);
 
-	.alt-text {
-		margin: 0 0 0.75rem;
-		font-size: 0.88rem;
-		color: var(--jwt-muted);
+	&__label {
+		display: block;
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: var(--jwt-text);
+		margin-bottom: 0.6rem;
 	}
 
-	// Grey ghost CTA — same treatment as the home-page secondary button.
-	.alt-btn {
-		width: 100%;
-		font-size: 0.95rem;
+	&__list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		list-style: none;
+		// Kadence's global `.single-content ul { padding-left: 2em }` out-specifies a
+		// plain class, which indented the chips away from the label and the note.
+		// Same !important override the checkout list above already needs.
+		margin: 0 !important;
+		padding-left: 0 !important;
+	}
+
+	&__item {
+		padding: 0.3rem 0.62rem;
+		border-radius: 999px;
+		font-size: 0.78rem;
+		line-height: 1.4;
+		white-space: nowrap;
+		// A wash of brand purple so the chips read as part of the payment step
+		// rather than disabled text. Kept low: this is supporting information
+		// under the method radio, not a call to action competing with Checkout.
+		background: color-mix(in srgb, var(--jwt-accent) 12%, transparent);
+		border: 1px solid color-mix(in srgb, var(--jwt-accent) 34%, var(--jwt-line));
+		color: var(--jwt-accent-light);
+	}
+
+	// Doubled class -> (0,2,0), which beats Kadence's `.single-content p
+	// { margin-top: 0 }` (0,1,1). A single class loses that fight, which is why
+	// the gap here appeared to do nothing however large the value was set.
+	& &__note {
+		// The list carries `margin: 0 !important` to beat Kadence's padding rule,
+		// so it has no bottom margin — the whole gap comes from this side.
+		margin: 1.15rem 0 0;
+		font-size: 0.75rem;
+		line-height: 1.55;
+		color: var(--jwt-muted);
 	}
 }
 
