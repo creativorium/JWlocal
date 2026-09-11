@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *     signature, build a WooCommerce order from the invoice snapshot, and
  *     mark it Completed — which fires the same Kit/Sheets sync every other
  *     order already fires. Yapp itself grants course access; we never call
- *     an "enroll" API the way the old Thinkific integration did.
+ *     an "enroll" API the way the retired Thinkific integration did.
  *  4. A reconciliation cron re-checks any invoice stuck pending, in case a
  *     webhook delivery was ever lost.
  *
@@ -1253,10 +1253,6 @@ class JWT_Yapp {
 
 		self::stamp_yapp_meta( $order, $data );
 
-		// Yapp grants course access itself — keep the still-live Thinkific module off
-		// this order (no-op once Thinkific is retired).
-		$order->update_meta_data( '_thinkific_processed', time() );
-		$order->update_meta_data( '_jwt_yapp_skipped_thinkific', 'yes' );
 		$order->save();
 
 		// payment_complete() moves it to processing/completed via WooCommerce's own
@@ -1340,16 +1336,6 @@ class JWT_Yapp {
 		if ( ! empty( $invoice->promo_code ) ) {
 			$order->update_meta_data( '_jwt_yapp_promo_code', $invoice->promo_code );
 		}
-
-		/*
-		 * Yapp grants course access itself, so this order must NOT also enrol the buyer
-		 * in Thinkific — the Bootcamp product is still mapped to a live Thinkific course
-		 * while the old Duitku flow runs alongside us. Setting the module's own
-		 * already-processed marker makes it skip the order without touching its code,
-		 * and turns into a harmless no-op once Thinkific is retired for good.
-		 */
-		$order->update_meta_data( '_thinkific_processed', time() );
-		$order->update_meta_data( '_jwt_yapp_skipped_thinkific', 'yes' );
 
 		// Keep Yapp's own financial breakdown on the order. Their status endpoint
 		// doesn't return fees, so the webhook is the only place these ever appear —
