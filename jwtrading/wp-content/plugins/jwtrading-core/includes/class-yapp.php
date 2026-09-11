@@ -49,6 +49,9 @@ class JWT_Yapp {
 		// straight to /?add-to-cart=ID → checkout; the single-product template is
 		// never rendered in this site's buy-now flow).
 		add_action( 'woocommerce_after_checkout_billing_form', array( __CLASS__, 'checkout_cta' ), 31 );
+		// Priority 8 = just above JWT_Checkout::terms_checkbox (9), so it sits over the
+		// terms line and the Checkout button inside the summary card.
+		add_action( 'woocommerce_review_order_before_submit', array( __CLASS__, 'fee_notice' ), 8 );
 		add_action( 'template_redirect', array( __CLASS__, 'render_screen' ), 5 );
 
 		add_action( 'wp_ajax_jwt_yapp_create_invoice', array( __CLASS__, 'ajax_create_invoice' ) );
@@ -579,6 +582,32 @@ class JWT_Yapp {
 			<div class="jwt-manual-warning" id="jwt-yapp-warning" role="alert" hidden></div>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Warn that Yapp adds fees on top of the product price.
+	 *
+	 * Yapp charges a transaction fee (Rp50.000 on QRIS at the time of writing) plus a
+	 * payment-gateway fee, neither of which WooCommerce knows about — so the total
+	 * jumps between our summary and their checkout. Cheaper to say so here than to
+	 * lose the sale at the last step.
+	 *
+	 * Shown only when the Yapp button is actually available to this visitor, so
+	 * Duitku-only buyers aren't warned about a fee they never pay. It starts
+	 * appearing for everyone by itself once "Admin-only button" is unticked.
+	 */
+	public static function fee_notice() {
+		if ( is_admin() || ! self::can_see_button() ) {
+			return;
+		}
+
+		$notice = apply_filters(
+			'jwt/yapp_fee_notice',
+			'⚠️ <strong>' . esc_html__( 'Biaya Transaksi:', 'jwtrading' ) . '</strong><br>'
+			. esc_html__( 'Pembayaran diproses oleh Yapp, dan ada biaya transaksi + biaya payment gateway di luar harga produk. Rincian dan total akhirnya ditampilkan di halaman pembayaran Yapp sebelum kamu menyelesaikan pembayaran.', 'jwtrading' )
+		);
+
+		echo '<div class="jwt-checkout-notice">' . wp_kses_post( $notice ) . '</div>';
 	}
 
 	public static function ajax_create_invoice() {
