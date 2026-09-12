@@ -71,6 +71,29 @@ add_action( 'wp_head', function () {
 }, 1 );
 
 /**
+ * Build attribution.
+ *
+ * Documents who built the site, on every page. This is metadata, not a link:
+ * search engines ignore `author` for ranking, so it passes no SEO value and is
+ * NOT a substitute for the footer credit in footer.php — that link is what
+ * actually counts. Kept purely so the build is attributable in the source.
+ *
+ * Filter `jwt/meta_author`; return '' to drop the tag.
+ */
+add_action( 'wp_head', function () {
+	if ( is_admin() ) {
+		return;
+	}
+
+	$jwt_author = apply_filters( 'jwt/meta_author', 'devnpixel' );
+
+	if ( '' !== trim( (string) $jwt_author ) ) {
+		printf( '<meta name="author" content="%s">' . "
+", esc_attr( $jwt_author ) );
+	}
+}, 2 );
+
+/**
  * Load Vite entries as ES modules.
  * (Filter name is `script_loader_tag` — `script_tag` does not exist.)
  */
