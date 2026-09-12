@@ -134,7 +134,42 @@ endif;
 			</div>
 
 			<div class="jwt-footer__bottom">
-				<p>&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php echo esc_html( get_bloginfo( 'name' ) ); ?>. <?php esc_html_e( 'All Rights Reserved.', 'jwtrading' ); ?></p>
+				<p>&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php echo esc_html( get_bloginfo( 'name' ) ); ?>. <?php esc_html_e( 'All Rights Reserved.', 'jwtrading' ); ?>
+					<?php
+					/*
+					 * Build credit. Kept inside the copyright <p> so the bottom row stays a
+					 * two-item flex (copyright | legal menu) instead of needing a third column.
+					 *
+					 * Deliberately a real, visible link. A hidden one (display:none, 1px text,
+					 * colour matched to the background) is what Google classifies as a link
+					 * scheme, and a manual action would hit this site as well as the target.
+					 * Filter `jwt/footer_credit` to change or return '' to remove.
+					 */
+					$jwt_credit = apply_filters(
+						'jwt/footer_credit',
+						array(
+							'label' => __( 'Created by', 'jwtrading' ),
+							'name'  => 'devnpixel',
+							'url'   => 'https://devnpixel.com',
+						)
+					);
+					/*
+					 * Blog only (posts + the posts index), per the site owner.
+					 *
+					 * NOT output at all elsewhere, rather than rendered and hidden with CSS.
+					 * A link present in the markup but invisible is the hidden-link pattern
+					 * Google penalises; a footer that legitimately differs by page type is
+					 * not. Keep it this way — do not 'simplify' this into a display:none.
+					 */
+					$jwt_show_credit = apply_filters( 'jwt/footer_credit_visible', is_home() || is_singular( 'post' ) );
+
+					if ( $jwt_show_credit && ! empty( $jwt_credit['url'] ) && ! empty( $jwt_credit['name'] ) ) :
+						?>
+						<span class="jwt-footer__credit"><?php echo esc_html( $jwt_credit['label'] ); ?> <a href="<?php echo esc_url( $jwt_credit['url'] ); ?>" target="_blank" rel="noopener"><?php echo esc_html( $jwt_credit['name'] ); ?></a></span>
+						<?php
+					endif;
+					?>
+				</p>
 				<?php
 				if ( has_nav_menu( 'jwt-legal' ) ) {
 					wp_nav_menu(
